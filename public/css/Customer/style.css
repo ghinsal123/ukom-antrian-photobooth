@@ -1,0 +1,164 @@
+/* Login Page */
+.login-container {
+    /* Background yang lebih terang dan lembut */
+    min-height: 100vh;
+    background-color: #f7f7f7; /* Background putih/abu-abu muda */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    font-family: sans-serif; /* Menggunakan font standar yang bersih */
+}
+
+.login-card {
+    background: white;
+    border-radius: 1.5rem; 
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 28rem;
+    text-align: center;
+    overflow: hidden;
+    
+    box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+        0 20px 40px -10px rgba(236, 72, 153, 0.4);
+}
+
+/* Header (Logo, Title, Subtitle) */
+.login-header {
+    margin-bottom: 2rem;
+}
+
+.login-logo-wrapper { 
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #fce7f3, #f5d0fe); 
+    border-radius: 50%;
+    margin: 0 auto 0.5rem auto;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.login-logo-img { 
+    width: 82px;
+    height: 82px; 
+    object-fit: cover; 
+    transform: scale(1.5);
+}
+
+.login-title {
+    font-size: 1.8rem; /* Sedikit lebih kecil */
+    font-weight: 600; /* Sedikit kurang tebal */
+    color: #333;
+    margin-bottom: 0.1rem;
+}
+
+.login-subtitle {
+    color: #888;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
+
+/* Form input */
+.input-group {
+    text-align: left;
+    margin-bottom: 1.5rem; /* Jarak antar input */
+}
+
+.input-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500; /* Font weight standar */
+    color: #555;
+    margin-bottom: 0.4rem;
+    /* Tambahkan icon di sebelah label */
+    display: flex;
+    align-items: center;
+}
+
+/* Icon di label */
+.input-label i {
+    margin-right: 8px;
+    color: #c084fc; /* Warna ungu untuk icon */
+    font-size: 1.1rem;
+}
+
+
+/* Input Field */
+.input-field {
+    width: 100%;
+    box-sizing: border-box; 
+    padding: 0.9rem 1rem; 
+    
+    border-radius: 0.5rem; 
+    border: 1px solid #e5e7eb; 
+    background-color: #f9fafb; 
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.input-field::placeholder {
+    color: #bbb;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #c084fc; /* Warna ungu saat fokus */
+    background-color: white; /* Kembali ke putih saat fokus */
+    box-shadow: 0 0 0 1px #c084fc;
+}
+
+/* Tombol login */
+.btn-login {
+    width: 100%;
+    /* Gradient yang lebih halus dan mirip gambar (Pink ke Ungu) */
+    background: linear-gradient(to right, #f472b6, #c084fc);
+    color: white;
+    font-weight: 700;
+    padding: 1rem; /* Padding yang lebih besar */
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem; /* Jarak dari input terakhir */
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+.btn-login:hover {
+    /* Gradient saat hover */
+    background: linear-gradient(to right, #ec4899, #a855f7);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Link Register */
+.register-link {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.link-register {
+    color: #c084fc; /* Warna ungu */
+    font-weight: 600;
+    text-decoration: none; /* Hilangkan garis bawah */
+    transition: color 0.2s;
+}
+
+.link-register:hover {
+    color: #a855f7;
+    text-decoration: underline;
+}
+
+/* Pesan Error */
+.error-message {
+    color: #ef4444; /* Merah untuk error */
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+

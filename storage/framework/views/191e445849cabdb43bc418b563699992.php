@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Operator Panel</title>
-    @vite('resources/css/app.css')
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
 </head>
 <body class="bg-gray-100">
 
@@ -13,8 +13,9 @@
     </nav>
 
     <div class="p-6">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </div>
 
 </body>
 </html>
+<?php /**PATH C:\ukom-antrian-photobooth\resources\views/Operator/layout.blade.php ENDPATH**/ ?>

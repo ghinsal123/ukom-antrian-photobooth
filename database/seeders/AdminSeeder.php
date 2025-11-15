@@ -11,7 +11,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         Pengguna::updateOrCreate(
-            ['email' => 'admin@photobooth.com'],
+            ['no_telp' => '081234567890'],
             [
                 'nama_pengguna' => 'admin',
                 'password' => Hash::make('123456'),

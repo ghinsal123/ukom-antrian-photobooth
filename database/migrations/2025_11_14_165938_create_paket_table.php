@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('paket', function (Blueprint $table) {
             $table->id();
             $table->string('nama_paket');
-            $table->decimal('harga');
-            $table->string('gambar');
-            $table->text('deskripsi');
+            $table->decimal('harga', 10, 2);
+            $table->string('gambar')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

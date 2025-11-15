@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('booth', function (Blueprint $table) {
             $table->id();
             $table->string('nama_booth');
-            $table->string('status');
             $table->integer('kapasitas');
-            $table->string('jam_operasional')->nullable();
+            $table->enum('status',['kosong','terpakai'])->default('kosong');
+            $table->time('jam_mulai')->nullable();
+            $table->time('jam_selesai')->nullable();
             $table->timestamps();
         });
     }

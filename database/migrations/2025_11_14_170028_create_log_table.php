@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('log', function (Blueprint $table) {
+          Schema::create('log', function (Blueprint $table) {
             $table->id();
-            $table->text('deskripsi');
-            // $table->datetimes('waktu');
-            $table->string('aksi');
-            $table->string('role');
+            $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
+            $table->foreignId('reservasi_id')->nullable()->constrained('reservasi')->onDelete('cascade');
+            $table->enum('aksi', ['buat_reservasi','update_status','hapus_reservasi']);
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

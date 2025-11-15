@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('paket_id')->constrained('paket')->onDelete('cascade');
             $table->string('nomor_antrian');
             $table->date('tanggal');
-            $table->string('status');
+            $table->enum('status', ['menunggu', 'proses', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->text('catatan')->nullable();
             $table->timestamps();
         });

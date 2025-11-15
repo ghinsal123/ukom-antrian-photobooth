@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
             $table->foreignId('booth_id')->constrained('booth')->onDelete('cascade');
             $table->foreignId('paket_id')->constrained('paket')->onDelete('cascade');
-            $table->string('nomor_antrian');
+            $table->string('nomor_antrian')->unique();
             $table->date('tanggal');
             $table->enum('status', ['menunggu', 'proses', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->text('catatan')->nullable();

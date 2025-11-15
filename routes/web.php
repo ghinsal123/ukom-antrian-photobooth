@@ -1,35 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Customer\AuthController;
+use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Customer Login
-Route::get('/customer/login', [AuthController::class, 'showLoginForm'])->name('customer.login');
-Route::post('/customer/login', [AuthController::class, 'login'])->name('customer.login.post');
+// Customer Routes
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('/login', [CustomerAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [CustomerAuthController::class, 'login'])->name('login.post');
+});
 
-// ==== Admin Pages (sementara tanpa controller, preview aja) ====
-Route::prefix('admin')->group(function () {
+// Admin Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
     Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    });
-
-    Route::get('/booths', function () {
-        return view('admin.booths.index');
-    });
-
-    Route::get('/packages', function () {
-        return view('admin.packages.index');
-    });
-
-    Route::get('/users', function () {
-        return view('admin.users.index');
-    });
-
-    Route::get('/reports', function () {
-        return view('admin.reports.index');
-    });
+    return "Admin Dashboard";
+    })->name('dashboard');
 });

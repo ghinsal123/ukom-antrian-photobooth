@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< Updated upstream
+
 use App\Http\Controllers\Customer\AuthController;
 
 Route::get('/', function () {
@@ -12,7 +12,6 @@ Route::get('/', function () {
 Route::get('/customer/login', [AuthController::class, 'showLoginForm'])->name('customer.login');
 Route::post('/customer/login', [AuthController::class, 'login'])->name('customer.login.post');
 
-// ==== Admin Pages (sementara tanpa controller, preview aja) ====
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
@@ -34,7 +33,7 @@ Route::prefix('admin')->group(function () {
         return view('admin.reports.index');
     });
 });
-=======
+
 use App\Http\Controllers\Customer\CustomerController;
 
 
@@ -54,4 +53,4 @@ Route::get('/customer/logout', function () {return view('Customer.logout');})->n
 Route::get('/customer/activity/{id}', function () {return view('Customer.detail');})->name('customer.activity.detail');
 Route::get('/customer/activity/{id}/edit', function () {return view('Customer.edit');})->name('customer.activity.edit');
 Route::get('/customer/activity/{id}/delete', function () {return view('Customer.hapus');})->name('customer.activity.delete');
->>>>>>> Stashed changes
+

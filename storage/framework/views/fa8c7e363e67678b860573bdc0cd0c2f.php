@@ -128,9 +128,6 @@
         renderCustomers(booth);
     });
 </script>
-
-</script>
-
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('Operator.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\ukom-antrian-photobooth\resources\views/Operator/dashboard.blade.php ENDPATH**/ ?>

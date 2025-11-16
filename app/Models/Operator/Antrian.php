@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Antrian extends Model
 {
-    protected $table = 'reservasi';
+    protected $table = 'antrian';
 
     protected $fillable = [
         'pengguna_id',

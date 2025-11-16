@@ -16,7 +16,7 @@
     <ul class="space-y-4 font-medium">
         <li>
             <a href="{{ url('/operator/dashboard') }}" 
-            class="block {{ request()->is('operator/dashboard') ? 'text-pink-400 font-bold' : 'text-gray-900 hover:text-pink-400' }}">
+            class="mt-12 block {{ request()->is('operator/dashboard') ? 'text-pink-400 font-bold' : 'text-gray-900 hover:text-pink-400' }}">
             Dashboard
             </a>
         </li>
@@ -33,8 +33,9 @@
             </a>
         </li>
         <li>
-            <a href="{{ url('/operator/reservasi') }}" 
-            class="block {{ request()->is('operator/reservasi') ? 'text-pink-400 font-bold' : 'text-gray-900 hover:text-pink-400' }}">
+            <hr class="my-2 border-gray-800">
+            <a href="{{ url('/operator/antrian') }}" 
+            class="block {{ request()->is('operator/antrian') ? 'text-pink-400 font-bold' : 'text-gray-900 hover:text-pink-400' }}">
             Antrian
             </a>
         </li>
@@ -45,16 +46,24 @@
             </a>
         </li>
         <li>
-            <a href="{{ url('/operator/logout') }}" 
-            class="block text-gray-900 hover:text-pink-400">
-            Logout
+           <!-- Link / Button Logout -->
+            <hr class=" border-gray-800">
+            <a href="{{ route('operator.logout') }}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            class="w-full text-red-500 hover:text-red-700 py-3 rounded-xl font-semibold block text-left">
+                Logout 
             </a>
+
+            <!-- Form POST tersembunyi -->
+            <form id="logout-form" action="{{ route('operator.logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
         </li>
     </ul>
     </nav>
 
     <!-- CONTENT -->
-    <div class="flex-1 p-6 ml-60"> <!-- ml-60 supaya nggak tertutup sidebar -->
+    <div class="flex-1 p-6 ml-60"> 
         @yield('content')
     </div>
 

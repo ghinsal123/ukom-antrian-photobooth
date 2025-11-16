@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Operator | FlashFrame</title>
-    @vite('resources/css/app.css')
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
 </head>
 
 <body class="min-h-screen flex items-center justify-center p-6 bg-pink-50">
@@ -17,7 +17,7 @@
 
             <!-- Logo + Title -->
             <div class="text-center mb-6">
-                <img src="{{ asset('images/logo.png') }}" 
+                <img src="<?php echo e(asset('images/logo.png')); ?>" 
                      alt="Logo" 
                      class="w-32 h-32 object-contain mx-auto mb-2 drop-shadow">
 
@@ -30,8 +30,8 @@
             </div>
 
             <!-- FORM -->
-            <form action="{{ route('operator.login.submit') }}" method="POST" class="space-y-5 mt-6">
-                @csrf
+            <form action="<?php echo e(route('operator.login.submit')); ?>" method="POST" class="space-y-5 mt-6">
+                <?php echo csrf_field(); ?>
 
                 <!-- Username -->
                 <div>
@@ -66,3 +66,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\ukom-antrian-photobooth\resources\views/Operator/login/login.blade.php ENDPATH**/ ?>

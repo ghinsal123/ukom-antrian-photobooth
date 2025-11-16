@@ -4,7 +4,7 @@ namespace App\Models\Operator;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Reservasi extends Model
+class Antrian extends Model
 {
     protected $table = 'reservasi';
 

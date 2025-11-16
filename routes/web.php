@@ -1,16 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Customer\AuthController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Customer Login
-Route::get('/customer/login', [AuthController::class, 'showLoginForm'])->name('customer.login');
-Route::post('/customer/login', [AuthController::class, 'login'])->name('customer.login.post');
+use App\Http\Controllers\Customer\CustomerController;
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -34,20 +25,11 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-use App\Http\Controllers\Customer\CustomerController;
 
 
-Route::get('/customer/login', [CustomerController::class, 'showLogin'])
-    ->name('customer.login');
-
-Route::post('/customer/login', [CustomerController::class, 'login'])
-    ->name('customer.login.submit');
-
-Route::get('/customer/dashboard', [CustomerController::class, 'dashboard'])
-    ->name('customer.dashboard');
-
-    
-
+Route::get('/customer/login', [CustomerController::class, 'showLogin'])->name('customer.login');
+Route::post('/customer/login', [CustomerController::class, 'login'])->name('customer.login.submit');
+Route::get('/customer/dashboard', [CustomerController::class, 'dashboard'])->name('customer.dashboard');
 Route::get('/customer/antrian', function () {return view('Customer.antrian');})->name('customer.antrian');
 Route::get('/customer/logout', function () {return view('Customer.logout');})->name('customer.logout');
 Route::get('/customer/activity/{id}', function () {return view('Customer.detail');})->name('customer.activity.detail');

@@ -9,15 +9,14 @@
 
 <body class="bg-pink-50">
 
-    <!-- Navbar -->
     <nav class="bg-white shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-pink-400">PhotoBooth FlashFrame</h1>
 
             <div class="flex gap-6 items-center">
-                <a href="/dashboard" class="text-gray-600 hover:text-pink-400">Dashboard</a>
+                <a href="/dashboard" class="text-gray-600 hover:text-ppink-400">Dashboard</a>
                 <a href="/antrian" class="text-pink-400 font-semibold">+ Antrian</a>
-                <a href="logout" class="text-gray-600 hover:text-pink-400">Logout</a>
+                <a href="/logout" class="text-gray-600 hover:text-pink-400">Logout</a>
             </div>
         </div>
     </nav>
@@ -28,16 +27,14 @@
 
         <div class="bg-white p-8 rounded-xl shadow-sm">
 
-            <!-- FORM -->
             <div class="space-y-6">
 
-                <!-- Nama -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Nama Lengkap</label>
                     <input 
                         type="text" 
                         class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
-                        placeholder="Contoh: Amanda Putri"
+                        placeholder="Masukkan nama anda"
                     >
                 </div>
 
@@ -47,21 +44,24 @@
                     <input 
                         type="text" 
                         class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
-                        placeholder="08xxxxxxxxxx"
+                        placeholder="Masukkan nomor telepon"
                     >
                 </div>
 
-                <!-- Jumlah Orang -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Jumlah Orang</label>
-                    <input 
-                        type="number" 
+                    <label class="block text-gray-700 font-semibold mb-2">Pilih Paket Foto</label>
+
+                    <select 
                         class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
-                        placeholder="1 - 10 Orang"
                     >
+                        <option value="">-- Pilih Paket Foto --</option>
+                        <option value="hemat">Paket Hemat (1–2 orang)</option>
+                        <option value="couple">Paket Couple (2 orang)</option>
+                        <option value="family"> Paket Family (3–5 orang)</option>
+                        <option value="premium"> Paket Premium (5-10 + Free Aksesoris)</option>
+                    </select>
                 </div>
 
-                <!-- Pilih Booth -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Pilih Booth</label>
 
@@ -69,28 +69,12 @@
                         class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
                     >
                         <option value="">-- Pilih Studio --</option>
-                        <option value="A">Studio A</option>
-                        <option value="B">Studio B</option>
-                        <option value="C">Studio C</option>
+                        <option value="A">Studio Vintage</option>
+                        <option value="B">Studio Cream</option>
+                        <option value="C">Studio Hitam</option>
                     </select>
                 </div>
 
-                <!-- Nomor Antrian (Auto) -->
-                <div>
-                    <label class="block text-gray-700 font-semibold mb-2">Nomor Antrian</label>
-                    <input 
-                        type="text"
-                        disabled
-                        class="w-full p-3 border rounded-lg bg-gray-100 text-gray-500"
-                        placeholder="Otomatis berdasarkan booth"
-                    >
-                    <p class="text-sm text-gray-400 mt-1">
-                        • Setiap studio punya nomor antrian sendiri.  
-                        • Contoh: A001, A002, B001, C001, dst.
-                    </p>
-                </div>
-
-                <!-- Tombol -->
                 <div class="pt-4">
                     <button 
                         class="w-full bg-pink-400 text-white py-3 rounded-lg font-semibold hover:bg-pink-500 transition">

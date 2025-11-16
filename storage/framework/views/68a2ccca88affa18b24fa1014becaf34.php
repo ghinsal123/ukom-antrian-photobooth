@@ -14,7 +14,7 @@
             <h1 class="text-2xl font-bold text-pink-400">PhotoBooth FlashFrame</h1>
 
             <div class="flex gap-6 items-center">
-                <a href="/dashboard" class="text-gray-600 hover:text-ppink-400">Dashboard</a>
+                <a href="/dashboard" class="text-gray-600 hover:text-pink-400">Dashboard</a>
                 <a href="/antrian" class="text-pink-400 font-semibold">+ Antrian</a>
                 <a href="/logout" class="text-gray-600 hover:text-pink-400">Logout</a>
             </div>
@@ -38,7 +38,6 @@
                     >
                 </div>
 
-                <!-- Nomor Telepon -->
                 <div>
                     <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
                     <input 
@@ -57,8 +56,8 @@
                         <option value="">-- Pilih Paket Foto --</option>
                         <option value="hemat">Paket Hemat (1–2 orang)</option>
                         <option value="couple">Paket Couple (2 orang)</option>
-                        <option value="family"> Paket Family (3–5 orang)</option>
-                        <option value="premium"> Paket Premium (5-10 + Free Aksesoris)</option>
+                        <option value="family">Paket Family (3–5 orang)</option>
+                        <option value="premium">Paket Premium (5–10 + Free Aksesoris)</option>
                     </select>
                 </div>
 
@@ -68,10 +67,12 @@
                     <select 
                         class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
                     >
-                        <option value="">-- Pilih Studio --</option>
-                        <option value="A">Studio Vintage</option>
-                        <option value="B">Studio Cream</option>
-                        <option value="C">Studio Hitam</option>
+                        <option value="">-- Pilih Booth --</option>
+                        <option value="vintage">Booth Vintage</option>
+                        <option value="classic">Booth Classic</option>
+                        <option value="modern">Booth Modern</option>
+                        <option value="minimal">Booth Minimal</option>
+                        <option value="neutral">Booth Neutral</option>
                     </select>
                 </div>
 
@@ -89,5 +90,4 @@
     </div>
 
 </body>
-</html>
-<?php /**PATH C:\ukom-antrian-photobooth\resources\views/Customer/antrian.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\ukom-antrian-photobooth\resources\views/Customer/antrian.blade.php ENDPATH**/ ?>

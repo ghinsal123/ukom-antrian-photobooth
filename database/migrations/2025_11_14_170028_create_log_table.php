@@ -14,7 +14,7 @@ return new class extends Migration
           Schema::create('log', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
-            $table->foreignId('reservasi_id')->nullable()->constrained('reservasi')->onDelete('cascade');
+            $table->foreignId('antrian_id')->nullable()->constrained('antrian')->onDelete('cascade');
             $table->enum('aksi', ['buat_reservasi','update_status','hapus_reservasi']);
             $table->text('keterangan')->nullable();
             $table->timestamps();

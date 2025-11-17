@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Operator\AntrianController;
-
+use App\Http\Controllers\Admin\PenggunaController;
 
 
 Route::get('/', function () {
@@ -20,17 +20,19 @@ Route::get('/', function () {
 */
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Guest (belum login)
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AdminLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [AdminLoginController::class, 'login'])->name('login.submit');
     });
 
-    // Authenticated
     Route::middleware('admin')->group(function () {
         Route::get('dashboard', fn () => view('admin.dashboard'))->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
+
+        // ⬇⬇ FIXED HERE
+        Route::resource('pengguna', PenggunaController::class)->names('pengguna');
     });
+
 });
 
 /*
@@ -87,7 +89,6 @@ Route::prefix('customer')->name('customer.')->group(function () {
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
-    // ⬅️ FIX: PAKAI "customer" bukan "auth:customer"
     Route::middleware('customer')->group(function () {
         Route::get('dashboard', [CustomerLoginController::class, 'dashboard'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');

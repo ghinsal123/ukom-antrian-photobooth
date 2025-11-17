@@ -9,7 +9,7 @@ class LoginController extends BaseLoginController
 {
     public function showLogin()
     {
-        return view('Operator.login.login');
+        return view('operator.login.login');
     }
 
     public function login(Request $request)

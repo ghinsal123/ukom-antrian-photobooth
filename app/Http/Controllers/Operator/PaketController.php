@@ -10,13 +10,13 @@ class PaketController extends Controller
 {
     public function index()
     {
-        $data = Paket::all();
-        return view('Operator.paket.index', compact('data'));
+        $pakets = Paket::all();
+        return view('Operator.paket.index', compact('pakets'));
     }
 
     public function show($id)
     {
-        $data = Paket::findOrFail($id);
-        return view('Operator.paket.show', compact('data'));
+        $paket = Paket::findOrFail($id);
+        return view('Operator.paket.show', compact('paket'));
     }
 }

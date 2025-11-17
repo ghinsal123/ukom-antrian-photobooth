@@ -7,6 +7,8 @@ use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Operator\AntrianController;
 use App\Http\Controllers\Operator\JadwalController;
+use App\Http\Controllers\Operator\BoothController;
+use App\Http\Controllers\Operator\PaketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -74,6 +76,13 @@ Route::prefix('operator')->name('operator.')->group(function () {
         Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
         Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.show');
 
+        // Booth
+        Route::get('/booth', [BoothController::class, 'index'])->name('operator.booth.index');
+        Route::get('/booth/{id}', [BoothController::class, 'show'])->name('operator.booth.show');
+
+        // Paket
+        Route::get('/paket', [PaketController::class, 'index'])->name('operator.paket.index');
+        Route::get('/paket/{id}', [PaketController::class, 'show'])->name('operator.paket.show');
     });
 
 });

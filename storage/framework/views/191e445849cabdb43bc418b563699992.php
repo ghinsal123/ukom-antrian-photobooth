@@ -32,6 +32,12 @@
             Paket
             </a>
         </li>
+                <li>
+            <a href="<?php echo e(url('/operator/booth')); ?>" 
+            class="block <?php echo e(request()->is('operator/booth') ? 'text-pink-400 font-bold' : 'text-gray-900 hover:text-pink-400'); ?>">
+            Booth
+            </a>
+        </li>
         <li>
             <hr class="my-2 border-gray-800">
             <a href="<?php echo e(url('/operator/antrian')); ?>" 

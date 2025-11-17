@@ -1,16 +1,21 @@
 @extends('Operator.layout')
 
 @section('content')
-<h2 class="text-xl font-bold mb-4">{{ $paket->nama_paket }}</h2>
+<h2 class="text-3xl font-bold mb-4">Detail Paket</h2>
 
-<div class="bg-white p-5 shadow rounded">
-    @if($paket->gambar)
-    <img src="{{ asset('storage/' . $paket->gambar) }}" class="w-40 mb-3">
-    @endif
+<ul class="list-disc ml-5">
+    <li>Nama Paket: {{ $paket->nama_paket }}</li>
+    <li>Harga: {{ $paket->harga }}</li>
+    <li>Deskripsi: {{ $paket->deskripsi ?? '-' }}</li>
+    <li>
+        Gambar: 
+        @if($paket->gambar)
+            <img src="{{ asset('storage/' . $paket->gambar) }}" alt="{{ $paket->nama_paket }}" class="w-48 mt-2">
+        @else
+            -
+        @endif
+    </li>
+</ul>
 
-    <p><strong>Harga:</strong> Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>
-    <p><strong>Deskripsi:</strong> {{ $paket->deskripsi }}</p>
-</div>
-
-<a href="/operator/paket" class="mt-4 inline-block px-4 py-2 bg-gray-300 rounded">Kembali</a>
+<a href="{{ route('operator.paket.index') }}" class="mt-4 inline-block text-blue-500">Kembali</a>
 @endsection

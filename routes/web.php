@@ -6,8 +6,7 @@ use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Operator\AntrianController;
-
-
+use App\Http\Controllers\Operator\JadwalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,6 +69,10 @@ Route::prefix('operator')->name('operator.')->group(function () {
 
             Route::delete('/delete/{id}', [AntrianController::class, 'destroy'])->name('delete');
         });
+
+        // JADWAL
+        Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+        Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.show');
 
     });
 

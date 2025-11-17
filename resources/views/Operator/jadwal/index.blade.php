@@ -1,29 +1,38 @@
 @extends('Operator.layout')
 
 @section('content')
-<h2 class="text-xl font-bold mb-4">Status Jadwal & Ruangan</h2>
+<div class="container">
 
-<table class="min-w-full mt-4 bg-white shadow rounded">
-    <thead>
-        <tr class="bg-gray-200">
-            <th class="p-3">Booth</th>
-            <th class="p-3">Tanggal</th>
-            <th class="p-3">Status</th>
-            <th class="p-3">Aksi</th>
-        </tr>
-    </thead>
+    <h2 class="text-2xl font-bold mb-4">Daftar Jadwal Antrian</h2>
 
-    <tbody>
-        @foreach ($jadwal as $j)
-        <tr class="border-b">
-            <td class="p-3">{{ $j->booth }}</td>
-            <td class="p-3">{{ $j->tanggal }}</td>
-            <td class="p-3">{{ ucfirst($j->status) }}</td>
-            <td class="p-3">
-                <a href="/operator/jadwal/show/{{ $j->id }}" class="text-blue-600">Detail</a>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+    <table class="table-auto w-full border">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="px-3 py-2 border">#</th>
+                <th class="px-3 py-2 border">Tanggal</th>
+                <th class="px-3 py-2 border">Nomor Antrian</th>
+                <th class="px-3 py-2 border">Status</th>
+                <th class="px-3 py-2 border">Aksi</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach ($jadwals as $j)
+            <tr>
+                <td class="px-3 py-2 border">{{ $loop->iteration }}</td>
+                <td class="px-3 py-2 border">{{ $j->tanggal }}</td>
+                <td class="px-3 py-2 border">{{ $j->nomor_antrian }}</td>
+                <td class="px-3 py-2 border">{{ ucfirst($j->status) }}</td>
+                <td class="px-3 py-2 border">
+                    <a href="{{ route('jadwal.show', $j->id) }}" class="text-blue-600 font-semibold">
+                        Lihat Detail
+                    </a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+
+    </table>
+
+</div>
 @endsection

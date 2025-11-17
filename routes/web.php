@@ -7,7 +7,8 @@ use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Operator\AntrianController;
 use App\Http\Controllers\Admin\PenggunaController;
-
+use App\Http\Controllers\Admin\BoothController;
+use App\Http\Controllers\Admin\PaketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // ⬇⬇ FIXED HERE
         Route::resource('pengguna', PenggunaController::class)->names('pengguna');
+        Route::resource('booth', BoothController::class)->names('booth');
+        Route::resource('paket', PaketController::class)->names('paket');
     });
 
 });

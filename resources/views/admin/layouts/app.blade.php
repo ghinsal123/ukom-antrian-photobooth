@@ -29,11 +29,11 @@
                 <i class="fas fa-home mr-2"></i> Dashboard
             </a>
 
-            <a href="/admin/booths" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/booths') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/booth" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/booth') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-camera mr-2"></i> Booth
             </a>
 
-            <a href="/admin/packages" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/packages') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/paket" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/paket') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-box mr-2"></i> Paket
             </a>
 

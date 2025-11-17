@@ -1,43 +1,66 @@
 @extends('Operator.layout')
 
 @section('content')
-<h2 class="text-xl font-bold mb-4">Daftar Antrian</h2>
+<div class="container mx-auto px-4">
 
-<a href="{{ route('operator.antrian.create') }}" class="bg-pink-500 text-white px-4 py-2 rounded">Tambah Antrian</a>
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Daftar Antrian</h2>
+        <a href="{{ route('operator.antrian.create') }}" 
+           class="bg-yellow-500 text-white font-semibold px-5 py-2 rounded-xl shadow-lg hover:bg-yellow-600 transition-all">
+           + Tambah Antrian
+        </a>
+    </div>
 
-<table class="min-w-full mt-4 bg-white shadow rounded">
-    <thead>
-        <tr class="bg-gray-200 text-left">
-            <th class="p-3">Nama</th>
-            <th class="p-3">Booth</th>
-            <th class="p-3">Paket</th>
-            <th class="p-3">Tanggal</th>
-            <th class="p-3">Status</th>
-            <th class="p-3">Aksi</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach ($antrian as $item)
-        <tr class="border-b">
-            <td class="p-3">{{ $item->pengguna->nama ?? '-' }}</td>
-            <td class="p-3">{{ $item->booth->nama_booth }}</td>
-            <td class="p-3">{{ $item->paket->nama_paket }}</td>
-            <td class="p-3">{{ $item->tanggal }}</td>
-            <td class="p-3 capitalize">{{ $item->status }}</td>
-            <td class="p-3 flex gap-2">
-
-                <a href="{{ route('operatorantrian.show', $item->id) }}" class="text-blue-600">Detail</a>
-                <a href="{{ route('operator.antrian.edit', $item->id) }}" class="text-yellow-600">Edit</a>
-
-                <form action="{{ route('operator.antrian.delete', $item->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button class="text-red-600">Hapus</button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+    <div class="overflow-x-auto">
+        <table class="table-auto w-full border-collapse rounded-3xl shadow-2xl overflow-hidden">
+            <thead class="bg-linear-to-r from-pink-300 to-pink-500 text-white">
+                <tr>
+                    <th class="px-6 py-3">Nama</th>
+                    <th class="px-6 py-3">Booth</th>
+                    <th class="px-6 py-3">Paket</th>
+                    <th class="px-6 py-3">Tanggal</th>
+                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($antrian as $item)
+                <tr class="bg-white hover:bg-pink-50 transition-all transform hover:scale-105 shadow-md hover:shadow-lg">
+                    <td class="px-4 py-3 font-medium text-pink-600">{{ $item->pengguna->nama ?? '-' }}</td>
+                    <td class="px-4 py-3 text-pink-500 font-semibold">{{ $item->booth->nama_booth }}</td>
+                    <td class="px-4 py-3 text-pink-500 font-semibold">{{ $item->paket->nama_paket }}</td>
+                    <td class="px-4 py-3 text-pink-500 font-semibold">{{ $item->tanggal }}</td>
+                    <td class="px-4 py-3 text-center">
+                        @if($item->status === 'selesai')
+                            <span class="bg-green-100 text-green-600 px-2 py-1 rounded-full text-sm font-semibold">Selesai</span>
+                        @elseif($item->status === 'dalam proses')
+                            <span class="bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full text-sm font-semibold">Proses</span>
+                        @else
+                            <span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-sm font-semibold">Batal</span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-3 text-center flex gap-2 justify-center">
+                        <a href="{{ route('operatorantrian.show', $item->id) }}" 
+                           class="bg-blue-500 text-white px-3 py-1 rounded-xl hover:bg-blue-600 shadow-md transition-all">
+                           Detail
+                        </a>
+                        <a href="{{ route('operator.antrian.edit', $item->id) }}" 
+                           class="bg-yellow-400 text-white px-3 py-1 rounded-xl hover:bg-yellow-500 shadow-md transition-all">
+                           Edit
+                        </a>
+                        <form action="{{ route('operator.antrian.delete', $item->id) }}" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                class="bg-red-500 text-white px-3 py-1 rounded-xl hover:bg-red-600 shadow-md transition-all">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection

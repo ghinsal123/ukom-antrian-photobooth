@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | FlashFrame</title>
-    @vite('resources/css/app.css')
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
 </head>
 
 <body class="bg-pink-50 min-h-screen flex items-center justify-center p-6">
@@ -12,12 +12,12 @@
     <div class="w-full max-w-md">
         <div class="relative p-10 bg-white rounded-3xl shadow-xl overflow-hidden">
 
-            {{-- Pastel Glow --}}
+            
             <div class="absolute inset-0 -z-10 bg-gradient-to-br from-pink-200/60 to-purple-200/60 blur-xl"></div>
 
-            {{-- Logo & Judul --}}
+            
             <div class="text-center mb-6">
-                <img src="{{ asset('images/logo.png') }}"
+                <img src="<?php echo e(asset('images/logo.png')); ?>"
                      alt="Logo"
                      class="w-32 h-32 mx-auto object-contain drop-shadow mb-2">
 
@@ -29,11 +29,11 @@
                 </p>
             </div>
 
-            {{-- Form Login --}}
-            <form action="{{ route('customer.login.submit') }}" method="POST" class="space-y-5 mt-6">
-                @csrf
+            
+            <form action="<?php echo e(route('customer.login.submit')); ?>" method="POST" class="space-y-5 mt-6">
+                <?php echo csrf_field(); ?>
 
-                {{-- Input Nama --}}
+                
                 <div>
                     <label class="block mb-1 font-semibold text-gray-700">Nama Lengkap</label>
                     
@@ -42,7 +42,7 @@
                         focus:border-pink-400 focus:ring-2 focus:ring-pink-400 outline-none transition">
                 </div>
 
-                {{-- Tombol Login --}}
+                
                 <button type="submit"
                     class="w-full py-3 font-semibold text-white rounded-xl shadow-md
                     bg-gradient-to-r from-pink-400 to-pink-500
@@ -57,3 +57,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\Users\USER\ukom-antrian-photobooth\resources\views/customer/login.blade.php ENDPATH**/ ?>

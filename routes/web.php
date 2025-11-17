@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
+use App\Http\Controllers\Customer\AntrianController;
+use App\Http\Controllers\Customer\DashboardController;
+
+
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,6 +59,16 @@ Route::prefix('operator')->name('operator.')->group(function () {
 | CUSTOMER
 |--------------------------------------------------------------------------
 */
+
+
+Route::get('/login', function () {
+    return redirect()->route('customer.login');
+})->name('login');
+
+Route::get('/', function () {
+    return redirect()->route('customer.login');
+});
+
 Route::prefix('customer')->name('customer.')->group(function () {
 
     Route::middleware('guest:customer')->group(function () {
@@ -60,14 +76,16 @@ Route::prefix('customer')->name('customer.')->group(function () {
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
-    // ⬅️ FIX: PAKAI "customer" bukan "auth:customer"
     Route::middleware('customer')->group(function () {
-        Route::get('dashboard', [CustomerLoginController::class, 'dashboard'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
         Route::get('antrian', fn () => view('Customer.antrian'))->name('antrian');
-        Route::get('activity/{id}', fn () => view('Customer.detail'))->name('activity.detail');
-        Route::get('activity/{id}/edit', fn () => view('Customer.edit'))->name('activity.edit');
-        Route::get('activity/{id}/delete', fn () => view('Customer.hapus'))->name('activity.delete');
+       Route::post('antrian/store', [AntrianController::class, 'store'])->name('antrian.store');
+
+        Route::get('activity/{id}', fn ($id) => view('Customer.detail', compact('id')))->name('activity.detail');
+        Route::get('activity/{id}/edit', fn ($id) => view('Customer.edit', compact('id')))->name('activity.edit');
+
+        Route::delete('activity/{id}/delete', [DashboardController::class, 'delete'])->name('activity.delete');
     });
 });

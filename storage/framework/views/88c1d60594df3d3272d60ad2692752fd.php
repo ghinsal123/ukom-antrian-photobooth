@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    @vite('resources/css/app.css')
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
 </head>
 
 <body class="bg-pink-50">
@@ -14,9 +14,9 @@
             <h1 class="text-2xl font-bold text-pink-400">PhotoBooth FlashFrame</h1>
 
             <div class="flex gap-6 items-center">
-                <a href="{{ route('customer.dashboard') }}" class="text-pink-400 font-semibold">Dashboard</a>
-                <a href="{{ route('customer.antrian') }}" class="text-gray-600 hover:text-pink-400">+ Antrian</a>
-                <a href="{{ route('customer.logout') }}" class="text-gray-600 hover:text-pink-400">Logout</a>
+                <a href="<?php echo e(route('customer.dashboard')); ?>" class="text-pink-400 font-semibold">Dashboard</a>
+                <a href="<?php echo e(route('customer.antrian')); ?>" class="text-gray-600 hover:text-pink-400">+ Antrian</a>
+                <a href="<?php echo e(route('customer.logout')); ?>" class="text-gray-600 hover:text-pink-400">Logout</a>
             </div>
         </div>
     </nav>
@@ -27,7 +27,7 @@
         <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
 
         <p class="text-lg text-gray-700 font-semibold mt-1 mb-6">
-            Halo {{ $nama }}, selamat datang kembali di dunia photogenic kamu! 
+            Halo <?php echo e($nama); ?>, selamat datang kembali di dunia photogenic kamu! 
         </p>
 
         
@@ -109,28 +109,30 @@
 
         <div class="bg-white p-6 rounded-xl shadow-sm space-y-6">
 
-            @forelse(($antrianku ?? []) as $item)
+            <?php $__empty_1 = true; $__currentLoopData = ($antrianku ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <div class="border-b pb-4">
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="font-semibold text-gray-800">
-                                {{ $item->nomor_antrian }} — {{ $nama }}
+                                <?php echo e($item->nomor_antrian); ?> — <?php echo e($nama); ?>
+
                             </p>
                             <p class="text-sm text-gray-500">
-                                Booth: {{ $item->booth_id }} • Status: {{ $item->status }}
+                                Booth: <?php echo e($item->booth_id); ?> • Status: <?php echo e($item->status); ?>
+
                             </p>
                         </div>
 
                         <div class="flex gap-4">
-                            <a href="{{ route('customer.activity.detail', $item->id) }}" class="text-blue-500">Detail</a>
-                            <a href="{{ route('customer.activity.edit', $item->id) }}" class="text-yellow-500">Edit</a>
-                            <a href="/customer/activity/{{ $item->id }}/delete" class="text-red-500">Delete</a>
+                            <a href="<?php echo e(route('customer.activity.detail', $item->id)); ?>" class="text-blue-500">Detail</a>
+                            <a href="<?php echo e(route('customer.activity.edit', $item->id)); ?>" class="text-yellow-500">Edit</a>
+                            <a href="/customer/activity/<?php echo e($item->id); ?>/delete" class="text-red-500">Delete</a>
                         </div>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <p class="text-gray-500 italic">Belum ada aktivitas antrian.</p>
-            @endforelse
+            <?php endif; ?>
 
         </div>
 
@@ -138,3 +140,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\Users\USER\ukom-antrian-photobooth\resources\views/customer/dashboard.blade.php ENDPATH**/ ?>

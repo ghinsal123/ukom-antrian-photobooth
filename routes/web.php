@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
+use App\Http\Controllers\Operator\AntrianController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,15 +40,39 @@ Route::prefix('admin')->name('admin.')->group(function () {
 */
 Route::prefix('operator')->name('operator.')->group(function () {
 
+    // Guest (belum login)
     Route::middleware('guest:operator')->group(function () {
         Route::get('login', [OperatorLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [OperatorLoginController::class, 'login'])->name('login.submit');
     });
 
+    // Sudah login
     Route::middleware('operator')->group(function () {
+
+        // DASHBOARD
         Route::get('dashboard', fn () => view('operator.dashboard'))->name('dashboard');
         Route::post('logout', [OperatorLoginController::class, 'logout'])->name('logout');
+
+        /*
+        |--------------------------------------------------------------------------
+        | ANTRIAN (CRUD)
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('antrian')->name('antrian.')->group(function () {
+
+            Route::get('/', [AntrianController::class, 'index'])->name('index');
+            Route::get('/create', [AntrianController::class, 'create'])->name('create');
+            Route::post('/store', [AntrianController::class, 'store'])->name('store');
+
+            Route::get('/show/{id}', [AntrianController::class, 'show'])->name('show');
+            Route::get('/edit/{id}', [AntrianController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [AntrianController::class, 'update'])->name('update');
+
+            Route::delete('/delete/{id}', [AntrianController::class, 'destroy'])->name('delete');
+        });
+
     });
+
 });
 
 /*

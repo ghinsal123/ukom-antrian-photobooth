@@ -28,30 +28,33 @@
         <h3 class="font-bold text-white">Selesai</h3>
         <p class="text-3xl font-bold mt-2 text-white">20</p>
     </div>
-
     <div class="bg-red-400 p-6 rounded-xl shadow-sm text-center">
         <h3 class="font-bold text-white">Pembatalan</h3>
         <p class="text-3xl font-bold mt-2 text-white">10</p>
     </div>
-</div>
-<!-- Container flex untuk diagram & booth -->
-<div class="flex flex-col md:flex-row gap-4 mb-8">
+    </div>
 
-    <!-- Diagram Lingkaran (Kiri) -->
+    <!-- diagram & booth -->
+    <div class="flex flex-col md:flex-row gap-4 mb-8">
+
+    <!-- Diagram Lingkaran -->
     <div class="bg-white p-3 rounded-xl shadow-sm w-full md:w-1/2">
         <h3 class="text-lg font-semibold mb-2">Distribusi Reservasi</h3>
         <canvas id="pieChart" width="200" height="200"></canvas>
     </div>
 
-    <!-- Booth Selector & Customer List (Kanan) -->
+    <!-- Booth Selector & Customer List -->
     <div class="bg-white p-4 rounded-xl shadow-sm w-full md:w-1/2">
-        <label for="boothSelect" class="block text-gray-700 font-semibold mb-2">Pilih Booth</label>
-        <select id="boothSelect" class="border border-gray-300 rounded p-2 w-full mb-4">
-            <option value="1">Booth 1</option>
-            <option value="2">Booth 2</option>
-            <option value="3">Booth 3</option>
-            <option value="4">Booth 4</option>
-            <option value="5">Booth 5</option>
+       <label for="boothSelect" class="block text-gray-700 font-semibold mb-2">Pilih Booth</label>
+        <select id="boothSelect" 
+            class="border border-gray-300 rounded-xl p-3 w-full mb-4 
+           bg-white shadow-sm focus:ring-2 focus:ring-pink-300 
+           focus:border-pink-400 focus:outline-none transition-all cursor-pointer">
+            <option value="1" class="text-gray-700 font-medium">Booth 1</option>
+            <option value="2" class="text-gray-700 font-medium">Booth 2</option>
+            <option value="3" class="text-gray-700 font-medium">Booth 3</option>
+            <option value="4" class="text-gray-700 font-medium">Booth 4</option>
+            <option value="5" class="text-gray-700 font-medium">Booth 5</option>
         </select>
 
         <!-- Daftar Customer -->

@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Auth\BaseLoginController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends BaseLoginController
 {
     public function showLogin()
     {
-        return view('admin.auth.login');
+        return view('admin.login.login');
     }
 
     public function login(Request $request)
@@ -18,12 +19,14 @@ class LoginController extends BaseLoginController
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['login' => 'Username atau password salah']);
+        return back()->withErrors([
+            'login' => 'Username atau password salah'
+        ]);
     }
 
     public function logout()
     {
-        auth()->logout();
+        Auth::guard('admin')->logout(); // FIX
         return redirect()->route('admin.login');
     }
 }

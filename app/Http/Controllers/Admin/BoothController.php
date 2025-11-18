@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class BoothController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $booths = Booth::all();
+        $query = Booth::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_booth', 'like', '%' . $request->search . '%')
+                  ->orWhere('status', 'like', '%' . $request->search . '%')
+                  ->orWhere('kapasitas', 'like', '%' . $request->search . '%');
+        }
+
+        $booths = $query->latest()->paginate(10);
+
         return view('admin.booth.index', compact('booths'));
     }
 
@@ -31,8 +40,7 @@ class BoothController extends Controller
 
         Booth::create($request->all());
 
-        return redirect()->route('admin.booth.index')
-                         ->with('success', 'Booth berhasil ditambahkan.');
+        return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -55,15 +63,13 @@ class BoothController extends Controller
 
         $booth->update($request->all());
 
-        return redirect()->route('admin.booth.index')
-                         ->with('success', 'Booth berhasil diperbarui.');
+        return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil diperbarui');
     }
 
     public function destroy($id)
     {
         Booth::destroy($id);
 
-        return redirect()->route('admin.booth.index')
-                         ->with('success', 'Booth berhasil dihapus.');
+        return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil dihapus');
     }
 }

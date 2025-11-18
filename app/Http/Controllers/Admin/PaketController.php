@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Storage;
 
 class PaketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pakets = Paket::all();
+        $query = Paket::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_paket', 'like', '%' . $request->search . '%')
+                  ->orWhere('harga', 'like', '%' . $request->search . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
+        }
+
+        $pakets = $query->latest()->paginate(10);
+
         return view('admin.paket.index', compact('pakets'));
     }
 
@@ -37,8 +46,7 @@ class PaketController extends Controller
 
         Paket::create($data);
 
-        return redirect()->route('admin.paket.index')
-                         ->with('success', 'Paket berhasil ditambahkan.');
+        return redirect()->route('admin.paket.index')->with('success', 'Paket berhasil ditambahkan');
     }
 
     public function show($id)
@@ -67,18 +75,15 @@ class PaketController extends Controller
         $data = $request->only(['nama_paket', 'harga', 'deskripsi']);
 
         if ($request->hasFile('gambar')) {
-            // hapus file lama
             if ($paket->gambar) {
                 Storage::disk('public')->delete($paket->gambar);
             }
-
             $data['gambar'] = $request->file('gambar')->store('paket', 'public');
         }
 
         $paket->update($data);
 
-        return redirect()->route('admin.paket.index')
-                         ->with('success', 'Paket berhasil diperbarui.');
+        return redirect()->route('admin.paket.index')->with('success', 'Paket berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -91,7 +96,6 @@ class PaketController extends Controller
 
         $paket->delete();
 
-        return redirect()->route('admin.paket.index')
-                         ->with('success', 'Paket berhasil dihapus.');
+        return redirect()->route('admin.paket.index')->with('success', 'Paket berhasil dihapus');
     }
 }

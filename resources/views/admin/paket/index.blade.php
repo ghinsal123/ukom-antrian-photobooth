@@ -14,6 +14,25 @@
         </a>
     </div>
 
+    {{-- SEARCH --}}
+    <form method="GET" action="{{ route('admin.paket.index') }}" class="mb-4 flex gap-2 items-center" id="searchForm">
+        <input type="text" name="search" value="{{ request('search') }}"
+            placeholder="Cari nama paket..."
+            class="w-64 border rounded-xl px-3 py-2"
+            oninput="handleSearch(this)">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl">
+            Cari
+        </button>
+    </form>
+
+    <script>
+        function handleSearch(input) {
+            if (input.value === "") {
+                document.getElementById("searchForm").submit();
+            }
+        }
+    </script>
+
     <table class="w-full border-collapse">
         <thead>
             <tr class="bg-pink-100 text-left">
@@ -34,20 +53,15 @@
                 <td class="p-3">{{ Str::limit($paket->deskripsi, 40) }}</td>
 
                 <td class="p-3 flex gap-2">
-                    <a href="{{ route('admin.paket.show', $paket->id) }}" 
-                       class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                    <a href="{{ route('admin.paket.show', $paket->id) }}" class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
                         Detail
                     </a>
-
-                    <a href="{{ route('admin.paket.edit', $paket->id) }}" 
-                       class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    <a href="{{ route('admin.paket.edit', $paket->id) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         Edit
                     </a>
-
                     <form action="{{ route('admin.paket.destroy', $paket->id) }}" method="POST"
                           onsubmit="return confirm('Yakin ingin menghapus paket?')">
-                        @csrf
-                        @method('DELETE')
+                        @csrf @method('DELETE')
                         <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
                             Hapus
                         </button>

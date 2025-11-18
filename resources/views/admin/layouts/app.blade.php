@@ -11,7 +11,7 @@
 <body class="flex bg-pink-50">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 min-h-screen bg-white shadow-xl p-6 relative overflow-hidden">
+    <aside class="w-64 min-h-screen bg-white shadow-xl p-6 relative flex flex-col">
 
         <!-- Glow Background -->
         <div class="absolute inset-0 -z-10 opacity-50 blur-2xl bg-linear-to-br from-[#FAD1E6] to-[#E5D4FF]"></div>
@@ -23,8 +23,7 @@
         </div>
 
         <!-- MENU -->
-        <nav class="space-y-2 font-medium">
-
+        <nav class="space-y-2 font-medium flex-1"> <!-- flex-1 biar menu tetap ke atas -->
             <a href="/admin/dashboard" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/dashboard') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-home mr-2"></i> Dashboard
             </a>
@@ -41,19 +40,19 @@
                 <i class="fas fa-user mr-2"></i> Pengguna
             </a>
 
-            <a href="/admin/reports" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/reports') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/log" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/log') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-file-alt mr-2"></i> Laporan
             </a>
-
-            <!-- LOGOUT BUTTON -->
-            <form action="{{ route('admin.logout') }}" method="POST" class="pt-3">
-                @csrf
-                <button class="block w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                </button>
-            </form>
-
         </nav>
+
+        <!-- LOGOUT BUTTON -->
+        <form action="{{ route('admin.logout') }}" method="POST" class="pt-4 pb-8">
+            @csrf
+            <button class="block w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </button>
+        </form>
+
     </aside>
 
     <!-- CONTENT -->

@@ -14,6 +14,25 @@
         </a>
     </div>
 
+    {{-- SEARCH --}}
+    <form method="GET" action="{{ route('admin.booth.index') }}" class="mb-4 flex gap-2 items-center" id="searchForm">
+        <input type="text" name="search" value="{{ request('search') }}"
+            placeholder="Cari nama booth..."
+            class="w-64 border rounded-xl px-3 py-2"
+            oninput="handleSearch(this)">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl">
+            Cari
+        </button>
+    </form>
+
+    <script>
+        function handleSearch(input) {
+            if (input.value === "") {
+                document.getElementById("searchForm").submit();
+            }
+        }
+    </script>
+
     <table class="w-full border-collapse">
         <thead>
             <tr class="bg-pink-100 text-left">
@@ -34,7 +53,7 @@
                 <td class="p-3">{{ $booth->nama_booth }}</td>
                 <td class="p-3">{{ $booth->kapasitas }}</td>
                 <td class="p-3">
-                    <span class="px-2 py-1 rounded-lg text-white
+                    <span class="px-3 py-1 rounded-lg text-sm text-white
                         {{ $booth->status == 'kosong' ? 'bg-green-500' : 'bg-red-500' }}">
                         {{ ucfirst($booth->status) }}
                     </span>
@@ -43,15 +62,12 @@
                 <td class="p-3">{{ $booth->jam_selesai ?? '-' }}</td>
 
                 <td class="p-3 flex gap-2">
-                    <a href="{{ route('admin.booth.edit', $booth->id) }}" 
-                       class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                    <a href="{{ route('admin.booth.edit', $booth->id) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         Edit
                     </a>
-
                     <form action="{{ route('admin.booth.destroy', $booth->id) }}" method="POST"
                           onsubmit="return confirm('Yakin ingin menghapus booth?')">
-                        @csrf
-                        @method('DELETE')
+                        @csrf @method('DELETE')
                         <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
                             Hapus
                         </button>
@@ -60,7 +76,7 @@
             </tr>
             @endforeach
         </tbody>
-
     </table>
+
 </div>
 @endsection

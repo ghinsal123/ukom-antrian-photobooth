@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Operator\AntrianController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\BoothController;
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\PaketController;
 
 Route::get('/', function () {
@@ -34,6 +35,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('pengguna', PenggunaController::class)->names('pengguna');
         Route::resource('booth', BoothController::class)->names('booth');
         Route::resource('paket', PaketController::class)->names('paket');
+        Route::resource('log', LogController::class)->names('log');
     });
 
 });

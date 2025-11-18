@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow">
+    
     <div class="flex justify-between items-center mb-5">
         <h2 class="text-2xl font-semibold text-gray-700">Daftar Pengguna</h2>
 
@@ -12,6 +13,24 @@
             + Tambah Pengguna
         </a>
     </div>
+    <form method="GET" action="{{ route('admin.pengguna.index') }}" class="mb-4 flex gap-2 items-center" id="searchForm">
+        <input type="text" name="search" value="{{ request('search') }}"
+            placeholder="Cari nama / telepon / role..."
+            class="w-64 border rounded-xl px-3 py-2"
+            oninput="handleSearch(this)">
+
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl">
+            Cari
+        </button>
+    </form>
+
+    <script>
+        function handleSearch(input) {
+            if (input.value === "") {
+                document.getElementById("searchForm").submit();
+            }
+        }
+    </script>
 
     <table class="w-full border-collapse">
         <thead>

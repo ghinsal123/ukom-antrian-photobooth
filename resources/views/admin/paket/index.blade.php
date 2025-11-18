@@ -20,7 +20,6 @@
                 <th class="p-3">#</th>
                 <th class="p-3">Nama Paket</th>
                 <th class="p-3">Harga</th>
-                <th class="p-3">Gambar</th>
                 <th class="p-3">Deskripsi</th>
                 <th class="p-3">Aksi</th>
             </tr>
@@ -32,18 +31,14 @@
                 <td class="p-3">{{ $index + 1 }}</td>
                 <td class="p-3">{{ $paket->nama_paket }}</td>
                 <td class="p-3">Rp {{ number_format($paket->harga, 0, ',', '.') }}</td>
-
-                <td class="p-3">
-                    @if($paket->gambar)
-                        <img src="{{ asset('storage/'.$paket->gambar) }}" class="w-16 h-16 rounded-lg object-cover">
-                    @else
-                        <span class="text-gray-400 italic">Tidak ada</span>
-                    @endif
-                </td>
-
-                <td class="p-3">{{ $paket->deskripsi ?? '-' }}</td>
+                <td class="p-3">{{ Str::limit($paket->deskripsi, 40) }}</td>
 
                 <td class="p-3 flex gap-2">
+                    <a href="{{ route('admin.paket.show', $paket->id) }}" 
+                       class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                        Detail
+                    </a>
+
                     <a href="{{ route('admin.paket.edit', $paket->id) }}" 
                        class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         Edit

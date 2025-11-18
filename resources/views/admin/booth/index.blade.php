@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow">
+
     <div class="flex justify-between items-center mb-5">
         <h2 class="text-2xl font-semibold text-gray-700">Data Booth</h2>
 
@@ -25,25 +26,28 @@
                 <th class="p-3">Aksi</th>
             </tr>
         </thead>
+
         <tbody>
-            @foreach($booth as $index => $booth)
+            @foreach($booths as $index => $booth)
             <tr class="border-b hover:bg-pink-50">
                 <td class="p-3">{{ $index + 1 }}</td>
                 <td class="p-3">{{ $booth->nama_booth }}</td>
                 <td class="p-3">{{ $booth->kapasitas }}</td>
                 <td class="p-3">
-                    <span class="px-3 py-1 rounded-full text-sm
-                        {{ $booth->status == 'tersedia' ? 'bg-green-200 text-green-600' : 'bg-red-200 text-red-600' }}">
+                    <span class="px-2 py-1 rounded-lg text-white
+                        {{ $booth->status == 'kosong' ? 'bg-green-500' : 'bg-red-500' }}">
                         {{ ucfirst($booth->status) }}
                     </span>
                 </td>
-                <td class="p-3">{{ $booth->jam_mulai }}</td>
-                <td class="p-3">{{ $booth->jam_selesai }}</td>
+                <td class="p-3">{{ $booth->jam_mulai ?? '-' }}</td>
+                <td class="p-3">{{ $booth->jam_selesai ?? '-' }}</td>
+
                 <td class="p-3 flex gap-2">
                     <a href="{{ route('admin.booth.edit', $booth->id) }}" 
                        class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         Edit
                     </a>
+
                     <form action="{{ route('admin.booth.destroy', $booth->id) }}" method="POST"
                           onsubmit="return confirm('Yakin ingin menghapus booth?')">
                         @csrf
@@ -56,6 +60,7 @@
             </tr>
             @endforeach
         </tbody>
+
     </table>
 </div>
 @endsection

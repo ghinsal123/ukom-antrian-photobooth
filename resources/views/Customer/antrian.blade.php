@@ -17,13 +17,12 @@
                 <a href="/customer/dashboard" class="text-gray-600 hover:text-pink-400">Dashboard</a>
                 <a href="/customer/antrian" class="text-pink-400 font-semibold">+ Antrian</a>
 
-                <!-- Logout -->
                 <a href="#"
-                   onclick="event.preventDefault(); 
-                   if (confirm('Apakah Anda yakin ingin logout?')) {
+                    onclick="event.preventDefault(); 
+                    if (confirm('Apakah Anda yakin ingin logout?')) {
                         document.getElementById('logout-form').submit();
-                   }"
-                   class="text-gray-600 hover:text-pink-400">
+                    }"
+                    class="text-gray-600 hover:text-pink-400">
                     Logout
                 </a>
 

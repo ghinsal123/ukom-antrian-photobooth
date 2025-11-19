@@ -27,7 +27,7 @@
         <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
 
         <p class="text-lg text-gray-700 font-semibold mt-1 mb-6">
-            Halo <?php echo e($nama); ?>, selamat datang kembali di dunia photogenic kamu! 
+            Halo <?php echo e($nama); ?>, selamat datang di dunia photogenic kamu! 
         </p>
 
         

@@ -9,12 +9,13 @@ class Antrian extends Model
     protected $table = 'antrian';
 
     protected $fillable = [
-        'pengguna_id',
-        'booth_id',
-        'paket_id',
-        'nomor_antrian',
-        'tanggal',
-        'status',
-        'catatan'
-    ];
+    'pengguna_id',
+    'booth_id',
+    'paket_id',
+    'nomor_antrian',
+    'tanggal',
+    'status',
+    'catatan'
+];
+
 }

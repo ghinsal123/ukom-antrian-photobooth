@@ -38,7 +38,8 @@
         <h2 class="text-3xl font-bold text-gray-800 mb-8">Form Tambah Antrian</h2>
 
         <div class="bg-white p-8 rounded-xl shadow-sm">
-            <form action="<?php echo e(route('customer.antrian.store')); ?>" method="POST">
+            <form action="<?php echo e(route('customer.antrian.submit')); ?>" method="POST">
+
                 <?php echo csrf_field(); ?>
 
                 <div class="space-y-6">

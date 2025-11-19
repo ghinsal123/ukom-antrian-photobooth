@@ -45,7 +45,7 @@
         </thead>
 
         <tbody>
-            @foreach($booths as $index => $booth)
+            @foreach($booth as $index => $booth)
             <tr class="border-b hover:bg-pink-50">
                 <td class="p-3">{{ $index + 1 }}</td>
 
@@ -58,7 +58,7 @@
                 {{-- GAMBAR --}}
                 <td class="p-3">
                     @if($booth->gambar)
-                        <img src="{{ asset('storage/' . $booth->gambar) }}" class="w-16 h-16 rounded-lg object-cover">
+                        <img src="{{ asset('public/booth/' . $booth->gambar) }}" class="w-16 h-16 object-cover rounded-lg">
                     @else
                         <span class="text-gray-400">Tidak ada</span>
                     @endif

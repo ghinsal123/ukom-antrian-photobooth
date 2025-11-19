@@ -1,139 +1,139 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard Customer</title>
     <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
 </head>
 
 <body class="bg-pink-50">
+
+    
     <nav class="bg-white shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            
             <h1 class="text-2xl font-bold text-pink-400">PhotoBooth FlashFrame</h1>
 
             <div class="flex gap-6 items-center">
-                <a href="<?php echo e(route('customer.dashboard')); ?>" class="text-pink-400 font-semibold">Dashboard</a>
-                <a href="<?php echo e(route('customer.antrian')); ?>" class="text-gray-600 hover:text-pink-400">+ Antrian</a>
-                <a href="<?php echo e(route('customer.logout')); ?>" class="text-gray-600 hover:text-pink-400">Logout</a>
+                <a href="/customer/dashboard" class="text-pink-400 font-semibold">Dashboard</a>
+                <a href="/customer/antrian" class="text-gray-600 hover:text-pink-400">+ Antrian</a>
+
+                <a href="#"
+                    onclick="event.preventDefault(); 
+                    if (confirm('Yakin ingin logout?')) {
+                        document.getElementById('logout-form').submit();
+                    }"
+                    class="text-gray-600 hover:text-pink-400">
+                    Logout
+                </a>
+
+                <form id="logout-form" action="<?php echo e(route('customer.logout')); ?>" method="POST" class="hidden">
+                    <?php echo csrf_field(); ?>
+                </form>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto px-4 py-10">
 
-    
-        <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
-
-        <p class="text-lg text-gray-700 font-semibold mt-1 mb-6">
-            Halo <?php echo e($nama); ?>, selamat datang di dunia photogenic kamu! 
-        </p>
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Dashboard Customer</h2>
 
         
-        <h3 class="text-2xl font-bold text-gray-800 mb-4">Antrian Per Booth</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-
-            
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="text-xl font-bold text-pink-500 mb-4">Booth Vintage</h4>
-                <div class="space-y-3">
-                    <div class="flex justify-between border-b pb-2">
-                        <span class="font-semibold text-gray-800">VT001 — Sarah</span>
-                        <span class="text-gray-500 text-sm">Menunggu</span>
-                    </div>
-
-                    <div class="flex justify-between border-b pb-2">
-                        <span class="font-semibold text-gray-800">VT002 — Andi</span>
-                        <span class="text-gray-500 text-sm">Menunggu</span>
-                    </div>
-                </div>
-            </div>
-
-        
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="text-xl font-bold text-pink-500 mb-4">Booth Classic</h4>
-                <div class="space-y-3">
-                    <div class="flex justify-between border-b pb-2">
-                        <span class="font-semibold text-gray-800">CL001 — Bella</span>
-                        <span class="text-gray-500 text-sm">Sedang Foto</span>
-                    </div>
-
-                    <div class="flex justify-between border-b pb-2">
-                        <span class="font-semibold text-gray-800">CL002 — Roni</span>
-                        <span class="text-gray-500 text-sm">Menunggu</span>
-                    </div>
-                </div>
-            </div>
-
-         
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="text-xl font-bold text-pink-500 mb-4">Booth Minimal</h4>
-                <div class="space-y-3">
-                    <div class="flex justify-between border-b pb-2">
-                        <span class="font-semibold text-gray-800">MN001 — Kevin</span>
-                        <span class="text-gray-500 text-sm">Menunggu</span>
-                    </div>
-                    <p class="text-gray-400 text-sm italic mt-2">Belum ada antrian lain</p>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="text-xl font-bold text-pink-500 mb-4">Booth Modern</h4>
-                <div class="space-y-3">
-                    <p class="text-gray-400 text-sm italic mt-2">Belum ada antrian</p>
-                </div>
-            </div>
-
-       
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="text-xl font-bold text-pink-500 mb-4">Booth Neutral</h4>
-                <div class="space-y-3">
-                    <p class="text-gray-400 text-sm italic mt-2">Belum ada antrian</p>
-                </div>
-            </div>
-
-        
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h4 class="text-xl font-bold text-pink-500 mb-4">Booth Bright</h4>
-                <div class="space-y-3">
-                    <p class="text-gray-400 text-sm italic mt-2">Belum ada antrian</p>
-                </div>
-            </div>
-
+        <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+            <h3 class="text-xl font-bold text-gray-700 mb-2">Halo, <?php echo e($nama); ?> 👋</h3>
+            <p class="text-gray-600">Berikut antrian kamu dan daftar antrian pada tiap booth.</p>
         </div>
 
-     
-        <h3 class="text-2xl font-bold text-gray-800 mb-4">Aktivitas Kamu</h3>
 
-        <div class="bg-white p-6 rounded-xl shadow-sm space-y-6">
+        
+        <div class="bg-white p-8 rounded-xl shadow-sm mb-12">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-6">Antrian Saya</h3>
 
-            <?php $__empty_1 = true; $__currentLoopData = ($antrianku ?? []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                <div class="border-b pb-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="font-semibold text-gray-800">
-                                <?php echo e($item->nomor_antrian); ?> — <?php echo e($nama); ?>
+            <?php if($antrianku->isEmpty()): ?>
+                <p class="text-gray-600 text-center py-10">Belum ada antrian yang kamu buat.</p>
+            <?php else: ?>
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-pink-200 text-gray-700">
+                            <th class="p-3">Nomor</th>
+                            <th class="p-3">Paket</th>
+                            <th class="p-3">Booth</th>
+                            <th class="p-3">Tanggal</th>
+                            <th class="p-3">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                            </p>
-                            <p class="text-sm text-gray-500">
-                                Booth: <?php echo e($item->booth_id); ?> • Status: <?php echo e($item->status); ?>
+                        <?php $__currentLoopData = $antrianku; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <tr class="border-t">
+                                <td class="p-3 font-semibold"><?php echo e($item->nomor_antrian); ?></td>
+                                <td class="p-3"><?php echo e($item->paket->nama_paket ?? '-'); ?></td>
+                                <td class="p-3"><?php echo e($item->booth->nama_booth ?? '-'); ?></td>
+                                <td class="p-3"><?php echo e($item->tanggal); ?></td>
+                                <td class="p-3">
+                                    <span class="px-3 py-1 rounded-full text-white 
+                                        <?php if($item->status == 'menunggu'): ?> bg-yellow-500 
+                                        <?php elseif($item->status == 'diproses'): ?> bg-blue-500 
+                                        <?php else: ?> bg-green-500 <?php endif; ?>">
+                                        <?php echo e(ucfirst($item->status)); ?>
 
-                            </p>
-                        </div>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-                        <div class="flex gap-4">
-                            <a href="<?php echo e(route('customer.activity.detail', $item->id)); ?>" class="text-blue-500">Detail</a>
-                            <a href="<?php echo e(route('customer.activity.edit', $item->id)); ?>" class="text-yellow-500">Edit</a>
-                            <a href="/customer/activity/<?php echo e($item->id); ?>/delete" class="text-red-500">Delete</a>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                <p class="text-gray-500 italic">Belum ada aktivitas antrian.</p>
+                    </tbody>
+                </table>
             <?php endif; ?>
+        </div>
 
+
+
+        
+        <div class="bg-white p-8 rounded-xl shadow-sm">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-6">Antrian Per Booth</h3>
+
+            <?php $__currentLoopData = $booths; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booth): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="mb-10">
+                    <h4 class="text-xl font-bold text-pink-500 mb-3"><?php echo e($booth->nama_booth); ?></h4>
+
+                    <?php if($antrianBooth[$booth->id]->isEmpty()): ?>
+                        <p class="text-gray-500 italic">Belum ada antrian di booth ini.</p>
+                    <?php else: ?>
+                        <table class="w-full text-left border-collapse mb-6">
+                            <thead>
+                                <tr class="bg-gray-200 text-gray-700">
+                                    <th class="p-3">Nomor</th>
+                                    <th class="p-3">Nama Pengguna</th>
+                                    <th class="p-3">Paket</th>
+                                    <th class="p-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $__currentLoopData = $antrianBooth[$booth->id]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <tr class="border-t">
+                                        <td class="p-3 font-semibold"><?php echo e($row->nomor_antrian); ?></td>
+                                        <td class="p-3"><?php echo e($row->pengguna->nama_pengguna ?? '-'); ?></td>
+                                        <td class="p-3"><?php echo e($row->paket->nama_paket ?? '-'); ?></td>
+                                        <td class="p-3">
+                                            <span class="px-3 py-1 rounded-full text-white 
+                                                <?php if($row->status == 'menunggu'): ?> bg-yellow-500
+                                                <?php elseif($row->status == 'diproses'): ?> bg-blue-500
+                                                <?php else: ?> bg-green-500
+                                                <?php endif; ?>">
+                                                <?php echo e(ucfirst($row->status)); ?>
+
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+
+                </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
 
     </div>

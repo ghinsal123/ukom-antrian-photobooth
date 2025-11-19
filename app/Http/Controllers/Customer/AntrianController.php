@@ -3,45 +3,44 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Antrian;
 use Illuminate\Http\Request;
+use App\Models\Antrian;
 
 class AntrianController extends Controller
 {
-    public function store(Request $request)
+    public function submit(Request $request)
     {
-        // Validasi input
-        $validatedData = $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
-            'no_telp' => 'required|string|max:20',
-            'paket_id' => 'required|integer',
+        $request->validate([
             'booth_id' => 'required|integer',
-            'catatan' => 'nullable|string'
+            'paket_id' => 'required|integer',
+            'catatan'  => 'nullable|string'
         ]);
 
-        // Pastikan user login
-        if (!session()->has('customer_id')) {
-            return redirect()->route('customer.login')
-                ->with('error', 'Sesi Anda berakhir. Silakan login kembali.');
+        // FIX ⛑
+        $customerId = session('customer_id');
+
+        if (!$customerId) {
+            return redirect()->route('customer.login');
         }
 
-        // Generate nomor antrian
-        $nomor = now()->format('dmy') . '-' . rand(100, 999);
-
-        // Simpan database
         Antrian::create([
-            'pengguna_id'   => session('customer_id'),
-            'nama_lengkap'  => $request->nama_lengkap,
-            'no_telp'       => $request->no_telp,
+            'pengguna_id'   => $customerId,
             'booth_id'      => $request->booth_id,
             'paket_id'      => $request->paket_id,
-            'nomor_antrian' => $nomor,
-            'tanggal'       => now(),
+            'nomor_antrian' => $this->generateNomorAntrian(),
+            'tanggal'       => now()->format('Y-m-d'),
             'status'        => 'menunggu',
-            'catatan'       => $request->catatan
+            'catatan'       => $request->catatan,
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', "Antrian berhasil! Nomor Anda: $nomor");
+            ->with('success', 'Antrian berhasil dibuat!');
+    }
+
+    private function generateNomorAntrian()
+    {
+        $last = Antrian::orderBy('id', 'desc')->first();
+        $next = $last ? $last->id + 1 : 1;
+        return now()->format('dmy') . '-' . str_pad($next, 3, '0', STR_PAD_LEFT);
     }
 }

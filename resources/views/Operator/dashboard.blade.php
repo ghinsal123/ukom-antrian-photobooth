@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="bg-pink-50">
-<h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Operator</h2>
+<h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
 
 <!-- Tanggal / Jadwal -->
     <div class="mb-6">

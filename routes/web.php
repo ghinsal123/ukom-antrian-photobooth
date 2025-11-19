@@ -10,7 +10,10 @@ use App\Http\Controllers\Operator\JadwalController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\BoothController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Operator\LogController as OperatorLogController;
 use App\Http\Controllers\Admin\PaketController;
+use App\Http\Controllers\Operator\BoothController as OperatorBoothController;
+use App\Http\Controllers\Operator\PaketController as OperatorPaketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -84,12 +87,18 @@ Route::prefix('operator')->name('operator.')->group(function () {
         Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.show');
 
         // Booth
-        Route::get('/booth', [BoothController::class, 'index'])->name('operator.booth.index');
-        Route::get('/booth/{id}', [BoothController::class, 'show'])->name('operator.booth.show');
+        Route::get('/booth', [OperatorBoothController::class, 'index'])->name('booth.index');
+        Route::get('/booth/{id}', [OperatorBoothController::class, 'show'])->name('booth.show');
 
         // Paket
-        Route::get('/paket', [PaketController::class, 'index'])->name('operator.paket.index');
-        Route::get('/paket/{id}', [PaketController::class, 'show'])->name('operator.paket.show');
+        Route::get('/paket', [OperatorPaketController::class, 'index'])->name('paket.index');
+        Route::get('/paket/{id}', [OperatorPaketController::class, 'show'])->name('paket.show');
+
+        // Logs
+        Route::get('/laporan', [OperatorLogController::class, 'index'])
+            ->name('log.index')
+            ->middleware('operator'); 
+
     });
 
 });

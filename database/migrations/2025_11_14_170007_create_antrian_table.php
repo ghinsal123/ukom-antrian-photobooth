@@ -6,27 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('antrian', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
-            $table->foreignId('booth_id')->constrained('booth')->onDelete('cascade');
-            $table->foreignId('paket_id')->constrained('paket')->onDelete('cascade');
+
+            $table->unsignedBigInteger('pengguna_id');
+            $table->unsignedBigInteger('booth_id');
+            $table->unsignedBigInteger('paket_id');
+
             $table->string('nomor_antrian')->unique();
             $table->date('tanggal');
             $table->enum('status', ['menunggu', 'proses', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->text('catatan')->nullable();
             $table->timestamps();
+
+            $table->foreign('pengguna_id')->references('id')->on('pengguna')->onDelete('cascade');
+            $table->foreign('booth_id')->references('id')->on('booth')->onDelete('cascade');
+            $table->foreign('paket_id')->references('id')->on('paket')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('antrian');

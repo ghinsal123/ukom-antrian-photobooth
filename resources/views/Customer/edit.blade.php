@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Antrian</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+       @vite('resources/css/app.css')
 </head>
 
 <body class="bg-pink-50">
-
     <div class="max-w-xl mx-auto px-4 py-10">
-
         <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Antrian</h1>
-
         <div class="bg-white rounded-xl shadow p-6 space-y-5">
 
             <label class="block">

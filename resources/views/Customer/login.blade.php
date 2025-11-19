@@ -12,10 +12,10 @@
     <div class="w-full max-w-md">
         <div class="relative p-10 bg-white rounded-3xl shadow-xl overflow-hidden">
 
-            {{-- Glow Pastel Background --}}
+            {{-- Pastel Glow --}}
             <div class="absolute inset-0 -z-10 bg-gradient-to-br from-pink-200/60 to-purple-200/60 blur-xl"></div>
 
-            {{-- Logo + Title --}}
+            {{-- Logo & Judul --}}
             <div class="text-center mb-6">
                 <img src="{{ asset('images/logo.png') }}"
                      alt="Logo"
@@ -29,11 +29,11 @@
                 </p>
             </div>
 
-            {{-- Form --}}
+            {{-- Form Login --}}
             <form action="{{ route('customer.login.submit') }}" method="POST" class="space-y-5 mt-6">
                 @csrf
 
-                {{-- Nama Lengkap --}}
+                {{-- Input Nama --}}
                 <div>
                     <label class="block mb-1 font-semibold text-gray-700">Nama Lengkap</label>
                     
@@ -42,7 +42,7 @@
                         focus:border-pink-400 focus:ring-2 focus:ring-pink-400 outline-none transition">
                 </div>
 
-                {{-- Button --}}
+                {{-- Tombol Login --}}
                 <button type="submit"
                     class="w-full py-3 font-semibold text-white rounded-xl shadow-md
                     bg-gradient-to-r from-pink-400 to-pink-500

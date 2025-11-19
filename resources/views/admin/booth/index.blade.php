@@ -39,9 +39,7 @@
                 <th class="p-3">#</th>
                 <th class="p-3">Nama Booth</th>
                 <th class="p-3">Kapasitas</th>
-                <th class="p-3">Status</th>
-                <th class="p-3">Jam Mulai</th>
-                <th class="p-3">Jam Selesai</th>
+                <th class="p-3">Gambar</th>
                 <th class="p-3">Aksi</th>
             </tr>
         </thead>
@@ -50,21 +48,28 @@
             @foreach($booths as $index => $booth)
             <tr class="border-b hover:bg-pink-50">
                 <td class="p-3">{{ $index + 1 }}</td>
-                <td class="p-3">{{ $booth->nama_booth }}</td>
-                <td class="p-3">{{ $booth->kapasitas }}</td>
-                <td class="p-3">
-                    <span class="px-3 py-1 rounded-lg text-sm text-white
-                        {{ $booth->status == 'kosong' ? 'bg-green-500' : 'bg-red-500' }}">
-                        {{ ucfirst($booth->status) }}
-                    </span>
-                </td>
-                <td class="p-3">{{ $booth->jam_mulai ?? '-' }}</td>
-                <td class="p-3">{{ $booth->jam_selesai ?? '-' }}</td>
 
+                {{-- NAMA --}}
+                <td class="p-3">{{ $booth->nama_booth }}</td>
+
+                {{-- KAPASITAS --}}
+                <td class="p-3">{{ $booth->kapasitas }}</td>
+
+                {{-- GAMBAR --}}
+                <td class="p-3">
+                    @if($booth->gambar)
+                        <img src="{{ asset('storage/' . $booth->gambar) }}" class="w-16 h-16 rounded-lg object-cover">
+                    @else
+                        <span class="text-gray-400">Tidak ada</span>
+                    @endif
+                </td>
+
+                {{-- AKSI --}}
                 <td class="p-3 flex gap-2">
                     <a href="{{ route('admin.booth.edit', $booth->id) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         Edit
                     </a>
+
                     <form action="{{ route('admin.booth.destroy', $booth->id) }}" method="POST"
                           onsubmit="return confirm('Yakin ingin menghapus booth?')">
                         @csrf @method('DELETE')

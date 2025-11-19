@@ -11,8 +11,6 @@ class Booth extends Model
     protected $fillable = [
         'nama_booth',
         'kapasitas',
-        'status',
-        'jam_mulai',
-        'jam_selesai',
+        'gambar',
     ];
 }

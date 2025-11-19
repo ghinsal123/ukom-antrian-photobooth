@@ -19,7 +19,6 @@ class LoginController extends Controller
             'full_name' => 'required|string|max:255'
         ]);
 
-        // Cek user atau buat otomatis
         $user = Pengguna::firstOrCreate(
             [
                 'nama_pengguna' => $request->full_name,
@@ -30,7 +29,6 @@ class LoginController extends Controller
             ]
         );
 
-        // simpan sesi
         session([
             'customer_id' => $user->id,
             'customer_name' => $user->nama_pengguna

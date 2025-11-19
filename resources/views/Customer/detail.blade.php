@@ -5,27 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Reservasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+       @vite('resources/css/app.css')
 </head>
 
 <body class="bg-pink-50">
 
-    <!-- Background Blur -->
+   
     <div class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"></div>
-
-    <!-- Modal Card -->
     <div class="fixed inset-0 flex items-center justify-center px-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative">
-
-            <!-- Tombol Close -->
             <a href="{{ route('customer.dashboard') }}"
                 class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold">
                 ×
             </a>
 
             <h2 class="text-xl font-bold text-gray-800 mb-4">Detail Reservasi</h2>
-
-            <!-- Nomor Antrian -->
             <div class="bg-pink-100 border-l-4 border-pink-400 p-3 rounded-lg mb-5">
                 <p class="text-gray-600 text-sm">Nomor Antrian</p>
                 <p class="text-lg font-bold text-pink-600">
@@ -33,7 +27,6 @@
                 </p>
             </div>
 
-            <!-- INFORMASI -->
             <div class="space-y-3">
 
                 <div class="flex justify-between">
@@ -81,8 +74,6 @@
                 </div>
 
             </div>
-
-            <!-- Tombol Kembali -->
             <a href="{{ route('customer.dashboard') }}"
                 class="block text-center bg-pink-400 hover:bg-pink-500 text-white px-4 py-2 rounded-xl mt-6">
                 Kembali

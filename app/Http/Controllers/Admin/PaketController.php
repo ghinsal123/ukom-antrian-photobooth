@@ -35,7 +35,7 @@ class PaketController extends Controller
             'nama_paket' => 'required|string|max:255',
             'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
         ]);
 
         $data = $request->only(['nama_paket', 'harga', 'deskripsi']);

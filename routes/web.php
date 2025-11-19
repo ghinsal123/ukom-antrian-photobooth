@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
-use App\Http\Controllers\Operator\AntrianController;
-use App\Http\Controllers\Operator\JadwalController;
+use App\Http\Controllers\Operator\AntrianController as OperatorAntrianController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\BoothController;
 use App\Http\Controllers\Admin\LogController;
@@ -14,6 +13,8 @@ use App\Http\Controllers\Operator\LogController as OperatorLogController;
 use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Operator\BoothController as OperatorBoothController;
 use App\Http\Controllers\Operator\PaketController as OperatorPaketController;
+use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
+use App\Http\Controllers\Customer\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -71,15 +72,15 @@ Route::prefix('operator')->name('operator.')->group(function () {
         */
         Route::prefix('antrian')->name('antrian.')->group(function () {
 
-            Route::get('/', [AntrianController::class, 'index'])->name('index');
-            Route::get('/create', [AntrianController::class, 'create'])->name('create');
-            Route::post('/store', [AntrianController::class, 'store'])->name('store');
+            Route::get('/', [OperatorAntrianController::class, 'index'])->name('index');
+            Route::get('/create', [OperatorAntrianController::class, 'create'])->name('create');
+            Route::post('/store', [OperatorAntrianController::class, 'store'])->name('store');
 
-            Route::get('/show/{id}', [AntrianController::class, 'show'])->name('show');
-            Route::get('/edit/{id}', [AntrianController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [AntrianController::class, 'update'])->name('update');
+            Route::get('/show/{id}', [OperatorAntrianController::class, 'show'])->name('show');
+            Route::get('/edit/{id}', [OperatorAntrianController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [OperatorAntrianController::class, 'update'])->name('update');
 
-            Route::delete('/delete/{id}', [AntrianController::class, 'destroy'])->name('delete');
+            Route::delete('/delete/{id}', [OperatorAntrianController::class, 'destroy'])->name('delete');
         });
 
         // JADWAL
@@ -108,6 +109,16 @@ Route::prefix('operator')->name('operator.')->group(function () {
 | CUSTOMER
 |--------------------------------------------------------------------------
 */
+
+
+Route::get('/login', function () {
+    return redirect()->route('customer.login');
+})->name('login');
+
+Route::get('/', function () {
+    return redirect()->route('customer.login');
+});
+
 Route::prefix('customer')->name('customer.')->group(function () {
 
     Route::middleware('guest:customer')->group(function () {
@@ -116,12 +127,15 @@ Route::prefix('customer')->name('customer.')->group(function () {
     });
 
     Route::middleware('customer')->group(function () {
-        Route::get('dashboard', [CustomerLoginController::class, 'dashboard'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
         Route::get('antrian', fn () => view('Customer.antrian'))->name('antrian');
-        Route::get('activity/{id}', fn () => view('Customer.detail'))->name('activity.detail');
-        Route::get('activity/{id}/edit', fn () => view('Customer.edit'))->name('activity.edit');
-        Route::get('activity/{id}/delete', fn () => view('Customer.hapus'))->name('activity.delete');
+       Route::post('antrian/store', [CustomerAntrianController::class, 'store'])->name('antrian.store');
+
+        Route::get('activity/{id}', fn ($id) => view('Customer.detail', compact('id')))->name('activity.detail');
+        Route::get('activity/{id}/edit', fn ($id) => view('Customer.edit', compact('id')))->name('activity.edit');
+
+        Route::delete('activity/{id}/delete', [DashboardController::class, 'delete'])->name('activity.delete');
     });
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Booth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BoothController extends Controller
 {
@@ -14,13 +15,12 @@ class BoothController extends Controller
 
         if ($request->filled('search')) {
             $query->where('nama_booth', 'like', '%' . $request->search . '%')
-                  ->orWhere('status', 'like', '%' . $request->search . '%')
                   ->orWhere('kapasitas', 'like', '%' . $request->search . '%');
         }
 
-        $booths = $query->latest()->paginate(10);
+        $booth = $query->latest()->paginate(10);
 
-        return view('admin.booth.index', compact('booths'));
+        return view('admin.booth.index', compact('booth'));
     }
 
     public function create()
@@ -33,12 +33,17 @@ class BoothController extends Controller
         $request->validate([
             'nama_booth' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1',
-            'status' => 'required|in:kosong,terpakai',
-            'jam_mulai' => 'nullable|date_format:H:i',
-            'jam_selesai' => 'nullable|date_format:H:i',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
         ]);
 
-        Booth::create($request->all());
+        $data = $request->only(['nama_booth', 'kapasitas']);
+
+        // Upload gambar
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('booth', 'public');
+        }
+
+        Booth::create($data);
 
         return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil ditambahkan');
     }
@@ -56,19 +61,38 @@ class BoothController extends Controller
         $request->validate([
             'nama_booth' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1',
-            'status' => 'required|in:kosong,terpakai',
-            'jam_mulai' => 'nullable|date_format:H:i',
-            'jam_selesai' => 'nullable|date_format:H:i',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $booth->update($request->all());
+        $data = $request->only(['nama_booth', 'kapasitas']);
+
+        // Upload gambar baru
+        if ($request->hasFile('gambar')) {
+
+            // Hapus gambar lama jika ada
+            if ($booth->gambar && Storage::disk('public')->exists($booth->gambar)) {
+                Storage::disk('public')->delete($booth->gambar);
+            }
+
+            // Simpan gambar baru
+            $data['gambar'] = $request->file('gambar')->store('booth', 'public');
+        }
+
+        $booth->update($data);
 
         return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil diperbarui');
     }
 
     public function destroy($id)
     {
-        Booth::destroy($id);
+        $booth = Booth::findOrFail($id);
+
+        // Hapus gambar
+        if ($booth->gambar && Storage::disk('public')->exists($booth->gambar)) {
+            Storage::disk('public')->delete($booth->gambar);
+        }
+
+        $booth->delete();
 
         return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil dihapus');
     }

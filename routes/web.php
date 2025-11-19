@@ -61,14 +61,6 @@ Route::prefix('operator')->name('operator.')->group(function () {
 */
 
 
-Route::get('/login', function () {
-    return redirect()->route('customer.login');
-})->name('login');
-
-Route::get('/', function () {
-    return redirect()->route('customer.login');
-});
-
 Route::prefix('customer')->name('customer.')->group(function () {
 
     Route::middleware('guest:customer')->group(function () {
@@ -77,15 +69,17 @@ Route::prefix('customer')->name('customer.')->group(function () {
     });
 
     Route::middleware('customer')->group(function () {
+
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
-        Route::get('antrian', fn () => view('Customer.antrian'))->name('antrian');
-       Route::post('antrian/store', [AntrianController::class, 'store'])->name('antrian.store');
+        Route::get('antrian', fn () => view('customer.antrian'))->name('antrian');
+        Route::post('antrian/submit', [AntrianController::class, 'submit'])->name('antrian.submit');
 
-        Route::get('activity/{id}', fn ($id) => view('Customer.detail', compact('id')))->name('activity.detail');
-        Route::get('activity/{id}/edit', fn ($id) => view('Customer.edit', compact('id')))->name('activity.edit');
+        Route::get('activity/{id}', fn ($id) => view('customer.detail', compact('id')))->name('activity.detail');
+        Route::get('activity/{id}/edit', fn ($id) => view('customer.edit', compact('id')))->name('activity.edit');
 
-        Route::delete('activity/{id}/delete', [DashboardController::class, 'delete'])->name('activity.delete');
+        Route::delete('activity/{id}/delete', [DashboardController::class, 'delete'])
+            ->name('activity.delete');
     });
 });

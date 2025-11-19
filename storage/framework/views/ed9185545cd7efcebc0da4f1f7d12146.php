@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Antrian</title>
-    @vite('resources/css/app.css')
+    <?php echo app('Illuminate\Foundation\Vite')('resources/css/app.css'); ?>
 </head>
 
 <body class="bg-pink-50">
@@ -26,8 +26,8 @@
                     Logout
                 </a>
 
-                <form id="logout-form" action="{{ route('customer.logout') }}" method="POST" class="hidden">
-                    @csrf
+                <form id="logout-form" action="<?php echo e(route('customer.logout')); ?>" method="POST" class="hidden">
+                    <?php echo csrf_field(); ?>
                 </form>
             </div>
         </div>
@@ -38,9 +38,9 @@
         <h2 class="text-3xl font-bold text-gray-800 mb-8">Form Tambah Antrian</h2>
 
         <div class="bg-white p-8 rounded-xl shadow-sm">
-            <form action="{{ route('customer.antrian.submit') }}" method="POST">
+            <form action="<?php echo e(route('customer.antrian.submit')); ?>" method="POST">
 
-                @csrf
+                <?php echo csrf_field(); ?>
 
                 <div class="space-y-6">
                     
@@ -49,7 +49,7 @@
                         <input 
                             type="text" 
                             name="nama_lengkap"
-                            value="{{ old('nama_lengkap') }}"
+                            value="<?php echo e(old('nama_lengkap')); ?>"
                             class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
                             placeholder="Masukkan nama anda"
                             required>
@@ -60,7 +60,7 @@
                         <input 
                             type="text" 
                             name="no_telp"
-                            value="{{ old('no_telp') }}"
+                            value="<?php echo e(old('no_telp')); ?>"
                             class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
                             placeholder="Masukkan nomor telepon"
                             required>
@@ -106,4 +106,4 @@
         </div>
     </div>
 </body>
-</html>
+</html><?php /**PATH C:\Users\USER\ukom-antrian-photobooth\resources\views/customer/antrian.blade.php ENDPATH**/ ?>

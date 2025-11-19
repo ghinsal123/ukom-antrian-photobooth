@@ -5,12 +5,15 @@
 <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
 
 <!-- Tanggal / Jadwal -->
-    <div class="mb-6">
-        <h2 class="text-2xl font-semibold text-gray-700">
-            Jadwal Hari Ini: 
-            <span class="text-pink-400 font-bold">{{ \Carbon\Carbon::now()->format('l, d F Y') }}</span>
-        </h2>
-    </div>
+   @php
+        \Carbon\Carbon::setLocale('id'); // set locale ke Indonesia
+        $hariIni = \Carbon\Carbon::now()->translatedFormat('l, d F Y'); // contoh: Rabu, 20 November 2025
+    @endphp
+
+    <h2 class="text-2xl py-5 font-semibold text-gray-700">
+        Jadwal Hari Ini: 
+        <span class="text-pink-400 font-bold">{{ $hariIni }}</span>
+    </h2>
 
 {{-- Statistik Utama --}}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Booth;
+use App\Models\Booth;
 
 class BoothController extends Controller
 {

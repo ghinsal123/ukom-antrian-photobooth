@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Paket; 
+use App\Models\Paket; 
 
 class PaketController extends Controller
 {

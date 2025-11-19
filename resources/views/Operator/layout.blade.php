@@ -13,15 +13,15 @@
 
     <!-- SIDEBAR -->
     <nav id="sidebar" class="w-60 h-screen bg-white text-gray-900 p-6 shadow-md fixed top-0 left-0 
-        transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50 flex flex-col">
-
+        transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-100 flex flex-col">
         <div>
             <!-- LOGO -->
             <div class="flex items-center gap-3 mb-10">
-                <img src="{{ asset('images/logo.png') }}" class="w-14 h-14 drop-shadow">
-                <h2 class="text-2xl font-bold text-pink-500">FlashFrame</h2>
+                <a href="{{ url('/operator/dashboard') }}" class="flex items-center gap-3">
+                    <img src="{{ asset('images/logo.png') }}" class="w-14 h-14 drop-shadow">
+                    <h2 class="text-2xl font-bold text-pink-500">FlashFrame</h2>
+                </a>
             </div>
-
             <!-- MENU -->
             <div class="space-y-2 font-medium">
 
@@ -85,7 +85,7 @@
     <div class="flex-1 ml-0 md:ml-60">
 
         <!-- HEADER MOBILE -->
-        <div class="md:hidden flex justify-between items-center p-4 bg-white shadow-sm">
+        <div class="md:hidden flex justify-between items-center p-4 bg-white shadow-sm sticky top-0 z-50">
             <button id="sidebarToggle" class="text-gray-700 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -95,9 +95,10 @@
 
             <!-- FOTO PROFIL MOBILE -->
             <div class="flex items-center gap-3">
-                <img src="{{ auth()->user()->foto ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
-                    class="w-10 h-10 rounded-full object-cover border">
-
+               <img src="{{ auth()->user()->foto 
+                    ? asset('storage/' . auth()->user()->foto) 
+                    : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
+                class="w-10 h-10 rounded-full object-cover border">
                 <div class="text-right leading-tight">
                     <p class="font-semibold text-gray-800 text-sm">{{ auth()->user()->nama_pengguna }}</p>
                     <p class="text-gray-500 text-xs">Operator</p>
@@ -106,10 +107,12 @@
         </div>
 
         <!-- HEADER DESKTOP -->
-        <div class="hidden md:flex w-full px-6 py-3 justify-end items-center bg-white shadow-sm rounded-b-lg">
+        <div class="hidden md:flex w-full px-6 py-3 justify-end items-center bg-white shadow-sm rounded-b-lg sticky top-0 z-50">
             <div class="flex items-center gap-3">
-                <img src="{{ auth()->user()->foto ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
-                    class="w-10 h-10 rounded-full object-cover border">
+               <img src="{{ auth()->user()->foto 
+                    ? asset('storage/' . auth()->user()->foto) 
+                    : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
+                class="w-10 h-10 rounded-full object-cover border">
                 <div class="text-right leading-tight">
                     <p class="font-semibold text-gray-800 text-sm">{{ auth()->user()->nama_pengguna }}</p>
                     <p class="text-gray-500 text-xs">Operator</p>

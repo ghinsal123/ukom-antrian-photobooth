@@ -40,7 +40,7 @@
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center flex gap-2 justify-center">
-                        <a href="{{ route('operatorantrian.show', $item->id) }}" 
+                        <a href="{{ route('operator.antrian.show', $item->id) }}" 
                            class="bg-blue-500 text-white px-3 py-1 rounded-xl hover:bg-blue-600 shadow-md transition-all">
                            Detail
                         </a>

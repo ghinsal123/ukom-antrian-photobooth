@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
-use App\Models\Operator\Antrian;
+use App\Models\Antrian;
 use App\Models\Pengguna;
-use App\Models\Operator\Paket;
-use App\Models\Operator\Booth;
+use App\Models\Paket;
+use App\Models\Booth;
 use App\Models\Admin\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,16 +39,37 @@ class AntrianController extends Controller
      */
     public function store(Request $request)
     {
-        // Ambil nomor terakhir di tanggal hari ini
+        // Validasi input
+        $request->validate([
+            'pengguna_id'   => 'nullable|exists:pengguna,id',
+            'nama_pengguna' => 'nullable|string|max:255',
+            'booth_id'      => 'required|exists:booth,id',
+            'paket_id'      => 'required|exists:paket,id',
+            'tanggal'       => 'required|date',
+            'catatan'       => 'nullable|string|max:500',
+        ]);
+
+        // Jika operator menulis nama baru, buat pengguna baru
+        if (!$request->pengguna_id && $request->nama_pengguna) {
+            $user = Pengguna::create([
+                'nama_pengguna'     => $request->nama_pengguna,
+                'email'    => 'dummy' . time() . '@example.com', // email dummy
+                'password' => bcrypt('password123'), // password default
+            ]);
+            $penggunaId = $user->id;
+        } else {
+            $penggunaId = $request->pengguna_id;
+        }
+
+        // Ambil nomor terakhir di tanggal yang sama
         $last = Antrian::whereDate('tanggal', $request->tanggal)
             ->orderBy('nomor_antrian', 'desc')
             ->first();
-
         $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
 
         // Simpan data antrian
         $antrian = Antrian::create([
-            'pengguna_id'   => $request->pengguna_id,
+            'pengguna_id'   => $penggunaId,
             'booth_id'      => $request->booth_id,
             'paket_id'      => $request->paket_id,
             'nomor_antrian' => $nextNumber,
@@ -62,10 +83,10 @@ class AntrianController extends Controller
             'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,
             'aksi'        => 'buat_reservasi',
-            'keterangan'  => 'Operator membuat antrian untuk pengguna ID ' . $request->pengguna_id,
+            'keterangan'  => 'Operator membuat antrian untuk pengguna ID ' . $penggunaId,
         ]);
 
-        return redirect()->route('operator.antrian.index');
+        return redirect()->route('operator.antrian.index')->with('success', 'Antrian berhasil ditambahkan!');
     }
 
     /**

@@ -13,19 +13,13 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        // Pakai session, BUKAN auth()
-        $customerId = session('customer_id');
-
-        if (!$customerId) {
-            return redirect()->route('customer.login');
-        }
+        $customerId = auth('customer')->id();
 
         $customer = Pengguna::find($customerId);
         $nama = $customer ? $customer->nama_pengguna : 'Pengguna';
 
         $booths = Booth::all();
 
-        // Antrian di setiap booth
         $antrianBooth = [];
         foreach ($booths as $booth) {
             $antrianBooth[$booth->id] = Antrian::with(['paket', 'pengguna'])
@@ -34,7 +28,6 @@ class DashboardController extends Controller
                 ->get();
         }
 
-        // Antrian milik user
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
             ->orderBy('id', 'desc')
@@ -50,7 +43,7 @@ class DashboardController extends Controller
 
     public function delete($id)
     {
-        $customerId = session('customer_id');
+        $customerId = auth('customer')->id();
 
         $antrian = Antrian::where('id', $id)
             ->where('pengguna_id', $customerId)

@@ -38,7 +38,6 @@ class LoginController extends Controller
         $nama = session('customer_name');
         $customer_id = session('customer_id');
 
-        // Ambil semua antrian user
         $antrianku = Antrian::where('pengguna_id', $customer_id)
             ->orderBy('created_at', 'desc')
             ->get();

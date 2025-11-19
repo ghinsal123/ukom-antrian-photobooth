@@ -5,7 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
-use App\Http\Controllers\Customer\AntrianController;
+use App\Http\Controllers\Operator\AntrianController as OperatorAntrianController;
+use App\Http\Controllers\Admin\PenggunaController;
+use App\Http\Controllers\Admin\BoothController;
+use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\PaketController;
+use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
 use App\Http\Controllers\Customer\DashboardController;
 
 
@@ -23,17 +28,22 @@ Route::get('/', function () {
 */
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Guest (belum login)
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AdminLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [AdminLoginController::class, 'login'])->name('login.submit');
     });
 
-    // Authenticated
     Route::middleware('admin')->group(function () {
         Route::get('dashboard', fn () => view('admin.dashboard'))->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
+
+        // ⬇⬇ FIXED HERE
+        Route::resource('pengguna', PenggunaController::class)->names('pengguna');
+        Route::resource('booth', BoothController::class)->names('booth');
+        Route::resource('paket', PaketController::class)->names('paket');
+        Route::resource('log', LogController::class)->names('log');
     });
+
 });
 
 /*
@@ -43,15 +53,39 @@ Route::prefix('admin')->name('admin.')->group(function () {
 */
 Route::prefix('operator')->name('operator.')->group(function () {
 
+    // Guest (belum login)
     Route::middleware('guest:operator')->group(function () {
         Route::get('login', [OperatorLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [OperatorLoginController::class, 'login'])->name('login.submit');
     });
 
+    // Sudah login
     Route::middleware('operator')->group(function () {
+
+        // DASHBOARD
         Route::get('dashboard', fn () => view('operator.dashboard'))->name('dashboard');
         Route::post('logout', [OperatorLoginController::class, 'logout'])->name('logout');
+
+        /*
+        |--------------------------------------------------------------------------
+        | ANTRIAN (CRUD)
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('antrian')->name('antrian.')->group(function () {
+
+            Route::get('/', [OperatorAntrianController::class, 'index'])->name('index');
+            Route::get('/create', [OperatorAntrianController::class, 'create'])->name('create');
+            Route::post('/store', [OperatorAntrianController::class, 'store'])->name('store');
+
+            Route::get('/show/{id}', [OperatorAntrianController::class, 'show'])->name('show');
+            Route::get('/edit/{id}', [OperatorAntrianController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [OperatorAntrianController::class, 'update'])->name('update');
+
+            Route::delete('/delete/{id}', [OperatorAntrianController::class, 'destroy'])->name('delete');
+        });
+
     });
+
 });
 
 /*
@@ -60,24 +94,36 @@ Route::prefix('operator')->name('operator.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
+Route::get('/login', fn() => redirect()->route('customer.login'))->name('login');
+Route::get('/', fn() => redirect()->route('customer.login'));
 
 Route::prefix('customer')->name('customer.')->group(function () {
 
+    // Guest Routes
     Route::middleware('guest:customer')->group(function () {
         Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
+    // Authenticated Routes
     Route::middleware('customer')->group(function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
+        // Halaman Form Antrian
         Route::get('antrian', fn () => view('customer.antrian'))->name('antrian');
-        Route::post('antrian/submit', [AntrianController::class, 'submit'])->name('antrian.submit');
 
-        Route::get('activity/{id}', fn ($id) => view('customer.detail', compact('id')))->name('activity.detail');
-        Route::get('activity/{id}/edit', fn ($id) => view('customer.edit', compact('id')))->name('activity.edit');
+        // Proses Submit Antrian
+        Route::post('antrian/submit', [CustomerAntrianController::class, 'submit'])
+            ->name('antrian.submit');
+
+        Route::get('activity/{id}', fn ($id) => view('customer.detail', compact('id')))
+            ->name('activity.detail');
+
+        Route::get('activity/{id}/edit', fn ($id) => view('customer.edit', compact('id')))
+            ->name('activity.edit');
 
         Route::delete('activity/{id}/delete', [DashboardController::class, 'delete'])
             ->name('activity.delete');

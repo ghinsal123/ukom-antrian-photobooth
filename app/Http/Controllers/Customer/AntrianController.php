@@ -16,6 +16,7 @@ class AntrianController extends Controller
             'catatan'  => 'nullable|string'
         ]);
 
+        // FIX ⛑
         $customerId = session('customer_id');
 
         if (!$customerId) {
@@ -32,14 +33,14 @@ class AntrianController extends Controller
             'catatan'       => $request->catatan,
         ]);
 
-        return redirect()->route('customer.dashboard');
+        return redirect()->route('customer.dashboard')
+            ->with('success', 'Antrian berhasil dibuat!');
     }
 
     private function generateNomorAntrian()
     {
         $last = Antrian::orderBy('id', 'desc')->first();
         $next = $last ? $last->id + 1 : 1;
-
         return now()->format('dmy') . '-' . str_pad($next, 3, '0', STR_PAD_LEFT);
     }
 }

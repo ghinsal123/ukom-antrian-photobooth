@@ -3,17 +3,18 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
-use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
-use App\Http\Controllers\Operator\AntrianController as OperatorAntrianController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\BoothController;
-use App\Http\Controllers\Admin\LogController;
-use App\Http\Controllers\Operator\LogController as OperatorLogController;
 use App\Http\Controllers\Admin\PaketController;
+use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
+use App\Http\Controllers\Operator\AntrianController as OperatorAntrianController;
+use App\Http\Controllers\Operator\LogController as OperatorLogController;
 use App\Http\Controllers\Operator\BoothController as OperatorBoothController;
 use App\Http\Controllers\Operator\PaketController as OperatorPaketController;
-use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
 use App\Http\Controllers\Operator\DashboardController as OperatorDashboardController;
+use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\AntrianController; 
@@ -35,7 +36,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
     Route::middleware('admin')->group(function () {
-        Route::get('dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
 
         // ⬇⬇ FIXED HERE

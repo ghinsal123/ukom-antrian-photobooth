@@ -7,22 +7,22 @@
 
     <div class="bg-white p-6 rounded-3xl shadow-md border border-pink-100">
         <h3 class="text-gray-500 font-medium">Total Booth</h3>
-        <p class="text-3xl font-bold text-pink-500">5</p>
+        <p class="text-3xl font-bold text-pink-500">{{ $totalBooth }}</p>
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-md border border-pink-100">
         <h3 class="text-gray-500 font-medium">Total Paket</h3>
-        <p class="text-3xl font-bold text-pink-500">8</p>
+        <p class="text-3xl font-bold text-pink-500">{{ $totalPaket }}</p>
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-md border border-pink-100">
         <h3 class="text-gray-500 font-medium">Total Akun</h3>
-        <p class="text-3xl font-bold text-pink-500">12</p>
+        <p class="text-3xl font-bold text-pink-500">{{ $totalAkun }}</p>
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-md border border-pink-100">
         <h3 class="text-gray-500 font-medium">Laporan Bulan Ini</h3>
-        <p class="text-3xl font-bold text-pink-500">32</p>
+        <p class="text-3xl font-bold text-ppink-500">{{ $totalLaporan }}</p>
     </div>
 
 </div>

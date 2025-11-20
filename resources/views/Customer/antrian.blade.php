@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Buat Antrian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Antrian</title>
     @vite('resources/css/app.css')
 </head>
 
@@ -19,7 +20,7 @@
 
                 <a href="#"
                     onclick="event.preventDefault(); 
-                    if (confirm('Yakin ingin logout?')) {
+                    if (confirm('Apakah Anda yakin ingin logout?')) {
                         document.getElementById('logout-form').submit();
                     }"
                     class="text-gray-600 hover:text-pink-400">
@@ -33,44 +34,94 @@
         </div>
     </nav>
 
+    {{-- ❗ TAMBAH JARAK DI SINI --}}
+    <div class="max-w-4xl mx-auto px-4 py-10 mt-20">
 
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Form Tambah Antrian</h2>
 
-    {{-- CONTAINER --}}
-    <div class="max-w-xl mx-auto bg-white mt-10 p-8 rounded-xl shadow">
+        <div class="bg-white p-8 rounded-xl shadow-sm">
 
-        <h2 class="text-3xl font-bold text-gray-800 mb-6">Buat Antrian Baru</h2>
+            {{-- FORM MULAI --}}
+            <form action="{{ route('customer.antrian.store') }}" method="POST">
+                @csrf
 
-        <form action="{{ route('customer.antrian.store') }}" method="POST">
-            @csrf
+                <div class="space-y-6">
 
-            <label class="block mb-2 font-semibold text-gray-700">Nama Lengkap</label>
-            <input type="text" name="nama_lengkap" class="w-full p-3 border rounded-lg mb-4 bg-pink-50">
+                    {{-- NAMA --}}
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Nama Lengkap</label>
+                        <input 
+                            type="text" 
+                            name="nama_lengkap"
+                            value="{{ old('nama_lengkap') }}"
+                            class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
+                            placeholder="Masukkan nama anda"
+                            required>
+                    </div>
 
-            <label class="block mb-2 font-semibold text-gray-700">No Telepon</label>
-            <input type="text" name="no_telp" class="w-full p-3 border rounded-lg mb-4 bg-pink-50">
+                    {{-- TELEPON --}}
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
+                        <input 
+                            type="text" 
+                            name="no_telp"
+                            value="{{ old('no_telp') }}"
+                            class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
+                            placeholder="Masukkan nomor telepon"
+                            required>
+                    </div>
 
-            <label class="block mb-2 font-semibold text-gray-700">Pilih Booth</label>
-            <select name="booth_id" class="w-full p-3 border rounded-lg mb-4 bg-pink-50">
-                @foreach ($booths as $b)
-                    <option value="{{ $b->id }}">{{ $b->nama_booth }}</option>
-                @endforeach
-            </select>
+                    {{-- TANGGAL --}}
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Tanggal</label>
+                        <input 
+                            type="date" 
+                            name="tanggal"
+                            class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
+                            required>
+                    </div>
 
-            <label class="block mb-2 font-semibold text-gray-700">Pilih Paket</label>
-            <select name="paket_id" class="w-full p-3 border rounded-lg mb-4 bg-pink-50">
-                @foreach ($pakets as $p)
-                    <option value="{{ $p->id }}">{{ $p->nama_paket }}</option>
-                @endforeach
-            </select>
+                    {{-- PAKET --}}
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Pilih Paket Foto</label>
+                        <select 
+                            name="paket_id"
+                            class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
+                            required>
+                            
+                            @foreach ($pakets as $paket)
+                                <option value="{{ $paket->id }}">{{ $paket->nama_paket }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <label class="block mb-2 font-semibold text-gray-700">Tanggal</label>
-            <input type="date" name="tanggal" class="w-full p-3 border rounded-lg mb-6 bg-pink-50">
+                    {{-- BOOTH --}}
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Pilih Booth</label>
+                        <select 
+                            name="booth_id"
+                            class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
+                            required>
+                            
+                            @foreach ($booths as $booth)
+                                <option value="{{ $booth->id }}">{{ $booth->nama_booth }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <button class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold shadow hover:bg-pink-600 transition">
-                Buat Antrian
-            </button>
-        </form>
+                    {{-- SUBMIT --}}
+                    <div class="pt-4">
+                        <button 
+                            type="submit"
+                            class="w-full bg-pink-400 text-white py-3 rounded-lg font-semibold hover:bg-pink-500 transition">
+                            Tambah Antrian
+                        </button>
+                    </div>
 
+                </div>
+            </form>
+            {{-- FORM SELESAI --}}
+        </div>
     </div>
 
 </body>

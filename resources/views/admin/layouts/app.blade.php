@@ -66,7 +66,7 @@
                 @php
                     $foto = $admin->foto
                         ? asset('storage/' . $admin->foto)
-                        : asset('images/default-avatar.png');
+                        : asset('images/profile.png');
                 @endphp
                 <img class="w-10 h-10 rounded-full object-cover" src="{{ $foto }}">
                 <div>

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_booth');
             $table->integer('kapasitas');
-            $table->string('gambar')->nullable(); 
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }

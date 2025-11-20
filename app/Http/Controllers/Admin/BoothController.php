@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Booth;
+use App\Models\Booth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,13 +32,21 @@ class BoothController extends Controller
     {
         $request->validate([
             'nama_booth' => 'required|string|max:255',
-            'kapasitas' => 'required|integer|min:1',
+            'kapasitas' => 'required|integer|min:1|max:10',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ], [
+            // Custom messages Indonesia
+            'nama_booth.required' => 'Nama booth wajib diisi.',
+            'kapasitas.required' => 'Kapasitas wajib diisi.',
+            'kapasitas.min' => 'Kapasitas minimal adalah 1.',
+            'kapasitas.max' => 'Kapasitas maksimal adalah 10.',
+            'gambar.image' => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes' => 'Gambar harus berformat JPG, JPEG, atau PNG.',
+            'gambar.max' => 'Ukuran gambar maksimal 4MB.',
         ]);
 
         $data = $request->only(['nama_booth', 'kapasitas']);
 
-        // Upload gambar
         if ($request->hasFile('gambar')) {
             $data['gambar'] = $request->file('gambar')->store('booth', 'public');
         }
@@ -46,6 +54,12 @@ class BoothController extends Controller
         Booth::create($data);
 
         return redirect()->route('admin.booth.index')->with('success', 'Booth berhasil ditambahkan');
+    }
+
+    public function show($id)
+    {
+        $booth = Booth::findOrFail($id);
+        return view('admin.booth.show', compact('booth'));
     }
 
     public function edit($id)
@@ -60,8 +74,16 @@ class BoothController extends Controller
 
         $request->validate([
             'nama_booth' => 'required|string|max:255',
-            'kapasitas' => 'required|integer|min:1',
+            'kapasitas' => 'required|integer|min:1|max:10',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'nama_booth.required' => 'Nama booth wajib diisi.',
+            'kapasitas.required' => 'Kapasitas wajib diisi.',
+            'kapasitas.min' => 'Kapasitas minimal adalah 1.',
+            'kapasitas.max' => 'Kapasitas maksimal adalah 10.',
+            'gambar.image' => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes' => 'Gambar harus berformat JPG, JPEG, atau PNG.',
+            'gambar.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         $data = $request->only(['nama_booth', 'kapasitas']);
@@ -69,12 +91,11 @@ class BoothController extends Controller
         // Upload gambar baru
         if ($request->hasFile('gambar')) {
 
-            // Hapus gambar lama jika ada
+            // Hapus gambar lama
             if ($booth->gambar && Storage::disk('public')->exists($booth->gambar)) {
                 Storage::disk('public')->delete($booth->gambar);
             }
 
-            // Simpan gambar baru
             $data['gambar'] = $request->file('gambar')->store('booth', 'public');
         }
 
@@ -87,7 +108,6 @@ class BoothController extends Controller
     {
         $booth = Booth::findOrFail($id);
 
-        // Hapus gambar
         if ($booth->gambar && Storage::disk('public')->exists($booth->gambar)) {
             Storage::disk('public')->delete($booth->gambar);
         }

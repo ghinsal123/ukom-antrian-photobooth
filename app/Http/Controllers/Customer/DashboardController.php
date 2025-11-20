@@ -7,43 +7,38 @@ use Illuminate\Http\Request;
 use App\Models\Antrian;
 use App\Models\Booth;
 use App\Models\Paket;
-use App\Models\Pengguna;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $customerId = auth('customer')->id();
+        $customerId = session('customer_id');
+        $customerName = session('customer_name');
 
-        $customer = Pengguna::find($customerId);
-        $nama = $customer ? $customer->nama_pengguna : 'Pengguna';
-
-        $booths = Booth::all();
-
-        $antrianBooth = [];
-        foreach ($booths as $booth) {
-            $antrianBooth[$booth->id] = Antrian::with(['paket', 'pengguna'])
-                ->where('booth_id', $booth->id)
-                ->orderBy('nomor_antrian')
-                ->get();
+        if (!$customerId) {
+            return redirect()->route('customer.login');
         }
+
+        $booth = Booth::with(['antrian' => function($q) {
+            $q->orderBy('nomor_antrian', 'ASC')
+              ->with(['pengguna', 'paket']);
+        }])->get();
 
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'DESC')
             ->get();
 
         return view('customer.dashboard', [
-            'nama' => $nama,
-            'booths' => $booths,
-            'antrianBooth' => $antrianBooth,
-            'antrianku' => $antrianku
+            'nama'       => $customerName,
+            'booth'     => $booth,
+            'antrianku'  => $antrianku
         ]);
     }
 
     public function delete($id)
     {
-        $customerId = auth('customer')->id();
+        $customerId = session('customer_id');
 
         $antrian = Antrian::where('id', $id)
             ->where('pengguna_id', $customerId)

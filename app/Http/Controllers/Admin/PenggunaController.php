@@ -11,15 +11,31 @@ class PenggunaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pengguna::query();
+    $query = Pengguna::query();
 
-        if ($request->filled('search')) {
-            $query->where('nama_pengguna', 'like', '%' . $request->search . '%')
-                ->orWhere('no_telp', 'like', '%' . $request->search . '%')
-                ->orWhere('role', 'like', '%' . $request->search . '%');
-        }
+    // Search
+    if ($request->filled('search')) {
+        $query->where(function ($q) use ($request) {
+            $q->where('nama_pengguna', 'like', '%' . $request->search . '%')
+            ->orWhere('no_telp', 'like', '%' . $request->search . '%')
+            ->orWhere('role', 'like', '%' . $request->search . '%');
+        });
+    }
 
-        $pengguna = $query->latest()->paginate(10);
+    // Urutkan role: admin → operator → customer
+    $query->orderByRaw("
+        CASE 
+            WHEN role = 'admin' THEN 1
+            WHEN role = 'operator' THEN 2
+            WHEN role = 'customer' THEN 3
+            ELSE 4
+        END
+    ");
+
+    // Urutkan customer terbaru di atas customer lama
+    $query->orderBy('created_at', 'desc');
+
+    $pengguna = $query->paginate(10);
 
         return view('admin.pengguna.index', compact('pengguna'));
     }

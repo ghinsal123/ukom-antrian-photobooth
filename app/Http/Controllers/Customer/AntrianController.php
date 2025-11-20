@@ -5,42 +5,49 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Antrian;
+use App\Models\Booth;
+use App\Models\Paket;
+use App\Models\Pengguna;
 
 class AntrianController extends Controller
 {
-    public function submit(Request $request)
+    public function create()
+    {
+        return view('customer.antrian', [
+            'booth' => Booth::all(),
+            'paket' => Paket::all()
+        ]);
+    }
+
+    public function store(Request $request)
     {
         $request->validate([
-            'booth_id' => 'required|integer',
-            'paket_id' => 'required|integer',
-            'catatan'  => 'nullable|string'
+            'booth_id' => 'required',
+            'paket_id' => 'required',
+            'tanggal'  => 'required|date',
         ]);
 
-        // FIX ⛑
         $customerId = session('customer_id');
+        $customer   = Pengguna::findOrFail($customerId); // ← AMBIL DATA PENGGUNA
 
-        if (!$customerId) {
-            return redirect()->route('customer.login');
-        }
+        // Hitung nomor antrian berikutnya
+        $last = Antrian::where('booth_id', $request->booth_id)
+            ->orderBy('nomor_antrian', 'DESC')
+            ->first();
 
+        $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
+
+        // Simpan KE TABEL ANTRIAN (tanpa nama & no_telp)
         Antrian::create([
             'pengguna_id'   => $customerId,
             'booth_id'      => $request->booth_id,
             'paket_id'      => $request->paket_id,
-            'nomor_antrian' => $this->generateNomorAntrian(),
-            'tanggal'       => now()->format('Y-m-d'),
-            'status'        => 'menunggu',
-            'catatan'       => $request->catatan,
+            'tanggal'       => $request->tanggal,
+            'nomor_antrian' => $nextNumber,
+            'status'        => 'menunggu'
         ]);
 
         return redirect()->route('customer.dashboard')
             ->with('success', 'Antrian berhasil dibuat!');
-    }
-
-    private function generateNomorAntrian()
-    {
-        $last = Antrian::orderBy('id', 'desc')->first();
-        $next = $last ? $last->id + 1 : 1;
-        return now()->format('dmy') . '-' . str_pad($next, 3, '0', STR_PAD_LEFT);
     }
 }

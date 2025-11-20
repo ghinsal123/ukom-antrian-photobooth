@@ -11,7 +11,8 @@ class Paket extends Model
     protected $fillable = [
         'nama_paket',
         'harga',
-        'deskripsi'
+        'gambar',
+        'deskripsi',
     ];
 
     public function antrian()

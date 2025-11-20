@@ -16,6 +16,7 @@
         <p><strong>Telepon:</strong> {{ $pengguna->no_telp }}</p>
         <p><strong>Role:</strong> {{ ucfirst($pengguna->role) }}</p>
         <p><strong>Dibuat:</strong> {{ $pengguna->created_at->format('d M Y H:i') }}</p>
+        <p><strong>Diedit:</strong> {{ $pengguna->updated_at->format('d M Y H:i') }}</p>
     </div>
 
     <div class="flex justify-between mt-6">

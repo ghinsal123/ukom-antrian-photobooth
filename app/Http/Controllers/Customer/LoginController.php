@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengguna;
-use App\Models\Antrian;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -20,29 +19,25 @@ class LoginController extends Controller
             'full_name' => 'required|string|max:255'
         ]);
 
-        $user = Pengguna::firstOrCreate(
-            ['nama_pengguna' => $request->full_name],
-            ['role' => 'customer', 'password' => bcrypt('customer')]
-        );
+        // CEK USER
+        $user = Pengguna::where('nama_pengguna', $request->full_name)->first();
 
+        // JIKA BELUM ADA → BUAT USER BARU (DENGAN PASSWORD DUMMY AGAR TIDAK ERROR)
+        if (!$user) {
+            $user = Pengguna::create([
+                'nama_pengguna' => $request->full_name,
+                'password'      => bcrypt('default123'), // password dummy agar tidak error
+                'role'          => 'customer'
+            ]);
+        }
+
+        // SIMPAN SESI LOGIN
         session([
-            'customer_id' => $user->id,
+            'customer_id'   => $user->id,
             'customer_name' => $user->nama_pengguna
         ]);
 
         return redirect()->route('customer.dashboard');
-    }
-
-    public function dashboard()
-    {
-        $nama = session('customer_name');
-        $customer_id = session('customer_id');
-
-        $antrianku = Antrian::where('pengguna_id', $customer_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('customer.dashboard', compact('nama', 'antrianku'));
     }
 
     public function logout()

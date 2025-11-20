@@ -10,7 +10,8 @@ class Booth extends Model
 
     protected $fillable = [
         'nama_booth',
-        'deskripsi'
+        'kapasitas',
+        'gambar',
     ];
 
     public function antrian()

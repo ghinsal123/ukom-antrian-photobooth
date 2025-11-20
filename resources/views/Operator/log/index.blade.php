@@ -31,7 +31,7 @@
     <!-- Tabel responsif -->
     <div class="overflow-x-auto">
         <table class="table-auto w-full border-collapse rounded-2xl shadow-xl overflow-hidden text-xs sm:text-sm md:text-base">
-            <thead class="bg-gradient-to-r from-pink-300 to-pink-500 text-white text-xs sm:text-sm">
+            <thead class="bg-linear-to-r from-pink-300 to-pink-500 text-white text-xs sm:text-sm">
                 <tr>
                     <th class="px-3 py-2">No</th>
                     <th class="px-3 py-2">Tanggal</th>
@@ -45,7 +45,7 @@
             </thead>
             <tbody>
                 @forelse($logs as $log)
-                <tr class="bg-white hover:bg-pink-50 transition-transform transform hover:scale-105 shadow-sm sm:shadow-md hover:shadow-lg">
+                <tr class="bg-white hover:bg-pink-50 shadow-sm sm:shadow-md hover:shadow-lg">
                     <td class="px-2 py-1 text-center border">{{ $loop->iteration }}</td>
                     <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
                     <td class="px-2 py-1 border">

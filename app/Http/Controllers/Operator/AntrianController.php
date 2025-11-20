@@ -14,11 +14,33 @@ use Illuminate\Support\Facades\Auth;
 class AntrianController extends Controller
 {
     /**
-     * Tampilkan daftar antrian
+     * Tampilkan daftar antrian + search + pagination
      */
-    public function index()
+    public function index(Request $request)
     {
-        $antrian = Antrian::with(['pengguna', 'paket', 'booth'])->get();
+        $query = Antrian::with(['pengguna', 'booth', 'paket']);
+
+        // Pencarian
+        if ($request->has('search') && $request->search != '') {
+            $keyword = $request->search;
+
+            $query->where(function ($q) use ($keyword) {
+                $q->whereHas('pengguna', function ($q2) use ($keyword) {
+                    $q2->where('nama_pengguna', 'like', "%$keyword%");
+                })
+                ->orWhere('nomor_antrian', 'like', "%$keyword%")
+                ->orWhereHas('booth', function ($q3) use ($keyword) {
+                    $q3->where('nama_booth', 'like', "%$keyword%");
+                })
+                ->orWhereHas('paket', function ($q4) use ($keyword) {
+                    $q4->where('nama_paket', 'like', "%$keyword%");
+                });
+            });
+        }
+
+        // Pagination
+        $antrian = $query->paginate(10);
+
         return view('Operator.antrian.index', compact('antrian'));
     }
 
@@ -39,7 +61,6 @@ class AntrianController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'pengguna_id'   => 'nullable|exists:pengguna,id',
             'nama_pengguna' => 'nullable|string|max:255',
@@ -49,36 +70,32 @@ class AntrianController extends Controller
             'catatan'       => 'nullable|string|max:500',
         ]);
 
-        // Jika operator menulis nama baru, buat pengguna baru
+        // Jika operator mengetik nama customer baru
         if (!$request->pengguna_id && $request->nama_pengguna) {
             $user = Pengguna::create([
-                'nama_pengguna'     => $request->nama_pengguna,
-                'email'    => 'dummy' . time() . '@example.com', // email dummy
-                'password' => bcrypt('password123'), // password default
+                'nama_pengguna' => $request->nama_pengguna,
+                'no_telp'       => null,
+                'password'      => bcrypt('password123'),
+                'role'          => 'customer',
             ]);
             $penggunaId = $user->id;
         } else {
             $penggunaId = $request->pengguna_id;
         }
 
-        // Ambil nomor terakhir di tanggal yang sama
-        $last = Antrian::whereDate('tanggal', $request->tanggal)
-            ->orderBy('nomor_antrian', 'desc')
-            ->first();
-        $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
+        // Nomor antrian otomatis
+        $nomorAntrian = $this->generateNomorAntrian();
 
-        // Simpan data antrian
         $antrian = Antrian::create([
             'pengguna_id'   => $penggunaId,
             'booth_id'      => $request->booth_id,
             'paket_id'      => $request->paket_id,
-            'nomor_antrian' => $nextNumber,
+            'nomor_antrian' => $nomorAntrian,
             'tanggal'       => $request->tanggal,
             'status'        => 'menunggu',
             'catatan'       => $request->catatan,
         ]);
 
-        // Catat log aktivitas operator
         Log::create([
             'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,
@@ -86,11 +103,29 @@ class AntrianController extends Controller
             'keterangan'  => 'Operator membuat antrian untuk pengguna ID ' . $penggunaId,
         ]);
 
-        return redirect()->route('operator.antrian.index')->with('success', 'Antrian berhasil ditambahkan!');
+        return redirect()->route('operator.antrian.index')
+            ->with('success', 'Antrian berhasil ditambahkan!');
     }
 
     /**
-     * Tampilkan detail antrian
+     * Generate nomor antrian otomatis
+     */
+    private function generateNomorAntrian()
+    {
+        $last = Antrian::orderBy('id', 'DESC')->first();
+
+        if (!$last) {
+            return 'A-001';
+        }
+
+        $lastNumber = intval(substr($last->nomor_antrian, 2));
+        $newNumber = $lastNumber + 1;
+
+        return 'A-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Detail antrian
      */
     public function show($id)
     {
@@ -99,11 +134,11 @@ class AntrianController extends Controller
     }
 
     /**
-     * Form edit antrian
+     * Form edit
      */
     public function edit($id)
     {
-        $data = Antrian::findOrFail($id);
+        $data = Antrian::with(['pengguna','booth','paket'])->findOrFail($id);
         $pengguna = Pengguna::all();
         $paket = Paket::all();
         $booth = Booth::all();
@@ -112,14 +147,22 @@ class AntrianController extends Controller
     }
 
     /**
-     * Update data antrian
+     * Update antrian
      */
     public function update(Request $request, $id)
     {
-        $antrian = Antrian::findOrFail($id);
-        $antrian->update($request->all());
+        $request->validate([
+            'status'  => 'required|in:menunggu,proses,selesai,dibatalkan',
+            'catatan' => 'nullable|string|max:500',
+        ]);
 
-        // Catat log update
+        $antrian = Antrian::findOrFail($id);
+
+        $antrian->update([
+            'status'  => $request->status,
+            'catatan' => $request->catatan,
+        ]);
+
         Log::create([
             'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,
@@ -137,7 +180,6 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::findOrFail($id);
 
-        // Catat log hapus
         Log::create([
             'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,

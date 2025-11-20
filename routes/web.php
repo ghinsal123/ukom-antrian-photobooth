@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Operator\BoothController as OperatorBoothController;
 use App\Http\Controllers\Operator\PaketController as OperatorPaketController;
 use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
+use App\Http\Controllers\Operator\DashboardController as OperatorDashboardController;
 use App\Http\Controllers\Customer\DashboardController;
 
 Route::get('/', function () {
@@ -62,7 +63,8 @@ Route::prefix('operator')->name('operator.')->group(function () {
     Route::middleware('operator')->group(function () {
 
         // DASHBOARD
-        Route::get('dashboard', fn () => view('operator.dashboard'))->name('dashboard');
+        Route::get('dashboard', [OperatorDashboardController::class, 'index'])
+        ->name('dashboard');
         Route::post('logout', [OperatorLoginController::class, 'logout'])->name('logout');
 
         /*
@@ -76,7 +78,7 @@ Route::prefix('operator')->name('operator.')->group(function () {
             Route::get('/create', [OperatorAntrianController::class, 'create'])->name('create');
             Route::post('/store', [OperatorAntrianController::class, 'store'])->name('store');
 
-            Route::get('/show/{id}', [OperatorAntrianController::class, 'show'])->name('show');
+            Route::get('/detail/{id}', [OperatorAntrianController::class, 'show'])->name('show');
             Route::get('/edit/{id}', [OperatorAntrianController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [OperatorAntrianController::class, 'update'])->name('update');
 

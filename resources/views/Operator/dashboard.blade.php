@@ -10,30 +10,35 @@
         $hariIni = \Carbon\Carbon::now()->translatedFormat('l, d F Y'); // contoh: Rabu, 20 November 2025
     @endphp
 
-    <h2 class="text-2xl py-5 font-semibold text-gray-700">
-        Jadwal Hari Ini: 
-        <span class="text-pink-400 font-bold">{{ $hariIni }}</span>
-    </h2>
+    <div class="flex items-center justify-between py-5">
+        <h2 class="text-2xl font-semibold text-gray-700">
+            Jadwal Hari Ini: 
+            <span class="text-pink-400 font-bold">{{ $hariIni }}</span>
+        </h2>
+        <div class="text-center bg-blue-400 text-white font-bold rounded-xl px-4 py-2 shadow">
+            Total Antrian: {{ $antrianHariIni }}
+        </div>
+    </div>
 
 {{-- Statistik Utama --}}
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <div class="bg-blue-400 p-6 rounded-xl shadow-sm text-center">
-        <h3 class="font-bold text-white">Reservasi Hari Ini</h3>
-        <p class="text-3xl font-bold mt-2 text-white">12</p>
+    <div class="bg-yellow-400 p-6 rounded-xl shadow-sm text-center">
+        <h3 class="font-bold text-white">Menunggu</h3>
+        <p class="text-3xl font-bold mt-2 text-white">{{ $menunggu }}</p>
     </div>
 
-    <div class="bg-yellow-400 p-6 rounded-xl shadow-sm text-center">
+    <div class="bg-blue-400 p-6 rounded-xl shadow-sm text-center">
         <h3 class="font-bold text-white">Dalam Proses</h3>
-        <p class="text-3xl font-bold mt-2 text-white">7</p>
+        <p class="text-3xl font-bold mt-2 text-white">{{ $dalamProses }}</p>
     </div>
 
     <div class="bg-green-400 p-6 rounded-xl shadow-sm text-center">
         <h3 class="font-bold text-white">Selesai</h3>
-        <p class="text-3xl font-bold mt-2 text-white">20</p>
+        <p class="text-3xl font-bold mt-2 text-white">{{ $selesai }}</p>
     </div>
     <div class="bg-red-400 p-6 rounded-xl shadow-sm text-center">
         <h3 class="font-bold text-white">Pembatalan</h3>
-        <p class="text-3xl font-bold mt-2 text-white">10</p>
+        <p class="text-3xl font-bold mt-2 text-white">{{ $batal }}</p>
     </div>
     </div>
 
@@ -42,22 +47,22 @@
 
     <!-- Diagram Lingkaran -->
     <div class="bg-white p-3 rounded-xl shadow-sm w-full md:w-1/2">
-        <h3 class="text-lg font-semibold mb-2">Distribusi Reservasi</h3>
+        <h3 class="text-lg font-semibold mb-2">Distribusi Booth Populer</h3>
         <canvas id="pieChart" width="200" height="200"></canvas>
     </div>
 
     <!-- Booth Selector & Customer List -->
     <div class="bg-white p-4 rounded-xl shadow-sm w-full md:w-1/2">
-       <label for="boothSelect" class="block text-gray-700 font-semibold mb-2">Pilih Booth</label>
+        <label for="boothSelect" class="block text-gray-700 font-semibold mb-2">Pilih Booth</label>
         <select id="boothSelect" 
             class="border border-gray-300 rounded-xl p-3 w-full mb-4 
-           bg-white shadow-sm focus:ring-2 focus:ring-pink-300 
-           focus:border-pink-400 focus:outline-none transition-all cursor-pointer">
-            <option value="1" class="text-gray-700 font-medium">Booth 1</option>
-            <option value="2" class="text-gray-700 font-medium">Booth 2</option>
-            <option value="3" class="text-gray-700 font-medium">Booth 3</option>
-            <option value="4" class="text-gray-700 font-medium">Booth 4</option>
-            <option value="5" class="text-gray-700 font-medium">Booth 5</option>
+                bg-white shadow-sm focus:ring-2 focus:ring-pink-300 
+                focus:border-pink-400 focus:outline-none transition-all cursor-pointer">
+            @foreach($booths as $booth)
+                <option value="{{ $booth->id }}" class="text-gray-700 font-medium">
+                    {{ $booth->nama_booth }}
+                </option>
+            @endforeach
         </select>
 
         <!-- Daftar Customer -->
@@ -71,41 +76,33 @@
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const chartData = {
-        1: [12, 7, 20, 10],
-        2: [5, 3, 15, 2],
-        3: [8, 4, 10, 5],
-        4: [6, 2, 18, 4],
-        5: [10, 5, 12, 3]
-    };
-
-    const customerData = {
-        1: [{name:"Ghina", time:"10:00"}, {name:"Amanda", time:"10:30"}],
-        2: [{name:"Putri", time:"11:00"}, {name:"Alaysa", time:"11:30"}],
-        3: [{name:"Budi", time:"12:00"}, {name:"Dewi", time:"12:30"}],
-        4: [{name:"Rizky", time:"13:00"}, {name:"Sari", time:"13:30"}],
-        5: [{name:"Tono", time:"14:00"}, {name:"Nina", time:"14:30"}]
-    };
+    const chartData = @json($chartPerBooth);
+    const labelBooth = @json($labelBooth);
+    const customerData = @json($customerData);
 
     const ctx = document.getElementById('pieChart').getContext('2d');
     let pieChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Reservasi Hari Ini', 'Dalam Proses', 'Selesai', 'Pembatalan'],
+            labels: labelBooth, 
             datasets: [{
-                label: 'Jumlah',
-                data: chartData[1],
+                label: 'Jumlah Antrian',
+                data: chartData, 
                 backgroundColor: [
                     'rgba(59,130,246,0.8)',
                     'rgba(253,224,71,0.8)',
                     'rgba(34,197,94,0.8)',
-                    'rgba(239,68,68,0.8)'
+                    'rgba(239,68,68,0.8)',
+                    'rgba(168,85,247,0.8)',
+                    'rgba(16,185,129,0.8)'
                 ],
                 borderColor: [
                     'rgba(59,130,246,1)',
                     'rgba(253,224,71,1)',
                     'rgba(34,197,94,1)',
-                    'rgba(239,68,68,1)'
+                    'rgba(239,68,68,1)',
+                    'rgba(168,85,247,1)',
+                    'rgba(16,185,129,1)'
                 ],
                 borderWidth: 1
             }]
@@ -118,21 +115,26 @@
 
     function renderCustomers(booth) {
         customerList.innerHTML = '';
-        customerData[booth].forEach(c => {
-            const div = document.createElement('div');
-            div.className = 'bg-pink-50 p-2 rounded shadow flex justify-between items-center';
-            div.innerHTML = `<span>${c.name}</span><span class="text-gray-500 text-sm">${c.time}</span>`;
-            customerList.appendChild(div);
-        });
+        if(customerData[booth]) {
+            customerData[booth].forEach(c => {
+                const a = document.createElement('a');
+                a.href = `{{ url('operator/antrian/detail') }}/${c.id}`;
+                a.className = 'block bg-pink-50 hover:bg-pink-100 p-2 rounded shadow flex justify-between items-center transition';
+                
+                a.innerHTML = `
+                    <span class="text-pink-500 font-medium">${c.name}</span>
+                    <span class="text-gray-500 text-sm">${c.time}</span>
+                `;
+                
+                customerList.appendChild(a);
+            });
+        }
     }
-
-    // Default booth 1
-    renderCustomers(1);
+    // Default booth pertama
+    renderCustomers(Object.keys(customerData)[0]);
 
     boothSelect.addEventListener('change', function() {
         const booth = this.value;
-        pieChart.data.datasets[0].data = chartData[booth];
-        pieChart.update();
         renderCustomers(booth);
     });
 </script>

@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booth extends Model
 {
-    protected $table = 'booth';
+    protected $table = 'booths';
 
     protected $fillable = [
         'nama_booth',
-        'deskripsi'
+        'kapasitas',
+        'gambar'
     ];
 
     public function antrian()

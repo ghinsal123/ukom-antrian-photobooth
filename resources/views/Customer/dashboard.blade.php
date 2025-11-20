@@ -95,7 +95,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                @foreach ($booths as $booth)
+                @foreach ($booth as $booth)
                     <div class="border rounded-xl p-5 shadow-sm bg-pink-50">
 
                         <h4 class="text-xl font-bold text-pink-500 mb-3 text-center">

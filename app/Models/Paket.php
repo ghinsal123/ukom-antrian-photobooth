@@ -11,6 +11,12 @@ class Paket extends Model
     protected $fillable = [
         'nama_paket',
         'harga',
-        'deskripsi'
+        'gambar',
+        'deskripsi',
     ];
+
+    public function antrian()
+    {
+        return $this->hasMany(Antrian::class, 'paket_id');
+    }
 }

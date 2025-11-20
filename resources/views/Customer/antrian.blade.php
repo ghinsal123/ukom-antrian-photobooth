@@ -89,7 +89,7 @@
                             class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
                             required>
                             
-                            @foreach ($pakets as $paket)
+                            @foreach ($paket as $paket)
                                 <option value="{{ $paket->id }}">{{ $paket->nama_paket }}</option>
                             @endforeach
                         </select>
@@ -103,7 +103,7 @@
                             class="w-full p-3 border rounded-lg focus:ring-pink-300 focus:border-pink-400"
                             required>
                             
-                            @foreach ($booths as $booth)
+                            @foreach ($booth as $booth)
                                 <option value="{{ $booth->id }}">{{ $booth->nama_booth }}</option>
                             @endforeach
                         </select>

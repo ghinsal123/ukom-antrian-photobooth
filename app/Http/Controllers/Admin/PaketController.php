@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Paket;
+use App\Models\Paket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,9 +19,9 @@ class PaketController extends Controller
                   ->orWhere('deskripsi', 'like', '%' . $request->search . '%');
         }
 
-        $pakets = $query->latest()->paginate(10);
+        $paket = $query->latest()->paginate(10);
 
-        return view('admin.paket.index', compact('pakets'));
+        return view('admin.paket.index', compact('paket'));
     }
 
     public function create()
@@ -36,6 +36,13 @@ class PaketController extends Controller
             'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ], [
+            'nama_paket.required' => 'Nama paket wajib diisi.',
+            'harga.required' => 'Harga wajib diisi.',
+            'harga.numeric' => 'Harga harus berupa angka.',
+            'gambar.image' => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes' => 'Gambar harus berformat JPG, JPEG, atau PNG.',
+            'gambar.max' => 'Ukuran gambar maksimal 4MB.',
         ]);
 
         $data = $request->only(['nama_paket', 'harga', 'deskripsi']);
@@ -69,7 +76,14 @@ class PaketController extends Controller
             'nama_paket' => 'required|string|max:255',
             'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ], [
+            'nama_paket.required' => 'Nama paket wajib diisi.',
+            'harga.required' => 'Harga wajib diisi.',
+            'harga.numeric' => 'Harga harus berupa angka.',
+            'gambar.image' => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes' => 'Gambar harus berformat JPG, JPEG, atau PNG.',
+            'gambar.max' => 'Ukuran gambar maksimal 4MB.',
         ]);
 
         $data = $request->only(['nama_paket', 'harga', 'deskripsi']);

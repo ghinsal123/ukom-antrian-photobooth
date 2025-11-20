@@ -19,7 +19,7 @@ class DashboardController extends Controller
             return redirect()->route('customer.login');
         }
 
-        $booths = Booth::with(['antrian' => function($q) {
+        $booth = Booth::with(['antrian' => function($q) {
             $q->orderBy('nomor_antrian', 'ASC')
               ->with(['pengguna', 'paket']);
         }])->get();
@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
         return view('customer.dashboard', [
             'nama'       => $customerName,
-            'booths'     => $booths,
+            'booth'     => $booth,
             'antrianku'  => $antrianku
         ]);
     }

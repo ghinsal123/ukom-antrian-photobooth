@@ -21,7 +21,7 @@ class LoginController extends BaseLoginController
 
         return back()->withErrors([
             'login' => 'Username atau password salah'
-        ]);
+        ])->withInput();
     }
 
     public function logout()

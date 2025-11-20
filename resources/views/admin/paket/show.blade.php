@@ -16,6 +16,7 @@
         <p><strong>Harga:</strong> Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>
         <p><strong>Deskripsi:</strong> {{ $paket->deskripsi }}</p>
         <p><strong>Dibuat:</strong> {{ $paket->created_at ? $paket->created_at->format('d M Y H:i') : '-' }}</p>
+        <p><strong>Diedit:</strong> {{ $paket->updated_at ? $paket->updated_at->format('d M Y H:i') : '-' }}</p>
     </div>
 
     <div class="flex justify-between mt-6">

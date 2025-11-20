@@ -13,9 +13,4 @@ class Paket extends Model
         'harga',
         'deskripsi'
     ];
-
-    public function antrian()
-    {
-        return $this->hasMany(Antrian::class, 'paket_id');
-    }
 }

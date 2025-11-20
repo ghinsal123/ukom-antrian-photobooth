@@ -10,29 +10,27 @@ class Antrian extends Model
 
     protected $fillable = [
         'pengguna_id',
+        'nama_lengkap',
+        'no_telp',
         'booth_id',
         'paket_id',
-        'nomor_antrian',
         'tanggal',
-        'status',
-        'catatan'
+        'nomor_antrian',
+        'status'
     ];
 
-    // Relasi ke pengguna (customer)
-    public function pengguna()
-    {
-        return $this->belongsTo(Pengguna::class, 'pengguna_id');
-    }
-
-    // Relasi ke booth
     public function booth()
     {
         return $this->belongsTo(Booth::class, 'booth_id');
     }
 
-    // Relasi ke paket
     public function paket()
     {
         return $this->belongsTo(Paket::class, 'paket_id');
+    }
+
+    public function pengguna()
+    {
+        return $this->belongsTo(Pengguna::class, 'pengguna_id');
     }
 }

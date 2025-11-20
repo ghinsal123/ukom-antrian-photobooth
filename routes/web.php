@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
-use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Operator\AntrianController as OperatorAntrianController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\BoothController;
@@ -14,7 +13,9 @@ use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Operator\BoothController as OperatorBoothController;
 use App\Http\Controllers\Operator\PaketController as OperatorPaketController;
 use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
+use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Customer\DashboardController;
+use App\Http\Controllers\Customer\AntrianController; 
 
 Route::get('/', function () {
     return view('welcome');
@@ -110,38 +111,27 @@ Route::prefix('operator')->name('operator.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/login', fn() => redirect()->route('customer.login'))->name('login');
-Route::get('/', fn() => redirect()->route('customer.login'));
 
 Route::prefix('customer')->name('customer.')->group(function () {
 
-    // Guest Routes
     Route::middleware('guest:customer')->group(function () {
         Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
-    // Authenticated Routes
     Route::middleware('customer')->group(function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
-        // Halaman Form Antrian
-        Route::get('antrian', fn () => view('customer.antrian'))->name('antrian');
+        // ✔ Route CREATE Antrian
+        Route::get('antrian', [AntrianController::class, 'create'])
+            ->name('antrian');
 
-        // Proses Submit Antrian
-        Route::post('antrian/submit', [CustomerAntrianController::class, 'submit'])
-            ->name('antrian.submit');
+        // ✔ Route STORE Antrian
+        Route::post('antrian/store', [AntrianController::class, 'store'])
+            ->name('antrian.store');
 
-        Route::get('activity/{id}', fn ($id) => view('customer.detail', compact('id')))
-            ->name('activity.detail');
-
-        Route::get('activity/{id}/edit', fn ($id) => view('customer.edit', compact('id')))
-            ->name('activity.edit');
-
-        Route::delete('activity/{id}/delete', [DashboardController::class, 'delete'])
-            ->name('activity.delete');
     });
+
 });

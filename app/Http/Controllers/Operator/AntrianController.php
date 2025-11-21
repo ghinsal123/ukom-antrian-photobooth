@@ -7,7 +7,8 @@ use App\Models\Antrian;
 use App\Models\Pengguna;
 use App\Models\Paket;
 use App\Models\Booth;
-use App\Models\Admin\Log;
+use App\Models\Log;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,25 +21,16 @@ class AntrianController extends Controller
     {
         $query = Antrian::with(['pengguna', 'booth', 'paket']);
 
-        // Pencarian
         if ($request->has('search') && $request->search != '') {
             $keyword = $request->search;
-
             $query->where(function ($q) use ($keyword) {
-                $q->whereHas('pengguna', function ($q2) use ($keyword) {
-                    $q2->where('nama_pengguna', 'like', "%$keyword%");
-                })
-                ->orWhere('nomor_antrian', 'like', "%$keyword%")
-                ->orWhereHas('booth', function ($q3) use ($keyword) {
-                    $q3->where('nama_booth', 'like', "%$keyword%");
-                })
-                ->orWhereHas('paket', function ($q4) use ($keyword) {
-                    $q4->where('nama_paket', 'like', "%$keyword%");
-                });
+                $q->whereHas('pengguna', fn($q2) => $q2->where('nama_pengguna', 'like', "%$keyword%"))
+                  ->orWhere('nomor_antrian', 'like', "%$keyword%")
+                  ->orWhereHas('booth', fn($q3) => $q3->where('nama_booth', 'like', "%$keyword%"))
+                  ->orWhereHas('paket', fn($q4) => $q4->where('nama_paket', 'like', "%$keyword%"));
             });
         }
 
-        // Pagination
         $antrian = $query->paginate(10);
 
         return view('Operator.antrian.index', compact('antrian'));
@@ -59,71 +51,84 @@ class AntrianController extends Controller
     /**
      * Simpan antrian baru
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'pengguna_id'   => 'nullable|exists:pengguna,id',
-            'nama_pengguna' => 'nullable|string|max:255',
-            'booth_id'      => 'required|exists:booth,id',
-            'paket_id'      => 'required|exists:paket,id',
-            'tanggal'       => 'required|date',
-            'catatan'       => 'nullable|string|max:500',
-        ]);
-
-        // Jika operator mengetik nama customer baru
-        if (!$request->pengguna_id && $request->nama_pengguna) {
-            $user = Pengguna::create([
-                'nama_pengguna' => $request->nama_pengguna,
-                'no_telp'       => null,
-                'password'      => bcrypt('password123'),
-                'role'          => 'customer',
+        public function store(Request $request)
+        {
+            $request->validate([
+                'pengguna_id'   => 'nullable|exists:pengguna,id',
+                'nama_pengguna' => 'nullable|string|max:255',
+                'booth_id'      => 'required|exists:booth,id',
+                'paket_id'      => 'required|exists:paket,id',
+                'tanggal'       => 'required|date',
+                'catatan'       => 'nullable|string|max:500',
             ]);
-            $penggunaId = $user->id;
-        } else {
-            $penggunaId = $request->pengguna_id;
-        }
 
-        // Nomor antrian otomatis
-        $nomorAntrian = $this->generateNomorAntrian();
+            // Jika operator mengetik nama customer baru
+            if (!$request->pengguna_id && $request->nama_pengguna) {
+                $user = Pengguna::create([
+                    'nama_pengguna' => $request->nama_pengguna,
+                    'no_telp'       => null,
+                    'password'      => bcrypt('password123'),
+                    'role'          => 'customer',
+                ]);
+                $penggunaId = $user->id;
+            } else {
+                $penggunaId = $request->pengguna_id;
+            }
 
+            // Paksa tanggal WIB dan format Y-m-d
+            $tanggal = Carbon::parse($request->tanggal, 'Asia/Jakarta')->format('Y-m-d');
+
+            $nomorAntrian = $this->generateNomorAntrian($request->booth_id, $tanggal);
+
+            // Saat membuat antrian
         $antrian = Antrian::create([
             'pengguna_id'   => $penggunaId,
             'booth_id'      => $request->booth_id,
             'paket_id'      => $request->paket_id,
             'nomor_antrian' => $nomorAntrian,
-            'tanggal'       => $request->tanggal,
+            'tanggal'       => $tanggal,
             'status'        => 'menunggu',
             'catatan'       => $request->catatan,
         ]);
 
+        // Buat log
         Log::create([
             'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,
-            'aksi'        => 'buat_reservasi',
-            'keterangan'  => 'Operator membuat antrian untuk pengguna ID ' . $penggunaId,
+            'aksi'        => 'buat_antrian',
+            'keterangan'  => 'Operator membuat antrian ID ' . $antrian->id,
         ]);
 
-        return redirect()->route('operator.antrian.index')
-            ->with('success', 'Antrian berhasil ditambahkan!');
-    }
+        // Saat update status
+        $antrian->update([
+            'status'  => $request->status,
+            'catatan' => $request->catatan,
+        ]);
+
+        // Buat log update
+        Log::create([
+            'pengguna_id' => Auth::id(),
+            'antrian_id'  => $antrian->id,
+            'aksi'        => 'update_status',
+            'keterangan'  => 'Operator mengubah status antrian ID ' . $antrian->id . ' menjadi ' . $request->status,
+        ]);
+    return redirect()->route('operator.antrian.index')
+        ->with('success', 'Antrian berhasil ditambahkan!');
+}
 
     /**
-     * Generate nomor antrian otomatis
+     * Generate nomor antrian otomatis per booth
      */
-    private function generateNomorAntrian()
+    private function generateNomorAntrian($boothId, $tanggal)
     {
-        $last = Antrian::orderBy('id', 'DESC')->first();
+        // Ambil nomor terakhir di booth yang sama pada tanggal yang sama
+        $last = Antrian::where('booth_id', $boothId)
+                    ->where('tanggal', $tanggal)
+                    ->orderBy('nomor_antrian', 'DESC')
+                    ->first();
 
-        if (!$last) {
-            return 'A-001';
-        }
-
-        $lastNumber = intval(substr($last->nomor_antrian, 2));
-        $newNumber = $lastNumber + 1;
-
-        return 'A-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+        return $last ? $last->nomor_antrian + 1 : 1;
     }
-
     /**
      * Detail antrian
      */
@@ -183,7 +188,7 @@ class AntrianController extends Controller
         Log::create([
             'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,
-            'aksi'        => 'hapus_reservasi',
+            'aksi'        => 'hapus_antrian',
             'keterangan'  => 'Operator menghapus antrian ID ' . $antrian->id,
         ]);
 

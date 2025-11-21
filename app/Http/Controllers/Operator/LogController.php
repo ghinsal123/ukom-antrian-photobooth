@@ -3,26 +3,49 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Log;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Log::with(['pengguna', 'antrian']);
+        // 1. Ambil log terbaru per antrian (MAX id per antrian)
+        $latestLogsSub = Log::select(DB::raw('MAX(id) as id'))
+            ->groupBy('antrian_id');
 
-        // Filter berdasarkan periode
-        if ($request->filter == 'hari') {
-            $query->whereDate('created_at', today());
-        } elseif ($request->filter == 'minggu') {
-            $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
-        } elseif ($request->filter == 'bulan') {
-            $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year);
-        } elseif ($request->filter == 'tahun') {
-            $query->whereYear('created_at', now()->year);
+        // 2. Query utama dengan relasi
+        $query = Log::with([
+            'pengguna',
+            'antrian.pengguna',
+            'antrian.booth',
+            'antrian.paket'
+        ])->whereIn('id', $latestLogsSub);
+
+        // 3. Filter berdasarkan tanggal antrian
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereHas('antrian', function($q) use ($request) {
+                $q->whereBetween('tanggal', [$request->start_date, $request->end_date]);
+            });
+        } elseif ($request->filled('start_date')) {
+            $query->whereHas('antrian', function($q) use ($request) {
+                $q->whereDate('tanggal', $request->start_date);
+            });
         }
 
+        // 4. Filter search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('pengguna', fn($q2) => $q2->where('nama_pengguna', 'like', "%$search%"))
+                  ->orWhereHas('antrian.pengguna', fn($q3) => $q3->where('nama_pengguna', 'like', "%$search%"))
+                  ->orWhereHas('antrian.booth', fn($q4) => $q4->where('nama_booth', 'like', "%$search%"))
+                  ->orWhereHas('antrian.paket', fn($q5) => $q5->where('nama_paket', 'like', "%$search%"));
+            });
+        }
+
+        // 5. Ambil hasil
         $logs = $query->orderBy('created_at', 'desc')->get();
 
         return view('Operator.log.index', compact('logs', 'request'));

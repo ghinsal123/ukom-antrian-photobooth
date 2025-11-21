@@ -5,9 +5,9 @@
 <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
 
 <!-- Tanggal / Jadwal -->
-   @php
-        \Carbon\Carbon::setLocale('id'); // set locale ke Indonesia
-        $hariIni = \Carbon\Carbon::now()->translatedFormat('l, d F Y'); // contoh: Rabu, 20 November 2025
+    @php
+        \Carbon\Carbon::setLocale('id'); 
+        $hariIni = \Carbon\Carbon::now('Asia/Jakarta')->translatedFormat('l, d F Y'); 
     @endphp
 
     <div class="flex items-center justify-between py-5">

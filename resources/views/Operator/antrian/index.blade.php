@@ -4,7 +4,6 @@
 <div class="container mx-auto px-4">
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
-
         <h2 class="text-3xl font-bold text-gray-800">Daftar Antrian</h2>
 
         <div class="flex gap-3">
@@ -30,8 +29,17 @@
                 + Tambah Antrian
             </a>
         </div>
-
     </div>
+
+    @php
+    function boothColor($name) {
+        $colors = ['purple', 'blue', 'green', 'yellow', 'purple', 'pink', 'indigo', 'teal', 'orange'];
+        $index = abs(crc32($name)) % count($colors);
+        $color = $colors[$index];
+        return "bg-{$color}-500 text-white";
+    }
+    @endphp
+
     <div class="overflow-x-auto">
         <table class="table-auto w-full border-collapse rounded-3xl shadow-2xl overflow-hidden">
             <thead class="bg-linear-to-r from-pink-300 to-pink-500 text-white">
@@ -50,7 +58,7 @@
             <tbody>
                 @foreach ($antrian as $item)
                 <tr class="bg-white shadow-md hover:shadow-lg">
-                    
+
                     {{-- Nomor Antrian --}}
                     <td class="px-4 py-3 font-bold text-pink-700">
                         {{ $item->nomor_antrian }}
@@ -62,8 +70,9 @@
                     </td>
 
                     {{-- Booth --}}
-                    <td class="px-4 py-3 text-pink-500 font-semibold">
-                        {{ $item->booth->nama_booth }}
+                    <td class="px-4 py-3 font-semibold text-center
+                        {{ $item->booth ? boothColor($item->booth->nama_booth) : 'bg-gray-300 text-gray-800' }}">
+                        {{ $item->booth->nama_booth ?? '-' }}
                     </td>
 
                     {{-- Paket --}}
@@ -87,17 +96,14 @@
                             <span class="bg-yellow-100 text-yellow-500 px-2 py-1 rounded-full text-sm font-semibold">
                                 Menunggu
                             </span>
-
                         @elseif($item->status === 'proses')
                             <span class="bg-blue-100 text-blue-500 px-2 py-1 rounded-full text-sm font-semibold">
                                 Proses
                             </span>
-
                         @elseif($item->status === 'selesai')
                             <span class="bg-green-100 text-green-500 px-2 py-1 rounded-full text-sm font-semibold">
                                 Selesai
                             </span>
-
                         @elseif($item->status === 'dibatalkan')
                             <span class="bg-red-100 text-red-500 px-2 py-1 rounded-full text-sm font-semibold">
                                 Dibatalkan
@@ -108,12 +114,12 @@
                     {{-- Aksi --}}
                     <td class="px-4 py-3 text-center flex gap-2 justify-center">
                         <a href="{{ route('operator.antrian.show', $item->id) }}" 
-                        class="bg-blue-500 text-white px-3 py-1 rounded-xl hover:bg-blue-600 shadow-md transition-all">
-                        Detail
+                           class="bg-blue-500 text-white px-3 py-1 rounded-xl hover:bg-blue-600 shadow-md transition-all">
+                           Detail
                         </a>
                         <a href="{{ route('operator.antrian.edit', $item->id) }}" 
-                        class="bg-yellow-400 text-white px-3 py-1 rounded-xl hover:bg-yellow-500 shadow-md transition-all">
-                        Edit
+                           class="bg-yellow-400 text-white px-3 py-1 rounded-xl hover:bg-yellow-500 shadow-md transition-all">
+                           Edit
                         </a>
                         <form action="{{ route('operator.antrian.delete', $item->id) }}" method="POST" class="inline">
                             @csrf

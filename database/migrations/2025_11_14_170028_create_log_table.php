@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-          Schema::create('log', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
-            $table->foreignId('antrian_id')->nullable()->constrained('antrian')->onDelete('cascade');
-            $table->enum('aksi', ['buat_reservasi','update_status','hapus_reservasi']);
+            $table->foreignId('pengguna_id')
+                  ->constrained('pengguna')
+                  ->onDelete('cascade');
+            $table->foreignId('antrian_id')
+                  ->nullable()
+                  ->constrained('antrian')
+                  ->onDelete('cascade');
+            $table->enum('aksi', ['buat_antrian', 'update_status', 'hapus_antrian'])
+                  ->default('buat_antrian');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('log');
+        Schema::dropIfExists('logs');
     }
 };

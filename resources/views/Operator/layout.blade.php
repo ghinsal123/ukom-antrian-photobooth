@@ -95,7 +95,6 @@
                 class="w-10 h-10 rounded-full object-cover border">
                 <div class="text-right leading-tight">
                     <p class="font-semibold text-gray-800 text-sm">{{ auth()->user()->nama_pengguna }}</p>
-                    <p class="text-gray-500 text-xs">Operator</p>
                 </div>
             </div>
         </div>
@@ -109,7 +108,6 @@
                 class="w-10 h-10 rounded-full object-cover border">
                 <div class="text-right leading-tight">
                     <p class="font-semibold text-gray-800 text-sm">{{ auth()->user()->nama_pengguna }}</p>
-                    <p class="text-gray-500 text-xs">Operator</p>
                 </div>
             </div>
         </div>

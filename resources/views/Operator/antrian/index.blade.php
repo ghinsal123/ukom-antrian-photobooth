@@ -46,6 +46,7 @@
                 <tr>
                     <th class="px-6 py-3">Nomor</th>
                     <th class="px-6 py-3">Nama</th>
+                    <th class="px-6 py-3">No. Telp</th>
                     <th class="px-6 py-3">Booth</th>
                     <th class="px-6 py-3">Paket</th>
                     <th class="px-6 py-3">Tanggal</th>
@@ -67,6 +68,11 @@
                     {{-- Nama --}}
                     <td class="px-4 py-3 font-medium text-pink-600">
                         {{ $item->pengguna->nama_pengguna ?? '-' }}
+                    </td>
+
+                    {{-- No. Telp --}}
+                    <td class="px-4 py-3 text-gray-700 font-semibold">
+                        {{ $item->pengguna->no_telp ?? '-' }}
                     </td>
 
                     {{-- Booth --}}

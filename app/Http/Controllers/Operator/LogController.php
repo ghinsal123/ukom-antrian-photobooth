@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class LogController extends Controller
 {
@@ -45,8 +46,24 @@ class LogController extends Controller
             });
         }
 
-        // 5. Ambil hasil
-        $logs = $query->orderBy('created_at', 'desc')->get();
+        // 5. Ambil hasil dan set timezone WIB
+        $logs = $query->orderBy('created_at', 'desc')->get()->map(function($log) {
+            $log->created_at = $log->created_at->clone()->timezone('Asia/Jakarta');
+            $log->updated_at = $log->updated_at->clone()->timezone('Asia/Jakarta');
+
+
+            if ($log->antrian) {
+                // Ubah tanggal antrian ke WIB
+                $log->antrian->tanggal = Carbon::parse($log->antrian->tanggal, 'Asia/Jakarta')->format('Y-m-d');
+
+                // Jika ada kolom jam, tampilkan juga WIB
+                if (isset($log->antrian->jam)) {
+                    $log->antrian->jam = Carbon::parse($log->antrian->jam, 'Asia/Jakarta')->format('H:i:s');
+                }
+            }
+
+            return $log;
+        });
 
         return view('Operator.log.index', compact('logs', 'request'));
     }

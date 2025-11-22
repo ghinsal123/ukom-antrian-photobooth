@@ -4,84 +4,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Reservasi</title>
-       @vite('resources/css/app.css')
+    <title>Detail Antrian</title>
+    @vite('resources/css/app.css')
 </head>
 
 <body class="bg-pink-50">
 
-   
-    <div class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"></div>
-    <div class="fixed inset-0 flex items-center justify-center px-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative">
-            <a href="{{ route('customer.dashboard') }}"
-                class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold">
-                ×
-            </a>
+<!-- Background Blur -->
+<div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"></div>
 
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Detail Reservasi</h2>
-            <div class="bg-pink-100 border-l-4 border-pink-400 p-3 rounded-lg mb-5">
-                <p class="text-gray-600 text-sm">Nomor Antrian</p>
-                <p class="text-lg font-bold text-pink-600">
-                    {{ $detail->kode ?? 'PB001' }}
+<!-- Center Card -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-lg max-w-xs w-full relative p-5">
+
+        <!-- Close -->
+        <a href="{{ route('customer.dashboard') }}"
+           class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </a>
+
+        <!-- Title -->
+        <h2 class="text-center text-lg font-semibold text-gray-800 mb-3">Detail Reservasi</h2>
+
+        <!-- Antrian -->
+        <div class="text-center mb-3">
+            <p class="text-xs text-gray-500">Nomor Antrian</p>
+            <p class="text-3xl font-bold text-purple-600">{{ $detail->nomor_antrian }}</p>
+        </div>
+
+        <!-- Details -->
+        <div class="space-y-3 text-sm">
+
+            <!-- Nama -->
+            <div>
+                <p class="text-xs text-gray-500">Nama</p>
+                <p class="font-medium text-gray-800">{{ $detail->pengguna->nama_pengguna }}</p>
+            </div>
+
+            <!-- Telepon -->
+            <div>
+                <p class="text-xs text-gray-500">Telepon</p>
+                <p class="font-medium text-gray-800">
+                    {{ $detail->no_telp ?? 'Tidak tersedia' }}
                 </p>
             </div>
 
-            <div class="space-y-3">
-
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Nama:</span>
-                    <span class="font-semibold text-gray-800">
-                        {{ $detail->nama ?? 'Sarah Cantik' }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Telepon:</span>
-                    <span class="font-semibold text-gray-800">
-                        {{ $detail->telepon ?? '081234567890' }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Jumlah Orang:</span>
-                    <span class="font-semibold text-gray-800">
-                        {{ $detail->jumlah_orang ?? '2 Orang' }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Booth:</span>
-                    <span class="font-semibold text-gray-800">
-                        {{ $detail->booth ?? 'Studio A' }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Tanggal:</span>
-                    <span class="font-semibold text-gray-800">
-                        {{ $detail->tanggal ?? '2025-11-20' }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Status:</span>
-                    <span
-                        class="px-3 py-1 text-sm rounded-full
-                        {{ ($detail->status ?? 'Dikonfirmasi') === 'Dikonfirmasi' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600' }}">
-                        {{ $detail->status ?? 'Dikonfirmasi' }}
-                    </span>
-                </div>
-
+            <!-- Paket -->
+            <div>
+                <p class="text-xs text-gray-500">Paket</p>
+                <p class="font-medium text-gray-800">{{ $detail->paket->nama_paket }}</p>
             </div>
-            <a href="{{ route('customer.dashboard') }}"
-                class="block text-center bg-pink-400 hover:bg-pink-500 text-white px-4 py-2 rounded-xl mt-6">
-                Kembali
-            </a>
+
+            <!-- Tanggal -->
+            <div>
+                <p class="text-xs text-gray-500">Tanggal</p>
+                <p class="font-medium text-gray-800">{{ $detail->tanggal }}</p>
+            </div>
+
+            <!-- Booth -->
+            <div>
+                <p class="text-xs text-gray-500">Booth</p>
+                <p class="font-medium text-gray-800">{{ $detail->booth->nama_booth }}</p>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <p class="text-xs text-gray-500">Status</p>
+                <span class="px-2 py-1 rounded text-xs font-medium
+                    {{ $detail->status == 'menunggu' ? 'bg-yellow-100 text-yellow-700' :
+                       ($detail->status == 'diproses' ? 'bg-blue-100 text-blue-700' :
+                       ($detail->status == 'selesai' ? 'bg-green-100 text-green-700' :
+                       'bg-red-100 text-red-700')) }}">
+                    {{ ucfirst($detail->status) }}
+                </span>
+            </div>
 
         </div>
+
+        <!-- Images -->
+        <div class="flex justify-center gap-5 mt-4">
+            <img src="{{ asset('storage/' . $detail->paket->gambar) }}"
+                 class="w-16 h-16 rounded-lg object-cover shadow">
+
+            <img src="{{ asset('storage/' . $detail->booth->gambar) }}"
+                 class="w-16 h-16 rounded-lg object-cover shadow">
+        </div>
+
     </div>
+</div>
 
 </body>
-
 </html>

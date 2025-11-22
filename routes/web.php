@@ -114,27 +114,32 @@ Route::prefix('operator')->name('operator.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-
 Route::prefix('customer')->name('customer.')->group(function () {
 
+    // AUTH LOGIN
     Route::middleware('guest:customer')->group(function () {
         Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
+    // CUSTOMER AUTHENTICATED
     Route::middleware('customer')->group(function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
-        // ✔ Route CREATE Antrian
-        Route::get('antrian', [AntrianController::class, 'create'])
-            ->name('antrian');
+        // CREATE
+        Route::get('antrian', [AntrianController::class, 'create'])->name('antrian');
+        Route::post('antrian/store', [AntrianController::class, 'store'])->name('antrian.store');
 
-        // ✔ Route STORE Antrian
-        Route::post('antrian/store', [AntrianController::class, 'store'])
-            ->name('antrian.store');
+        // DETAIL
+        Route::get('antrian/{id}/detail', [AntrianController::class, 'detail'])->name('antrian.detail');
 
+        // EDIT + UPDATE
+        Route::get('antrian/{id}/edit', [AntrianController::class, 'edit'])->name('antrian.edit');
+        Route::put('antrian/{id}', [AntrianController::class, 'update'])->name('antrian.update');
+
+        // DELETE
+        Route::delete('antrian/{id}', [AntrianController::class, 'destroy'])->name('antrian.delete');
     });
-
 });

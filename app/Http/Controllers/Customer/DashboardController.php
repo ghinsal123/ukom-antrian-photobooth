@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Antrian;
 use App\Models\Booth;
 use App\Models\Paket;
+use App\Models\Pengguna;
 
 class DashboardController extends Controller
 {
@@ -19,6 +20,9 @@ class DashboardController extends Controller
             return redirect()->route('customer.login');
         }
 
+        // 🔥 Tambahkan: ambil data user
+        $pengguna = Pengguna::find($customerId);
+
         $booth = Booth::with(['antrian' => function($q) {
             $q->orderBy('nomor_antrian', 'ASC')
               ->with(['pengguna', 'paket']);
@@ -30,9 +34,12 @@ class DashboardController extends Controller
             ->get();
 
         return view('customer.dashboard', [
-            'nama'       => $customerName,
-            'booth'     => $booth,
-            'antrianku'  => $antrianku
+            'nama'        => $customerName,
+            'booth'       => $booth,
+            'antrianku'   => $antrianku,
+
+            // 🔥 Tambahkan ini biar tidak error
+            'pengguna'    => $pengguna
         ]);
     }
 

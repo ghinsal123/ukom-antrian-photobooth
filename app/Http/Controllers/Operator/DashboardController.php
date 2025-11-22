@@ -48,7 +48,8 @@ class DashboardController extends Controller
                         'name' => $a->pengguna->nama_pengguna ?? '-', 
                         'time' => Carbon::parse($a->created_at)
                                     ->timezone('Asia/Jakarta') 
-                                    ->format('H:i') // format jam WIB
+                                    ->format('H:i'),
+                         'status' => $a->status
                     ];
                 });
         }

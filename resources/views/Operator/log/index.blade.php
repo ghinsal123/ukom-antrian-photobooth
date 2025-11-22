@@ -66,47 +66,50 @@
     <!-- Tabel -->
     <div class="overflow-x-auto">
         <table class="table-auto w-full border-collapse shadow-xl text-xs sm:text-sm md:text-base">
-            <thead class="border bg-pink-100 text-gray-800">
-                <tr>
-                    <th class="px-3 py-2 border">No</th>
-                    <th class="px-3 py-2 border">Waktu</th>
-                    <th class="px-3 py-2 border">Operator</th>
-                    <th class="px-3 py-2 border">Customer</th>
-                    <th class="px-3 py-2 border">Booth</th>
-                    <th class="px-3 py-2 border">Paket</th>
-                    <th class="px-3 py-2 border">Status</th>
-                    <th class="px-3 py-2 border">Aksi</th>
-                </tr>
-            </thead>
+ <thead class="border bg-pink-100 text-gray-800">
+    <tr>
+        <th class="px-3 py-2 border">No</th>
+        <th class="px-3 py-2 border">Waktu</th>
+        <th class="px-3 py-2 border">Operator</th>
+        <th class="px-3 py-2 border">Customer</th>
+        <th class="px-3 py-2 border">Booth</th>
+        <th class="px-3 py-2 border">Paket</th>
+        <th class="px-3 py-2 border">Status</th>
+        <th class="px-3 py-2 border">Catatan</th> <!-- Kolom baru -->
+        <th class="px-3 py-2 border">Aksi</th>
+    </tr>
+</thead>
 
-            <tbody>
-                @forelse($logs as $log)
-                <tr class="bg-white hover:bg-pink-50">
-                    <td class="px-2 py-1 text-center border">{{ $loop->iteration }}</td>
-                    <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
-                    <td class="px-2 py-1 border">{{ $log->pengguna->nama_pengguna ?? '-' }}</td>
-                    <td class="px-2 py-1 border">{{ $log->antrian->pengguna->nama_pengguna ?? '-' }}</td>
-                    <td class="px-2 py-1 border">{{ $log->antrian->booth->nama_booth ?? '-' }}</td>
-                    <td class="px-2 py-1 border">{{ $log->antrian->paket->nama_paket ?? '-' }}</td>
-                    <td class="px-2 py-1 border">
-                        @if($log->antrian)
-                            <span class="px-2 py-1 rounded-xl text-white
-                                @if($log->antrian->status == 'menunggu') bg-yellow-500
-                                @elseif($log->antrian->status == 'proses') bg-blue-500
-                                @elseif($log->antrian->status == 'selesai') bg-green-500
-                                @else bg-gray-500 @endif">
-                                {{ ucfirst($log->antrian->status) }}
-                            </span>
-                        @else - @endif
-                    </td>
-                    <td class="px-2 py-1 border capitalize">{{ str_replace('_', ' ', $log->aksi) }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="px-2 py-2 text-center border">Tidak ada log</td>
-                </tr>
-                @endforelse
-            </tbody>
+<tbody>
+    @forelse($logs as $log)
+    <tr class="bg-white hover:bg-pink-50">
+        <td class="px-2 py-1 text-center border">{{ $loop->iteration }}</td>
+        <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
+        <td class="px-2 py-1 border">{{ $log->pengguna->nama_pengguna ?? '-' }}</td>
+        <td class="px-2 py-1 border">{{ $log->antrian->pengguna->nama_pengguna ?? '-' }}</td>
+        <td class="px-2 py-1 border">{{ $log->antrian->booth->nama_booth ?? '-' }}</td>
+        <td class="px-2 py-1 border">{{ $log->antrian->paket->nama_paket ?? '-' }}</td>
+        <td class="px-2 py-1 border">
+            @if($log->antrian)
+                <span class="px-2 py-1 rounded-xl text-gray-800
+                    @if($log->antrian->status == 'menunggu') 
+                    @elseif($log->antrian->status == 'proses') 
+                    @elseif($log->antrian->status == 'selesai')
+                    @else @endif">
+                    {{ ucfirst($log->antrian->status) }}
+                </span>
+            @else - @endif
+        </td>
+        <td class="px-2 py-1 border">{{ $log->antrian->catatan ?? '-' }}</td> <!-- Catatan ditampilkan -->
+        <td class="px-2 py-1 border capitalize">{{ str_replace('_', ' ', $log->aksi) }}</td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="9" class="px-2 py-2 text-center border">Tidak ada log</td>
+    </tr>
+    @endforelse
+</tbody>
+
         </table>
     </div>
 

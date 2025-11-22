@@ -14,50 +14,32 @@ class DashboardController extends Controller
     public function index()
     {
         $customerId = session('customer_id');
-        $customerName = session('customer_name');
 
         if (!$customerId) {
             return redirect()->route('customer.login');
         }
 
-        // 🔥 Tambahkan: ambil data user
         $pengguna = Pengguna::find($customerId);
 
-        $booth = Booth::with(['antrian' => function($q) {
-            $q->orderBy('nomor_antrian', 'ASC')
-              ->with(['pengguna', 'paket']);
-        }])->get();
-
+        // Ambil semua antrian milik user (semua status, semua tanggal)
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
+            ->orderBy('tanggal', 'DESC')
             ->orderBy('id', 'DESC')
             ->get();
 
+        // Ambil semua booth + antriannya (semua tanggal). Jika ingin hanya hari ini,
+        // ubah whereDate('tanggal', now()->toDateString()) di query antrian.
+        $booth = Booth::with(['antrian' => function ($q) {
+            $q->orderBy('tanggal', 'DESC')
+              ->orderBy('nomor_antrian', 'ASC')
+              ->with(['pengguna', 'paket']);
+        }])->get();
+
         return view('customer.dashboard', [
-            'nama'        => $customerName,
-            'booth'       => $booth,
-            'antrianku'   => $antrianku,
-
-            // 🔥 Tambahkan ini biar tidak error
-            'pengguna'    => $pengguna
+            'booth'     => $booth,
+            'antrianku' => $antrianku,
+            'pengguna'  => $pengguna
         ]);
-    }
-
-    public function delete($id)
-    {
-        $customerId = session('customer_id');
-
-        $antrian = Antrian::where('id', $id)
-            ->where('pengguna_id', $customerId)
-            ->first();
-
-        if (!$antrian) {
-            return redirect()->back()->with('error', 'Antrian tidak ditemukan');
-        }
-
-        $antrian->delete();
-
-        return redirect()->route('customer.dashboard')
-            ->with('success', 'Antrian berhasil dihapus!');
     }
 }

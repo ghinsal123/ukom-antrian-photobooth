@@ -11,9 +11,6 @@ use App\Models\Pengguna;
 
 class AntrianController extends Controller
 {
-    /**
-     * FORM TAMBAH ANTRIAN
-     */
     public function create()
     {
         $customerId = session('customer_id');
@@ -22,44 +19,36 @@ class AntrianController extends Controller
             return redirect()->route('customer.login');
         }
 
-        $pengguna = Pengguna::find($customerId);
-
         return view('customer.antrian', [
             'booth' => Booth::all(),
             'paket' => Paket::all(),
-            'pengguna' => $pengguna
+            'pengguna' => Pengguna::find($customerId)
         ]);
     }
 
-    /**
-     * SIMPAN ANTRIAN BARU
-     */
     public function store(Request $request)
     {
-        // VALIDASI INPUT
         $request->validate([
-            'booth_id'     => 'required',
-            'paket_id'     => 'required',
-            'tanggal'      => 'required|date'
+            'booth_id' => 'required|exists:booth,id',
+            'paket_id' => 'required|exists:paket,id',
+            'tanggal'  => 'required|date',
+            'no_telp'  => 'required'
         ]);
 
         $customerId = session('customer_id');
-
-        if (!$customerId) {
-            return redirect()->route('customer.login');
-        }
-
-        // Ambil data user yang login
         $pengguna = Pengguna::find($customerId);
 
-        // CARI NOMOR ANTRIAN TERAKHIR PER BOOTH
+        // update nomor telepon
+        $pengguna->update(['no_telp' => $request->no_telp]);
+
+        // nomor antrian otomatis untuk booth + tanggal yang sama
         $last = Antrian::where('booth_id', $request->booth_id)
+            ->whereDate('tanggal', $request->tanggal)
             ->orderBy('nomor_antrian', 'DESC')
             ->first();
 
         $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
 
-        // SIMPAN ANTRIAN
         Antrian::create([
             'pengguna_id'   => $customerId,
             'booth_id'      => $request->booth_id,
@@ -70,12 +59,9 @@ class AntrianController extends Controller
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', 'Antrian berhasil ditambahkan!');
+            ->with('success', 'Data berhasil ditambahkan.');
     }
 
-    /**
-     * DETAIL ANTRIAN
-     */
     public function detail($id)
     {
         $detail = Antrian::with(['booth', 'paket', 'pengguna'])
@@ -84,17 +70,14 @@ class AntrianController extends Controller
         return view('customer.detail', compact('detail'));
     }
 
-    /**
-     * FORM EDIT
-     */
     public function edit($id)
     {
         $antrian = Antrian::with(['booth', 'paket', 'pengguna'])
             ->findOrFail($id);
 
-        if ($antrian->status !== 'menunggu') {
+        if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
-                ->with('error', 'Antrian tidak bisa diedit.');
+                ->with('error', 'Antrian tidak bisa diubah.');
         }
 
         return view('customer.edit', [
@@ -105,50 +88,55 @@ class AntrianController extends Controller
         ]);
     }
 
-    /**
-     * UPDATE ANTRIAN
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'booth_id'     => 'required',
-            'paket_id'     => 'required',
-            'tanggal'      => 'required|date'
+            'booth_id' => 'required|exists:booth,id',
+            'paket_id' => 'required|exists:paket,id',
+            'tanggal'  => 'required|date'
         ]);
 
         $antrian = Antrian::findOrFail($id);
 
-        if ($antrian->status !== 'menunggu') {
+        if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
-                ->with('error', 'Antrian tidak bisa diedit.');
+                ->with('error', 'Antrian tidak bisa diubah.');
         }
 
-        // UPDATE DATA ANTRIAN
+        // jika booth/tanggal berubah, hitung nomor baru
+        if ($antrian->booth_id != $request->booth_id || $antrian->tanggal != $request->tanggal) {
+            $last = Antrian::where('booth_id', $request->booth_id)
+                ->whereDate('tanggal', $request->tanggal)
+                ->orderBy('nomor_antrian', 'DESC')
+                ->first();
+
+            $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
+            $antrian->nomor_antrian = $nextNumber;
+        }
+
         $antrian->update([
             'booth_id' => $request->booth_id,
             'paket_id' => $request->paket_id,
-            'tanggal'  => $request->tanggal,
+            'tanggal'  => $request->tanggal
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('warning', 'Antrian berhasil diperbarui!');
+            ->with('success', 'Perubahan berhasil disimpan.');
     }
 
-    /**
-     * HAPUS / BATALKAN ANTRIAN
-     */
     public function destroy($id)
     {
         $antrian = Antrian::findOrFail($id);
 
-        if ($antrian->status !== 'menunggu') {
+        if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
                 ->with('error', 'Antrian tidak bisa dibatalkan.');
         }
 
-        $antrian->delete();
+        // UBAH STATUS (jangan delete)
+        $antrian->update(['status' => 'dibatalkan']);
 
         return redirect()->route('customer.dashboard')
-            ->with('error', 'Antrian berhasil dibatalkan!');
+            ->with('success', 'Antrian berhasil dibatalkan.');
     }
 }

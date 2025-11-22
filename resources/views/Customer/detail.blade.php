@@ -10,87 +10,133 @@
 
 <body class="bg-pink-50">
 
-<!-- Background Blur -->
+<!-- Background popup -->
 <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"></div>
 
-<!-- Center Card -->
+<!-- Popup card -->
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-lg max-w-xs w-full relative p-5">
+    <div class="bg-white rounded-lg shadow-xl w-[420px] p-6 border border-pink-200">
 
-        <!-- Close -->
-        <a href="{{ route('customer.dashboard') }}"
-           class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </a>
+        <!-- Judul -->
+        <h2 class="text-center text-lg font-semibold text-pink-500 mb-4">
+            Detail Antrian
+        </h2>
 
-        <!-- Title -->
-        <h2 class="text-center text-lg font-semibold text-gray-800 mb-3">Detail Reservasi</h2>
-
-        <!-- Antrian -->
-        <div class="text-center mb-3">
+        <!-- Nomor Antrian -->
+        <div class="text-center mb-4">
             <p class="text-xs text-gray-500">Nomor Antrian</p>
             <p class="text-3xl font-bold text-purple-600">{{ $detail->nomor_antrian }}</p>
         </div>
 
-        <!-- Details -->
-        <div class="space-y-3 text-sm">
+        <!-- Detail User -->
+        <div class="grid grid-cols-2 gap-4 text-sm">
 
-            <!-- Nama -->
             <div>
                 <p class="text-xs text-gray-500">Nama</p>
                 <p class="font-medium text-gray-800">{{ $detail->pengguna->nama_pengguna }}</p>
             </div>
 
-            <!-- Telepon -->
             <div>
                 <p class="text-xs text-gray-500">Telepon</p>
                 <p class="font-medium text-gray-800">
-                    {{ $detail->no_telp ?? 'Tidak tersedia' }}
+                    {{ $detail->no_telp ?? $detail->pengguna->no_telp ?? 'Tidak tersedia' }}
                 </p>
             </div>
 
-            <!-- Paket -->
             <div>
                 <p class="text-xs text-gray-500">Paket</p>
                 <p class="font-medium text-gray-800">{{ $detail->paket->nama_paket }}</p>
             </div>
 
-            <!-- Tanggal -->
             <div>
                 <p class="text-xs text-gray-500">Tanggal</p>
                 <p class="font-medium text-gray-800">{{ $detail->tanggal }}</p>
             </div>
 
-            <!-- Booth -->
             <div>
                 <p class="text-xs text-gray-500">Booth</p>
                 <p class="font-medium text-gray-800">{{ $detail->booth->nama_booth }}</p>
             </div>
 
-            <!-- Status -->
+            <!-- STATUS -->
             <div>
                 <p class="text-xs text-gray-500">Status</p>
-                <span class="px-2 py-1 rounded text-xs font-medium
-                    {{ $detail->status == 'menunggu' ? 'bg-yellow-100 text-yellow-700' :
-                       ($detail->status == 'diproses' ? 'bg-blue-100 text-blue-700' :
-                       ($detail->status == 'selesai' ? 'bg-green-100 text-green-700' :
-                       'bg-red-100 text-red-700')) }}">
-                    {{ ucfirst($detail->status) }}
-                </span>
+
+                @php $status = strtolower($detail->status); @endphp
+
+                @if($status == 'menunggu')
+                    <span class="px-2 py-1 bg-gray-200 text-gray-700 text-xs font-medium rounded-md">
+                        Menunggu
+                    </span>
+
+                @elseif($status == 'proses' || $status == 'diproses')
+                    <span class="px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-md">
+                        Diproses
+                    </span>
+
+                @elseif($status == 'selesai')
+                    <span class="px-2 py-1 bg-pink-200 text-pink-800 text-xs font-medium rounded-md">
+                        Selesai
+                    </span>
+
+                @elseif($status == 'dibatalkan')
+                    <span class="px-2 py-1 bg-red-200 text-red-800 text-xs font-medium rounded-md">
+                        Dibatalkan
+                    </span>
+                @endif
             </div>
 
         </div>
 
-        <!-- Images -->
-        <div class="flex justify-center gap-5 mt-4">
-            <img src="{{ asset('storage/' . $detail->paket->gambar) }}"
-                 class="w-16 h-16 rounded-lg object-cover shadow">
+        <!-- Preview Paket & Booth -->
+        <div class="grid grid-cols-2 gap-6 mt-6">
 
-            <img src="{{ asset('storage/' . $detail->booth->gambar) }}"
-                 class="w-16 h-16 rounded-lg object-cover shadow">
+            <!-- Paket -->
+            <div class="flex flex-col items-center">
+                <p class="text-sm font-medium text-pink-500 mb-1">Paket</p>
+
+                <div class="w-28 h-28 rounded-lg overflow-hidden border border-pink-200 shadow-md">
+                    <img src="{{ asset('storage/' . $detail->paket->gambar) }}" class="w-full h-full object-cover">
+                </div>
+
+                @if(!empty($detail->paket->deskripsi))
+                    <p class="text-xs text-gray-600 mt-2 text-center">
+                        {{ $detail->paket->deskripsi }}
+                    </p>
+                @endif
+
+                <p class="text-xs font-semibold text-pink-600 mt-1">
+                    Rp{{ number_format($detail->paket->harga, 0, ',', '.') }}
+                </p>
+            </div>
+
+            <!-- Booth -->
+            <div class="flex flex-col items-center">
+                <p class="text-sm font-medium text-purple-500 mb-1">Booth</p>
+
+                <div class="w-28 h-28 rounded-lg overflow-hidden border border-pink-200 shadow-md">
+                    <img src="{{ asset('storage/' . $detail->booth->gambar) }}" class="w-full h-full object-cover">
+                </div>
+
+                @if(!empty($detail->booth->deskripsi))
+                <p class="text-xs text-gray-600 mt-2 text-center">
+                    {{ $detail->booth->deskripsi }}
+                </p>
+                @endif
+
+                <p class="text-xs font-semibold text-purple-600 mt-1">
+                    Maks: {{ $detail->booth->kapasitas }} orang
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Tombol kembali -->
+        <div class="text-center mt-6">
+            <a href="{{ route('customer.dashboard') }}"
+               class="text-sm text-pink-500 font-medium hover:underline">
+               Kembali
+            </a>
         </div>
 
     </div>

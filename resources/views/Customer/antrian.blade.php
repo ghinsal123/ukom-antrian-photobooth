@@ -74,14 +74,10 @@
                         <input
                             type="text"
                             name="no_telp"
-                            value="{{ $pengguna->no_telp }}"
-                            placeholder="Nomor telepon kamu..."
-                            inputmode="numeric"
-                            pattern="[0-9]+"
-                            maxlength="15"
+                            value="{{ old('no_telp', $pengguna->no_telp) }}"
                             required
-                            class="w-full p-2.5 border rounded-lg text-sm"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            class="w-full p-2.5 border rounded-lg focus:ring-pink-300 focus:border-pink-400 text-sm"
+                            placeholder="Masukkan nomor telepon aktif kamu">
                     </div>
 
                     {{-- TANGGAL - PAKET - BOOTH --}}
@@ -90,10 +86,12 @@
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Tanggal</label>
                             <input
-                                type="date"
-                                name="tanggal"
-                                required
-                                class="w-full p-2.5 border rounded-lg focus:ring-pink-300 focus:border-pink-400 text-sm">
+                            type="text"
+                            name="tanggal"
+                            value="{{ date('Y-m-d') }}"
+                            readonly
+                            class="w-full p-2.5 border rounded-lg bg-gray-100 text-gray-600 text-sm cursor-not-allowed">
+
                         </div>
 
                         <div>

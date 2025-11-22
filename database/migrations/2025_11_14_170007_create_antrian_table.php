@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->integer('nomor_antrian');
             $table->unique(['booth_id', 'nomor_antrian']);
+
             $table->date('tanggal');
             $table->enum('status', ['menunggu', 'proses', 'selesai', 'dibatalkan'])->default('menunggu');
             $table->text('catatan')->nullable();

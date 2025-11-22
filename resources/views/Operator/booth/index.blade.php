@@ -9,7 +9,7 @@
     <form method="GET" action="{{ route('operator.booth.index') }}" class="flex gap-2 items-center w-full md:w-auto">
         <input type="text" name="search" value="{{ request('search') }}"
                placeholder="Cari nama booth..."
-               class="w-full md:w-64 border rounded-xl px-3 py-2">
+               class="w-full md:w-64 border border-gray-500 rounded-xl px-3 py-2">
         <button type="submit" class="px-4 py-2 bg-pink-500 text-white rounded-xl hover:bg-pink-600">
             Cari
         </button>

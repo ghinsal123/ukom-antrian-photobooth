@@ -54,11 +54,14 @@
                    readonly>
         </div>
 
-        {{-- Tanggal --}}
+        {{-- Tanggal & Waktu --}}
         <div>
-            <label class="block text-gray-700 font-semibold mb-2">Tanggal</label>
-            <input type="date" name="tanggal" value="{{ $data->tanggal }}" 
-                   class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+            <label class="block text-gray-700 font-semibold mb-2">Tanggal & Waktu</label>
+            <p class="text-gray-600 text-lg italic">
+                {{ \Carbon\Carbon::parse($data->tanggal)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+            </p>
+
+            <input type="hidden" name="tanggal" value="{{ \Carbon\Carbon::parse($data->tanggal)->timezone('Asia/Jakarta')->format('Y-m-d H:i:s') }}">
         </div>
 
         {{-- Status --}}
@@ -80,10 +83,10 @@
                       placeholder="Tambahkan catatan...">{{ $data->catatan }}</textarea>
         </div>
 
-        {{-- Tombol Update & Batal --}}
+        {{-- Tombol Edit & Batal --}}
         <div class="flex gap-4">
             <button type="submit" class="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition duration-300">
-                Update
+                Edit Antrian
             </button>
             <a href="{{ route('operator.antrian.index') }}" 
                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg text-center transition duration-300">

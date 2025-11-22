@@ -1,7 +1,7 @@
 @extends('Operator.layout')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-6 text-gray-800">Detail Antrian</h2>
+<h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Detail Antrian</h2>
 
 <div class="bg-white p-6 shadow-md rounded-xl divide-y divide-gray-200">
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
@@ -25,8 +25,10 @@
         <span class="text-gray-900">{{ $data->nomor_antrian }}</span>
     </div>
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
-        <span class="font-medium text-gray-700">Tanggal</span>
-        <span class="text-gray-900">{{ $data->tanggal }}</span>
+        <span class="font-medium text-gray-700">Tanggal & Waktu</span>
+        <span class="text-gray-900">
+            {{ \Carbon\Carbon::parse($data->tanggal)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+        </span>
     </div>
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Status</span>

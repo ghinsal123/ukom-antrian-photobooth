@@ -4,13 +4,13 @@
 <div class="bg-white rounded-3xl shadow-2xl p-6 max-w-3xl mx-auto mt-8">
     <h2 class="text-3xl font-bold mb-6 text-pink-600">{{ $booth->nama_booth }}</h2>
 
-    <div class="mb-6">
+    <div class="flex justify-center mb-6">
         @if($booth->gambar)
             <img src="{{ asset('storage/' . $booth->gambar) }}" 
-                 alt="{{ $booth->nama_booth }}" 
-                 class="w-full h-auto object-cover rounded-xl shadow-md">
+                alt="{{ $booth->nama_booth }}" 
+                class="w-64 h-64 object-cover rounded-xl shadow-md">
         @else
-            <div class="w-full h-64 bg-gray-100 flex items-center justify-center rounded-xl shadow-md">
+            <div class="w-64 h-64 bg-gray-100 flex items-center justify-center rounded-xl shadow-md">
                 <span class="text-gray-400 italic">Tidak ada gambar</span>
             </div>
         @endif

@@ -26,7 +26,7 @@
                     <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
                         <i class="fas fa-search text-sm"></i>
                     </span>
-                    <input type="text" name="search" placeholder="Cari nama, booth, paket..."
+                    <input type="text" name="search" placeholder="Cari nama, booth, paket, status..."
                         value="{{ request('search') }}"
                         class="border rounded-xl px-9 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-pink-500">
                 </div>
@@ -75,8 +75,8 @@
         <th class="px-3 py-2 border">Booth</th>
         <th class="px-3 py-2 border">Paket</th>
         <th class="px-3 py-2 border">Status</th>
-        <th class="px-3 py-2 border">Catatan</th> <!-- Kolom baru -->
-        <th class="px-3 py-2 border">Aksi</th>
+        <th class="px-3 py-2 border">Catatan</th> 
+        <th class="px-3 py-2 border no-print">Aksi</th>
     </tr>
 </thead>
 
@@ -100,8 +100,8 @@
                 </span>
             @else - @endif
         </td>
-        <td class="px-2 py-1 border">{{ $log->antrian->catatan ?? '-' }}</td> <!-- Catatan ditampilkan -->
-        <td class="px-2 py-1 border capitalize">{{ str_replace('_', ' ', $log->aksi) }}</td>
+        <td class="px-2 py-1 border">{{ $log->antrian->catatan ?? '-' }}</td> 
+        <td class="px-2 py-1 border capitalize no-print">{{ str_replace('_', ' ', $log->aksi) }}</td>
     </tr>
     @empty
     <tr>

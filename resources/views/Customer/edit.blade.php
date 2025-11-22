@@ -57,36 +57,34 @@
                             disabled>
                     </div>
 
-                    {{-- GRID 2 KOLOM: TELEPON & TANGGAL --}}
+                    {{-- GRID 2 KOLOM --}}
                     <div class="grid grid-cols-2 gap-4">
 
-                        {{-- TELEPON --}}
+                        {{-- TELEPON READONLY --}}
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Nomor Telepon</label>
                             <input 
-                                type="number"
+                                type="text"
                                 name="no_telp"
                                 value="{{ $antrian->pengguna->no_telp }}"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 15);"
-                                class="w-full p-2.5 border rounded-lg focus:ring-pink-300 focus:border-pink-400 text-sm"
-                                placeholder="08xxxxxxxxxx"
-                                required>
+                                class="w-full p-2.5 border rounded-lg bg-gray-100 text-sm cursor-not-allowed"
+                                readonly>
                         </div>
 
-                        {{-- TANGGAL --}}
+                        {{-- TANGGAL READONLY --}}
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Tanggal</label>
                             <input 
                                 type="date" 
                                 name="tanggal"
-                                value="{{ $antrian->tanggal }}"
-                                class="w-full p-2.5 border rounded-lg focus:ring-pink-300 focus:border-pink-400 text-sm"
-                                required>
+                                value="{{ $antrian->tanggal }}" 
+                                class="w-full p-2.5 border rounded-lg bg-gray-100 text-sm cursor-not-allowed"
+                                readonly>
                         </div>
 
                     </div>
 
-                    {{-- GRID 2 KOLOM: PAKET & BOOTH --}}
+                    {{-- GRID 2 KOLOM --}}
                     <div class="grid grid-cols-2 gap-4">
 
                         {{-- PAKET --}}
@@ -131,21 +129,17 @@
 
                     </div>
 
-                    {{-- PREVIEW IMAGES --}}
+                    {{-- PREVIEW --}}
                     <div class="grid grid-cols-2 gap-4">
-
-                        {{-- PREVIEW PAKET --}}
                         <div class="border rounded-lg p-3 bg-gray-50 flex justify-center items-center min-h-[120px]">
                             <p id="textPaket" class="text-gray-400 text-xs hidden">Preview Paket</p>
                             <img id="previewPaket" src="{{ asset('storage/' . $antrian->paket->gambar) }}" class="w-full h-28 object-cover rounded-lg">
                         </div>
 
-                        {{-- PREVIEW BOOTH --}}
                         <div class="border rounded-lg p-3 bg-gray-50 flex justify-center items-center min-h-[120px]">
                             <p id="textBooth" class="text-gray-400 text-xs hidden">Preview Booth</p>
                             <img id="previewBooth" src="{{ asset('storage/' . $antrian->booth->gambar) }}" class="w-full h-28 object-cover rounded-lg">
                         </div>
-
                     </div>
 
                     {{-- SUBMIT --}}
@@ -162,7 +156,7 @@
         </div>
     </div>
 
-    {{-- SCRIPT PREVIEW --}}
+    {{-- SCRIPT --}}
     <script>
         // PREVIEW PAKET
         const selectPaket = document.getElementById('selectPaket');
@@ -171,7 +165,6 @@
 
         selectPaket.addEventListener('change', function () {
             const gambar = this.options[this.selectedIndex].dataset.gambar;
-
             textPaket.classList.add('hidden');
             previewPaket.src = gambar;
             previewPaket.classList.remove('hidden');
@@ -184,7 +177,6 @@
 
         selectBooth.addEventListener('change', function () {
             const gambar = this.options[this.selectedIndex].dataset.gambar;
-
             textBooth.classList.add('hidden');
             previewBooth.src = gambar;
             previewBooth.classList.remove('hidden');

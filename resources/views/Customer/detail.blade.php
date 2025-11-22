@@ -13,24 +13,17 @@
 <!-- Background Blur -->
 <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"></div>
 
-<!-- Center Card -->
+<!-- Bigger Square Card -->
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-lg max-w-xs w-full relative p-5">
-
-        <!-- Close -->
-        <a href="{{ route('customer.dashboard') }}"
-           class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </a>
+    <div class="bg-white rounded-xl shadow-xl w-[360px] p-6 border border-pink-200">
 
         <!-- Title -->
-        <h2 class="text-center text-lg font-semibold text-gray-800 mb-3">Detail Reservasi</h2>
+        <h2 class="text-center text-lg font-semibold text-pink-500 mb-4">
+            Detail Antrian
+        </h2>
 
-        <!-- Antrian -->
-        <div class="text-center mb-3">
+        <!-- Antrian Number -->
+        <div class="text-center mb-4">
             <p class="text-xs text-gray-500">Nomor Antrian</p>
             <p class="text-3xl font-bold text-purple-600">{{ $detail->nomor_antrian }}</p>
         </div>
@@ -44,11 +37,11 @@
                 <p class="font-medium text-gray-800">{{ $detail->pengguna->nama_pengguna }}</p>
             </div>
 
-            <!-- Telepon -->
+            <!-- Telepon (always visible) -->
             <div>
                 <p class="text-xs text-gray-500">Telepon</p>
                 <p class="font-medium text-gray-800">
-                    {{ $detail->no_telp ?? 'Tidak tersedia' }}
+                    {{ $detail->no_telp ?? $detail->pengguna->no_telp ?? 'Tidak tersedia' }}
                 </p>
             </div>
 
@@ -84,13 +77,21 @@
 
         </div>
 
-        <!-- Images -->
-        <div class="flex justify-center gap-5 mt-4">
+        <!-- Bigger Images -->
+        <div class="flex justify-center gap-4 mt-5">
             <img src="{{ asset('storage/' . $detail->paket->gambar) }}"
-                 class="w-16 h-16 rounded-lg object-cover shadow">
+                 class="w-24 h-24 rounded-lg object-cover shadow-lg border border-pink-200">
 
             <img src="{{ asset('storage/' . $detail->booth->gambar) }}"
-                 class="w-16 h-16 rounded-lg object-cover shadow">
+                 class="w-24 h-24 rounded-lg object-cover shadow-lg border border-pink-200">
+        </div>
+
+        <!-- Close button -->
+        <div class="text-center mt-5">
+            <a href="{{ route('customer.dashboard') }}"
+               class="text-sm text-pink-500 font-medium hover:underline">
+               Kembali
+            </a>
         </div>
 
     </div>

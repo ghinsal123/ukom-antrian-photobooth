@@ -16,13 +16,13 @@
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-md border border-pink-100">
-        <h3 class="text-gray-500 font-medium">Total Akun</h3>
+        <h3 class="text-gray-500 font-medium">Total Pengguna</h3>
         <p class="text-3xl font-bold text-pink-500">{{ $totalAkun }}</p>
     </div>
 
     <div class="bg-white p-6 rounded-3xl shadow-md border border-pink-100">
         <h3 class="text-gray-500 font-medium">Laporan Bulan Ini</h3>
-        <p class="text-3xl font-bold text-ppink-500">{{ $totalLaporan }}</p>
+        <p class="text-3xl font-bold text-pink-500">{{ $totalLaporan }}</p>
     </div>
 
 </div>

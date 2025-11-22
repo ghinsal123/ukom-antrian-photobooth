@@ -19,7 +19,7 @@ class LoginController extends Controller
             'full_name' => 'required|string|max:255'
         ]);
 
-        // CEK USER
+        // untuk cek customer
         $user = Pengguna::where('nama_pengguna', $request->full_name)->first();
 
         // JIKA BELUM ADA → BUAT USER BARU (DENGAN PASSWORD DUMMY AGAR TIDAK ERROR)
@@ -31,7 +31,7 @@ class LoginController extends Controller
             ]);
         }
 
-        // SIMPAN SESI LOGIN
+        // simpan login 
         session([
             'customer_id'   => $user->id,
             'customer_name' => $user->nama_pengguna

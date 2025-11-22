@@ -116,15 +116,14 @@ Route::prefix('operator')->name('operator.')->group(function () {
 
 Route::prefix('customer')->name('customer.')->group(function () {
 
-    // AUTH LOGIN
+    //  LOGIN
     Route::middleware('guest:customer')->group(function () {
         Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
-    // CUSTOMER AUTHENTICATED
+    // CUSTOMER 
     Route::middleware('customer')->group(function () {
-
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 

@@ -16,7 +16,8 @@ class Antrian extends Model
         'paket_id',
         'tanggal',
         'nomor_antrian',
-        'status'
+        'status',
+        'catatan',
     ];
 
     public function booth()
@@ -33,4 +34,10 @@ class Antrian extends Model
     {
         return $this->belongsTo(Pengguna::class, 'pengguna_id');
     }
+
+        public function logs()
+    {
+        return $this->hasMany(Log::class, 'antrian_id');
+    }
+
 }

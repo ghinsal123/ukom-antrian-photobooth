@@ -1,91 +1,95 @@
 @extends('Operator.layout')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-6 text-gray-800">Edit Antrian</h2>
+<div class="max-w-3xl mx-auto mt-8">
+    <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Edit Antrian</h2>
 
-<form action="{{ route('operator.antrian.update', $data->id) }}" method="POST" class="bg-white p-6 shadow-lg rounded-xl space-y-4">
-    @csrf
-    @method('PUT')
+    <form action="{{ route('operator.antrian.update', $data->id) }}" method="POST" class="bg-white p-8 shadow-lg rounded-xl space-y-6">
+        @csrf
+        @method('PUT')
 
-    <!-- Pengguna (input text) -->
-    <div>
-        <label class="font-medium text-gray-700">Pengguna</label>
-        <input type="text" name="pengguna_id" 
-               value="{{ $data->pengguna->nama_pengguna ?? '' }}" 
-               class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-               placeholder="Ketik nama pengguna...">
-    </div>
+        {{-- Nama Pengguna --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Pengguna</label>
+            <input type="text" 
+                   value="{{ $data->pengguna->nama_pengguna }}" 
+                   class="w-full border border-gray-300 p-3 rounded-lg bg-gray-100 cursor-not-allowed"
+                   readonly>
+            <input type="hidden" name="pengguna_id" value="{{ $data->pengguna->id }}">
+        </div>
 
-    <!-- Booth -->
-    <div>
-        <label class="font-medium text-gray-700">Booth</label>
-        <select name="booth_id" class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            @foreach ($booth as $b)
-                <option value="{{ $b->id }}" @selected($b->id == $data->booth_id)>
-                    {{ $b->nama_booth }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+        {{-- Nomor Telepon --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
+            <input type="text" value="{{ $data->pengguna->no_telp ?? '-' }}"
+                   class="w-full border border-gray-300 p-3 rounded-lg bg-gray-100 cursor-not-allowed"
+                   readonly>
+        </div>
 
-    <!-- Paket -->
-    <div>
-        <label class="font-medium text-gray-700">Paket</label>
-        <select name="paket_id" class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            @foreach ($paket as $p)
-                <option value="{{ $p->id }}" @selected($p->id == $data->paket_id)>
-                    {{ $p->nama_paket }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+        {{-- Booth --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Booth</label>
+            <select name="booth_id" class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+                @foreach ($booth as $b)
+                    <option value="{{ $b->id }}" @selected($b->id == $data->booth_id)>{{ $b->nama_booth }}</option>
+                @endforeach
+            </select>
+        </div>
 
-    <!-- Nomor Antrian -->
-    <div>
-        <label class="font-medium text-gray-700">Nomor Antrian</label>
-        <input type="text" name="nomor_antrian" 
-            value="{{ $data->nomor_antrian }}" 
-            class="w-full border border-gray-300 p-2 rounded-lg bg-gray-100 cursor-not-allowed"
-            readonly>
-    </div>
+        {{-- Paket --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Paket</label>
+            <select name="paket_id" class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+                @foreach ($paket as $p)
+                    <option value="{{ $p->id }}" @selected($p->id == $data->paket_id)>{{ $p->nama_paket }}</option>
+                @endforeach
+            </select>
+        </div>
 
-    <!-- Tanggal -->
-    <div>
-        <label class="font-medium text-gray-700">Tanggal</label>
-        <input type="date" name="tanggal" 
-               value="{{ $data->tanggal }}" 
-               class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
-    </div>
+        {{-- Nomor Antrian --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Nomor Antrian</label>
+            <input type="text" value="{{ $data->nomor_antrian }}" 
+                   class="w-full border border-gray-300 p-3 rounded-lg bg-gray-100 cursor-not-allowed"
+                   readonly>
+        </div>
 
-    <!-- Status -->
-    <div>
-        <label class="font-medium text-gray-700">Status</label>
-        <select name="status" class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            <option value="menunggu" @selected($data->status == 'menunggu')>Menunggu</option>
-            <option value="proses" @selected($data->status == 'proses')>Proses</option>
-            <option value="selesai" @selected($data->status == 'selesai')>Selesai</option>
-            <option value="batal" @selected($data->status == 'batal')>Dibatalkan</option>
-        </select>
-    </div>
+        {{-- Tanggal --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Tanggal</label>
+            <input type="date" name="tanggal" value="{{ $data->tanggal }}" 
+                   class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+        </div>
 
-    <!-- Catatan -->
-    <div>
-        <label class="font-medium text-gray-700">Catatan</label>
-        <textarea name="catatan" rows="3" 
-                  class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  placeholder="Tambahkan catatan...">{{ $data->catatan }}</textarea>
-    </div>
+        {{-- Status --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Status</label>
+            <select name="status" class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400">
+                <option value="menunggu" @selected($data->status == 'menunggu')>Menunggu</option>
+                <option value="proses" @selected($data->status == 'proses')>Proses</option>
+                <option value="selesai" @selected($data->status == 'selesai')>Selesai</option>
+                <option value="dibatalkan" @selected($data->status == 'dibatalkan')>Dibatalkan</option>
+            </select>
+        </div>
 
-    <!-- Tombol Update -->
-    <div class="pt-2">
-        <button type="submit" 
-                class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-5 py-2 rounded-lg transition">
-            Update
-        </button>
-        <a href="{{ route('operator.antrian.index') }}" 
-           class="ml-3 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition">
-            Kembali
-        </a>
-    </div>
-</form>
+        {{-- Catatan --}}
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Catatan</label>
+            <textarea name="catatan" rows="4" 
+                      class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 resize-none"
+                      placeholder="Tambahkan catatan...">{{ $data->catatan }}</textarea>
+        </div>
+
+        {{-- Tombol Update & Batal --}}
+        <div class="flex gap-4">
+            <button type="submit" class="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition duration-300">
+                Update
+            </button>
+            <a href="{{ route('operator.antrian.index') }}" 
+               class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg text-center transition duration-300">
+               Batal
+            </a>
+        </div>
+    </form>
+</div>
 @endsection

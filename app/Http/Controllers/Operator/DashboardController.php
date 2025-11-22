@@ -11,19 +11,20 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $hariIni = Carbon::today();
+        // Set tanggal hari ini menggunakan timezone WIB
+        $hariIni = Carbon::now('Asia/Jakarta')->startOfDay();
 
-        // Statistik utama
+        // Statistik utama berdasarkan WIB
         $antrianHariIni = Antrian::whereDate('tanggal', $hariIni)->count();
-        $menunggu        = Antrian::where('status', 'menunggu')->count();
-        $dalamProses     = Antrian::where('status', 'proses')->count();
-        $selesai         = Antrian::where('status', 'selesai')->count();
-        $batal           = Antrian::where('status', 'dibatalkan')->count();
+        $menunggu       = Antrian::whereDate('tanggal', $hariIni)->where('status', 'menunggu')->count();
+        $dalamProses    = Antrian::whereDate('tanggal', $hariIni)->where('status', 'proses')->count();
+        $selesai        = Antrian::whereDate('tanggal', $hariIni)->where('status', 'selesai')->count();
+        $batal          = Antrian::whereDate('tanggal', $hariIni)->where('status', 'dibatalkan')->count();
 
         // Ambil semua booth
         $booths = Booth::all();
 
-        // Data chart per booth: total reservasi per booth hari ini
+        // Data chart per booth: total reservasi per booth hari ini (WIB)
         $chartPerBooth = [];
         $labelBooth = [];
         foreach ($booths as $booth) {
@@ -33,11 +34,12 @@ class DashboardController extends Controller
                 ->count();
         }
 
-        // Data customer per booth untuk daftar customer
+        // Data customer per booth untuk daftar customer, waktu ditampilkan WIB
         $customerData = [];
         foreach ($booths as $booth) {
             $customerData[$booth->id] = Antrian::with('pengguna')
                 ->where('booth_id', $booth->id)
+                ->whereDate('tanggal', $hariIni)
                 ->orderBy('created_at', 'ASC')
                 ->get()
                 ->map(function($a) {
@@ -46,7 +48,8 @@ class DashboardController extends Controller
                         'name' => $a->pengguna->nama_pengguna ?? '-', 
                         'time' => Carbon::parse($a->created_at)
                                     ->timezone('Asia/Jakarta') 
-                                    ->format('H:i')
+                                    ->format('H:i'),
+                         'status' => $a->status
                     ];
                 });
         }

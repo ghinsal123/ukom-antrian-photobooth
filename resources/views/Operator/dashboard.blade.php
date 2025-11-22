@@ -5,9 +5,9 @@
 <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
 
 <!-- Tanggal / Jadwal -->
-   @php
-        \Carbon\Carbon::setLocale('id'); // set locale ke Indonesia
-        $hariIni = \Carbon\Carbon::now()->translatedFormat('l, d F Y'); // contoh: Rabu, 20 November 2025
+    @php
+        \Carbon\Carbon::setLocale('id'); 
+        $hariIni = \Carbon\Carbon::now('Asia/Jakarta')->translatedFormat('l, d F Y'); 
     @endphp
 
     <div class="flex items-center justify-between py-5">
@@ -115,22 +115,36 @@
 
     function renderCustomers(booth) {
         customerList.innerHTML = '';
-        if(customerData[booth]) {
+
+        if (customerData[booth]) {
             customerData[booth].forEach(c => {
+
+                // Tentukan warna badge berdasarkan status
+                let badgeColor = '';
+                if (c.status === 'menunggu') badgeColor = 'bg-yellow-500';
+                else if (c.status === 'proses') badgeColor = 'bg-blue-500';
+                else if (c.status === 'selesai') badgeColor = 'bg-green-500';
+                else badgeColor = 'bg-red-500'; // pembatalan
+
                 const a = document.createElement('a');
                 a.href = `{{ url('operator/antrian/detail') }}/${c.id}`;
-                a.className = 'block bg-pink-50 hover:bg-pink-100 p-2 rounded shadow flex justify-between items-center transition';
-                
+                a.className = 'block bg-pink-50 hover:bg-pink-100 p-3 rounded-xl shadow flex justify-between items-center transition';
+
                 a.innerHTML = `
-                    <span class="text-pink-500 font-medium">${c.name}</span>
-                    <span class="text-gray-500 text-sm">${c.time}</span>
+                    <div class="flex flex-col">
+                        <span class="text-pink-600 font-semibold">${c.name}</span>
+                        <span class="text-gray-500 text-sm">${c.time}</span>
+                    </div>
+
+                    <span class="px-2 py-1 text-xs text-white rounded-full ${badgeColor}">
+                        ${c.status.charAt(0).toUpperCase() + c.status.slice(1)}
+                    </span>
                 `;
-                
+
                 customerList.appendChild(a);
             });
         }
     }
-    // Default booth pertama
     renderCustomers(Object.keys(customerData)[0]);
 
     boothSelect.addEventListener('change', function() {

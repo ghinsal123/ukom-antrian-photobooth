@@ -10,6 +10,51 @@
 
 <body class="bg-pink-50">
 
+    {{-- POPUP SUCCESS --}}
+    @if (session('success'))
+    <div id="popupSuccess" 
+        class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+
+        <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center scale-75 opacity-0 animate-zoomIn">
+
+            <!-- Icon -->
+            <div class="mx-auto w-20 h-20 flex items-center justify-center 
+                        rounded-full border border-green-400 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                    class="w-10 h-10 text-green-500" fill="none" 
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" 
+                        d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+
+            <!-- Text -->
+            <p class="text-lg font-semibold text-gray-700 mb-4">
+                {{ session('success') }}
+            </p>
+
+            <!-- Button -->
+            <button onclick="document.getElementById('popupSuccess').remove()"
+                    class="px-5 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600">
+                OK
+            </button>
+
+        </div>
+    </div>
+
+    <style>
+        @keyframes zoomIn {
+            0% { transform: scale(0.6); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1.3); opacity: 1; }
+        }
+        .animate-zoomIn {
+            animation: zoomIn 0.25s ease-out forwards;
+        }
+    </style>
+    @endif
+
+
     <!-- NAVBAR – versi dashboard -->
     <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -192,11 +237,6 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // Toggle menu
-        function toggleMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
         // Auto set tanggal hari ini
         document.addEventListener("DOMContentLoaded", function () {
             const today = new Date();
@@ -209,17 +249,14 @@
             const selected = this.options[this.selectedIndex];
             document.getElementById('textPaket').classList.add('hidden');
 
-            const img = document.getElementById('previewPaket');
-            img.src = selected.dataset.gambar;
-            img.classList.remove('hidden');
+            document.getElementById('previewPaket').src = selected.dataset.gambar;
+            document.getElementById('previewPaket').classList.remove('hidden');
 
-            const harga = document.getElementById('hargaPaket');
-            harga.innerText = "Harga: Rp " + selected.dataset.harga;
-            harga.classList.remove('hidden');
+            document.getElementById('hargaPaket').innerText = "Harga: Rp " + selected.dataset.harga;
+            document.getElementById('hargaPaket').classList.remove('hidden');
 
-            const desc = document.getElementById('deskripsiPaket');
-            desc.innerText = selected.dataset.deskripsi;
-            desc.classList.remove('hidden');
+            document.getElementById('deskripsiPaket').innerText = selected.dataset.deskripsi;
+            document.getElementById('deskripsiPaket').classList.remove('hidden');
         });
 
         // Preview booth
@@ -227,13 +264,11 @@
             const selected = this.options[this.selectedIndex];
             document.getElementById('textBooth').classList.add('hidden');
 
-            const img = document.getElementById('previewBooth');
-            img.src = selected.dataset.gambar;
-            img.classList.remove('hidden');
+            document.getElementById('previewBooth').src = selected.dataset.gambar;
+            document.getElementById('previewBooth').classList.remove('hidden');
 
-            const max = document.getElementById('maxBooth');
-            max.innerText = "Kapasitas Booth: " + selected.dataset.max + " orang";
-            max.classList.remove('hidden');
+            document.getElementById('maxBooth').innerText = "Kapasitas Booth: " + selected.dataset.max + " orang";
+            document.getElementById('maxBooth').classList.remove('hidden');
         });
     </script>
 

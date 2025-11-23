@@ -126,6 +126,9 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::middleware('customer')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
+        // ARSIP
+        Route::get('arsip', [DashboardController::class, 'arsip'])->name('arsip');
+
 
         // CREATE
         Route::get('antrian', [AntrianController::class, 'create'])->name('antrian');
@@ -140,5 +143,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
         // DELETE
         Route::delete('antrian/{id}', [AntrianController::class, 'destroy'])->name('antrian.delete');
+
+        Route::get('/customer/arsip', [DashboardController::class, 'arsip'])
+    ->name('customer.arsip')
+    ->middleware('customer');
+
     });
 });

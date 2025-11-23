@@ -19,15 +19,34 @@
             </h1>
 
             <div class="hidden md:flex gap-6 items-center">
-                <a href="/customer/dashboard" class="text-gray-600 hover:text-pink-400">Dashboard</a>
-                <a href="/customer/antrian" class="text-pink-400 font-semibold">+ Antrian</a>
 
+                {{-- Dashboard --}}
+                <a href="{{ route('customer.dashboard') }}"
+                    class="text-gray-600 hover:text-pink-400">
+                    Dashboard
+                </a>
+
+                {{-- + Antrian (Active) --}}
+                <a href="{{ route('customer.antrian') }}"
+                    class="text-pink-400 font-semibold">
+                    + Antrian
+                </a>
+
+                {{-- Arsip --}}
+                <a href="{{ route('customer.arsip') }}"
+                    class="text-gray-600 hover:text-pink-400">
+                    Arsip
+                </a>
+
+                {{-- Logout --}}
                 <a href="#"
                     onclick="event.preventDefault();
                     if (confirm('Apakah Anda yakin ingin logout?')) {
                         document.getElementById('logout-form').submit();
                     }"
-                    class="text-gray-600 hover:text-pink-400">Logout</a>
+                    class="text-gray-600 hover:text-pink-400">
+                    Logout
+                </a>
 
                 <form id="logout-form" action="{{ route('customer.logout') }}" method="POST" class="hidden">
                     @csrf
@@ -37,16 +56,33 @@
             <button onclick="toggleMenu()" class="md:hidden text-pink-400 text-2xl font-bold">☰</button>
         </div>
 
-        {{-- MENU MOBILE --}}
+        {{-- MOBILE MENU --}}
         <div id="mobileMenu" class="hidden md:hidden px-4 pb-3 space-y-2">
-            <a href="/customer/dashboard" class="block text-gray-600 hover:text-pink-400">Dashboard</a>
-            <a href="/customer/antrian" class="block text-pink-400 font-semibold">+ Antrian</a>
+
+            <a href="{{ route('customer.dashboard') }}"
+                class="block text-gray-600 hover:text-pink-400">
+                Dashboard
+            </a>
+
+            <a href="{{ route('customer.antrian') }}"
+                class="block text-pink-400 font-semibold">
+                + Antrian
+            </a>
+
+            <a href="{{ route('customer.arsip') }}"
+                class="block text-gray-600 hover:text-pink-400">
+                Arsip
+            </a>
+
             <a href="#"
                 onclick="event.preventDefault();
-                if (confirm('Yakin mau logout?')) {
+                if (confirm('Yakin ingin logout?')) {
                     document.getElementById('logout-form').submit();
                 }"
-                class="block text-gray-600 hover:text-pink-400">Logout</a>
+                class="block text-gray-600 hover:text-pink-400">
+                Logout
+            </a>
+
         </div>
     </nav>
 
@@ -75,7 +111,7 @@
 
                 <div class="space-y-4">
 
-                    {{-- NAMA USER --}}
+                    {{-- Nama Pengguna --}}
                     <div>
                         <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Nama Lengkap</label>
                         <input
@@ -85,7 +121,7 @@
                             class="w-full p-2.5 border rounded-lg bg-gray-100 text-gray-600 text-sm">
                     </div>
 
-                    {{-- NOMOR HP --}}
+                    {{-- Telepon --}}
                     <div>
                         <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Nomor Telepon</label>
                         <input
@@ -100,10 +136,10 @@
                             placeholder="Masukkan nomor telepon aktif kamu">
                     </div>
 
-                    {{-- GRID PILIHAN --}}
+                    {{-- GRID INPUT --}}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-                        {{-- TANGGAL AUTO --}}
+                        {{-- Tanggal --}}
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Tanggal</label>
                             <input
@@ -114,7 +150,7 @@
                                 class="w-full p-2.5 border rounded-lg bg-gray-100 text-gray-600 text-sm">
                         </div>
 
-                        {{-- PAKET --}}
+                        {{-- Paket --}}
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Pilih Paket Foto</label>
                             <select
@@ -136,7 +172,7 @@
                             </select>
                         </div>
 
-                        {{-- BOOTH --}}
+                        {{-- Booth --}}
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1.5 text-sm">Pilih Booth</label>
                             <select
@@ -161,7 +197,7 @@
                     {{-- PREVIEW --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                        {{-- PREVIEW PAKET --}}
+                        {{-- Preview Paket --}}
                         <div class="border rounded-lg p-3 bg-gray-50 min-h-[260px]">
                             <p id="textPaket" class="text-gray-400 text-xs">Preview Paket</p>
 
@@ -172,7 +208,7 @@
                             <p id="deskripsiPaket" class="text-xs text-gray-600 mt-1 hidden"></p>
                         </div>
 
-                        {{-- PREVIEW BOOTH --}}
+                        {{-- Preview Booth --}}
                         <div class="border rounded-lg p-3 bg-gray-50 min-h-[260px]">
                             <p id="textBooth" class="text-gray-400 text-xs">Preview Booth</p>
 
@@ -183,7 +219,7 @@
 
                     </div>
 
-                    {{-- BUTTON --}}
+                    {{-- Submit --}}
                     <button
                         type="submit"
                         class="w-full bg-pink-400 text-white py-2.5 rounded-lg font-semibold hover:bg-pink-500 transition text-sm">
@@ -196,24 +232,21 @@
     </div>
 
 
-    {{-- SCRIPT PREVIEW + FIX TANGGAL OTOMATIS --}}
+    {{-- SCRIPT --}}
     <script>
         function toggleMenu() {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         }
 
-        // === FIX TANGGAL OTOMATIS 100% AKURAT ===
+        // FIX TANGGAL AUTO
         document.addEventListener("DOMContentLoaded", function () {
             const today = new Date();
             today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
             document.getElementById("tanggalInput").value = today.toISOString().slice(0, 10);
         });
 
-        const sP = document.getElementById('selectPaket');
-        const sB = document.getElementById('selectBooth');
-
-        // preview paket
-        sP?.addEventListener('change', function () {
+        // Preview Paket
+        document.getElementById('selectPaket')?.addEventListener('change', function () {
             const selected = this.options[this.selectedIndex];
 
             document.getElementById('textPaket').classList.add('hidden');
@@ -231,8 +264,8 @@
             desc.classList.remove('hidden');
         });
 
-        // preview booth
-        sB?.addEventListener('change', function () {
+        // Preview Booth
+        document.getElementById('selectBooth')?.addEventListener('change', function () {
             const selected = this.options[this.selectedIndex];
 
             document.getElementById('textBooth').classList.add('hidden');

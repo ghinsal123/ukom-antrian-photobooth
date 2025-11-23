@@ -21,30 +21,34 @@
         @csrf
         @method('PUT')
 
+        {{-- NAMA --}}
         <div class="mb-4">
             <label class="block mb-1 font-medium">Nama Pengguna</label>
             <input type="text" name="nama_pengguna" required
-                   class="w-full p-2 border rounded-xl"
-                   value="{{ old('nama_pengguna', $pengguna->nama_pengguna) }}">
+                class="w-full p-2 border rounded-xl"
+                value="{{ old('nama_pengguna', $pengguna->nama_pengguna) }}">
         </div>
 
+        {{-- TELEPON --}}
         <div class="mb-4">
             <label class="block mb-1 font-medium">Nomor Telepon</label>
             <input type="text" name="no_telp" required
-                   class="w-full p-2 border rounded-xl"
-                   value="{{ old('no_telp', $pengguna->no_telp) }}">
+                class="w-full p-2 border rounded-xl"
+                value="{{ old('no_telp', $pengguna->no_telp) }}">
         </div>
 
+        {{-- PASSWORD --}}
         <div class="mb-4">
-            <label class="block mb-1 font-medium">Password (isi kalau ingin ubah)</label>
+            <label class="block mb-1 font-medium">Password (isi jika ingin ubah)</label>
             <input type="password" name="password"
-                   class="w-full p-2 border rounded-xl">
+                class="w-full p-2 border rounded-xl">
         </div>
 
+        {{-- FOTO --}}
         <div class="mb-4">
             <label class="block mb-1 font-medium">Foto</label>
             <input type="file" name="foto" accept="image/*"
-                   class="w-full p-2 border rounded-xl">
+                class="w-full p-2 border rounded-xl">
         </div>
 
         @if($pengguna->foto)
@@ -54,14 +58,24 @@
             </div>
         @endif
 
+        {{-- ROLE KHUSUS OPERATOR --}}
+        @if($pengguna->role === 'operator')
         <div class="mb-4">
             <label class="block mb-1 font-medium">Role</label>
-            <select name="role" class="w-full p-2 border rounded-xl">
-                <option value="customer" @selected($pengguna->role == 'customer')>Customer</option>
-                <option value="admin" @selected($pengguna->role == 'admin')>Admin</option>
-                <option value="operator" @selected($pengguna->role == 'operator')>Operator</option>
-            </select>
+
+            <input type="text"
+                class="w-full p-2 border rounded-xl bg-gray-100 text-gray-600"
+                value="Operator"
+                disabled>
+
+            <input type="hidden" name="role" value="operator">
         </div>
+        @endif
+
+        {{-- ROLE ADMIN DISIMPAN TANPA INPUT --}}
+        @if($pengguna->role === 'admin')
+            <input type="hidden" name="role" value="admin">
+        @endif
 
         <div class="flex justify-between mt-6">
             <a href="{{ route('admin.pengguna.index') }}"
@@ -74,6 +88,7 @@
                 Update
             </button>
         </div>
+
     </form>
 </div>
 @endsection

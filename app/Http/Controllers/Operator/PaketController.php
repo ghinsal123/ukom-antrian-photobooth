@@ -3,13 +3,22 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
-use App\Models\Paket; 
+use Illuminate\Http\Request;
+use App\Models\Paket;
 
 class PaketController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pakets = Paket::all();
+        $query = Paket::query();
+
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $query->where('nama_paket', 'like', "%$keyword%");
+        }
+
+        $pakets = $query->get(); 
+
         return view('Operator.paket.index', compact('pakets'));
     }
 

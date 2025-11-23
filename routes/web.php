@@ -17,7 +17,6 @@ use App\Http\Controllers\Operator\DashboardController as OperatorDashboardContro
 use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Customer\DashboardController;
-use App\Http\Controllers\Customer\AntrianController; 
 
 Route::get('/', function () {
     return view('welcome');
@@ -87,10 +86,6 @@ Route::prefix('operator')->name('operator.')->group(function () {
             Route::delete('/delete/{id}', [OperatorAntrianController::class, 'destroy'])->name('delete');
         });
 
-        // JADWAL
-        Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
-        Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.show');
-
         // Booth
         Route::get('/booth', [OperatorBoothController::class, 'index'])->name('booth.index');
         Route::get('/booth/{id}', [OperatorBoothController::class, 'show'])->name('booth.show');
@@ -131,22 +126,20 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
 
         // CREATE
-        Route::get('antrian', [AntrianController::class, 'create'])->name('antrian');
-        Route::post('antrian/store', [AntrianController::class, 'store'])->name('antrian.store');
+        Route::get('antrian', [CustomerAntrianController::class, 'create'])->name('antrian');
+        Route::post('antrian/store', [CustomerAntrianController::class, 'store'])->name('antrian.store');
 
         // DETAIL
-        Route::get('antrian/{id}/detail', [AntrianController::class, 'detail'])->name('antrian.detail');
+        Route::get('antrian/{id}/detail', [CustomerAntrianController::class, 'detail'])->name('antrian.detail');
 
         // EDIT + UPDATE
-        Route::get('antrian/{id}/edit', [AntrianController::class, 'edit'])->name('antrian.edit');
-        Route::put('antrian/{id}', [AntrianController::class, 'update'])->name('antrian.update');
-
-        // DELETE
-        Route::delete('antrian/{id}', [AntrianController::class, 'destroy'])->name('antrian.delete');
+        Route::get('antrian/{id}/edit', [CustomerAntrianController::class, 'edit'])->name('antrian.edit');
+        Route::put('antrian/{id}', [CustomerAntrianController::class, 'update'])->name('antrian.update');
 
         Route::get('/customer/arsip', [DashboardController::class, 'arsip'])
     ->name('customer.arsip')
     ->middleware('customer');
 
+        Route::delete('antrian/{id}', [CustomerAntrianController::class, 'destroy'])->name('antrian.delete');
     });
 });

@@ -17,7 +17,10 @@
                 <div class="text-center mb-6">
                     <img src="{{ asset('images/logo.png') }}" class="w-32 h-32 mx-auto mb-2">
                     <h1 class="text-3xl font-bold text-pink-400 mb-2">Login Admin</h1>
-                    <p class="text-gray-600 text-sm">Masukkan kredensial admin untuk mengelola sistem Photobooth.</p>
+                    <p class="text-gray-600 text-sm leading-relaxed mx-4">
+                        Masukkan nama dan password admin 
+                        <span class="font-semibold text-pink-500">untuk mengelola sistem Photobooth</span>.
+                    </p>
                 </div>
 
                 <!-- ALERT ERROR -->

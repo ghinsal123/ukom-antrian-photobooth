@@ -1,10 +1,11 @@
 @extends('Operator.layout')
 
 @section('content')
+
 <div class="container mx-auto px-4">
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
-        <h2 class="text-3xl font-bold text-gray-800">Daftar Antrian</h2>
+        <h2 class="text-3xl md:text-2xl font-bold text-gray-800">Daftar Antrian</h2>
 
         <div class="flex gap-3">
             <!-- Form Search -->
@@ -14,7 +15,7 @@
                     name="search"
                     value="{{ request('search') }}"
                     placeholder="Cari nama / nomor / booth / paket..."
-                    class="px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-400 focus:outline-none"
+                    class="px-3 py-2 w-70 rounded-lg border border-gray-500 focus:ring-2 focus:ring-pink-400 focus:outline-none"
                 />
                 <button
                     type="submit"

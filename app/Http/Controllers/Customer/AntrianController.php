@@ -11,14 +11,18 @@ use App\Models\Pengguna;
 
 class AntrianController extends Controller
 {
+    
+    // Halaman buat create antrian
     public function create()
     {
+        // cek customer sudah login
         $customerId = session('customer_id');
 
         if (!$customerId) {
             return redirect()->route('customer.login');
         }
 
+        // kirim data booth, paket, dan data user ke halaman form
         return view('customer.antrian', [
             'booth' => Booth::all(),
             'paket' => Paket::all(),
@@ -26,8 +30,10 @@ class AntrianController extends Controller
         ]);
     }
 
+    // Menyimpan antrian baru
     public function store(Request $request)
     {
+        // validasi input
         $request->validate([
             'booth_id' => 'required|exists:booth,id',
             'paket_id' => 'required|exists:paket,id',
@@ -35,20 +41,23 @@ class AntrianController extends Controller
             'no_telp'  => 'required'
         ]);
 
+        // ambil data customer dari session
         $customerId = session('customer_id');
         $pengguna = Pengguna::find($customerId);
 
-        // update nomor telepon
+        // update nomor telepon customer
         $pengguna->update(['no_telp' => $request->no_telp]);
 
-        // nomor antrian otomatis
+        // cari nomor antrian terakhir berdasarkan booth dan tanggal
         $last = Antrian::where('booth_id', $request->booth_id)
             ->whereDate('tanggal', $request->tanggal)
             ->orderBy('nomor_antrian', 'DESC')
             ->first();
 
+        // kalau ada nomor terakhir  tambah 1, kalau nggak ada → mulai dari 1
         $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
 
+        // simpan antrian baru
         Antrian::create([
             'pengguna_id'   => $customerId,
             'booth_id'      => $request->booth_id,
@@ -62,19 +71,25 @@ class AntrianController extends Controller
             ->with('success', 'Antrian berhasil ditambahkan.');
     }
 
+    
+    // Detail antrian
     public function detail($id)
     {
+        // ambil data antrian + relasi (booth, paket, pengguna)
         $detail = Antrian::with(['booth', 'paket', 'pengguna'])
             ->findOrFail($id);
 
         return view('customer.detail', compact('detail'));
     }
 
+    // Halaman edit antrian
     public function edit($id)
     {
+        // ambil data antrian
         $antrian = Antrian::with(['booth', 'paket', 'pengguna'])
             ->findOrFail($id);
 
+        // cuma bisa edit kalau status = menunggu
         if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
                 ->with('error', 'Antrian tidak bisa diubah.');
@@ -88,8 +103,11 @@ class AntrianController extends Controller
         ]);
     }
 
+    
+    // Proses update antrian
     public function update(Request $request, $id)
     {
+        // validasi input
         $request->validate([
             'booth_id' => 'required|exists:booth,id',
             'paket_id' => 'required|exists:paket,id',
@@ -98,13 +116,15 @@ class AntrianController extends Controller
 
         $antrian = Antrian::findOrFail($id);
 
+        // hanya bisa update kalau status masih menunggu
         if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
                 ->with('error', 'Antrian tidak bisa diubah.');
         }
 
-        // hitung nomor baru jika booth/tanggal berubah
+        // kalau booth/tanggal berubah → hitung ulang nomor antrian baru
         if ($antrian->booth_id != $request->booth_id || $antrian->tanggal != $request->tanggal) {
+
             $last = Antrian::where('booth_id', $request->booth_id)
                 ->whereDate('tanggal', $request->tanggal)
                 ->orderBy('nomor_antrian', 'DESC')
@@ -114,6 +134,7 @@ class AntrianController extends Controller
             $antrian->nomor_antrian = $nextNumber;
         }
 
+        // update data antrian
         $antrian->update([
             'booth_id' => $request->booth_id,
             'paket_id' => $request->paket_id,
@@ -123,26 +144,32 @@ class AntrianController extends Controller
         return redirect()->route('customer.dashboard')
             ->with('success', 'Antrian berhasil diperbarui.');
     }
+
+    // Membatalkan antrian
     public function destroy(Request $request, $id)
     {
         $antrian = Antrian::findOrFail($id);
 
+        // hanya antrian menunggu yang bisa dibatalkan
         if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
                 ->with('error', 'Antrian tidak bisa dibatalkan.');
         }
 
+        // validasi alasan dan catatan
         $request->validate([
             'alasan' => 'required|string|max:500',
             'catatan_tambahan' => 'nullable|string|max:500',
         ]);
 
+        // update status jadi dibatalkan
         $antrian->update([
             'status' => 'dibatalkan',
             'catatan' => $request->alasan . 
-                                ($request->catatan_tambahan ? " | Catatan: ".$request->catatan_tambahan : ''),
+                        ($request->catatan_tambahan ? " | Catatan: ".$request->catatan_tambahan : ''),
         ]);
 
+        // simpan log pembatalan
         \App\Models\Log::create([
             'pengguna_id' => $antrian->pengguna_id,
             'antrian_id'  => $antrian->id,
@@ -154,4 +181,3 @@ class AntrianController extends Controller
             ->with('success', 'Antrian berhasil dibatalkan.');
     }
 }
- 

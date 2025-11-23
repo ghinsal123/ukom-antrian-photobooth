@@ -13,21 +13,21 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Ambil customer ID dari session
+        // Ambil customer ID dari session (cek siapa yang login)
         $customerId = session('customer_id');
 
-        // Jika belum login → redirect
+        // Kalau belum login balik ke halaman login
         if (!$customerId) {
             return redirect()->route('customer.login');
         }
 
-        // Ambil data customer
+        // Ambil data user/customer yang lagi login
         $pengguna = Pengguna::findOrFail($customerId);
 
         /*
-        |--------------------------------------------------------------------------
-        | 1. AMBIL ANTRIAN MILIK CUSTOMER
-        |--------------------------------------------------------------------------
+        1. AMBIL SEMUA ANTRIAN PUNYA CUSTOMER INI
+        Jadi ini buat nampilin daftar antrianku di dashboard
+        diurutkan dari tanggal terbaru → lalu id terbaru
         */
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
@@ -36,22 +36,22 @@ class DashboardController extends Controller
             ->get();
 
         /*
-        |--------------------------------------------------------------------------
-        | 2. AMBIL SEMUA BOOTH + ANTRIAN
-        |--------------------------------------------------------------------------
+        2. AMBIL SEMUA BOOTH + ANTRIAN DI DALAMNYA
+        Jadi customer bisa lihat booth apa aja dan antrinya
+        antrian diurutkan berdasarkan tanggal dan nomor
         */
         $booth = Booth::with([
             'antrian' => function ($q) {
+                // ngambil antrian per booth, diurutkan
                 $q->orderBy('tanggal', 'DESC')
                   ->orderBy('nomor_antrian', 'ASC')
-                  ->with(['pengguna', 'paket']);
+                  ->with(['pengguna', 'paket']); // ikut ambil user & paket
             }
         ])->get();
 
         /*
-        |--------------------------------------------------------------------------
-        | 3. RETURN VIEW DASHBOARD
-        |--------------------------------------------------------------------------
+        3. RETURN KE HALAMAN DASHBOARD CUSTOMER
+        Bawa data booth, antrian user, dan data loginnya
         */
         return view('customer.dashboard', [
             'booth'     => $booth,
@@ -61,29 +61,34 @@ class DashboardController extends Controller
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | ⭐ ARSIP PAGE CUSTOMER
-    |--------------------------------------------------------------------------
-    | Menampilkan semua antrian yang statusnya "selesai"
+    HALAMAN ARSIP
+    Ini halaman buat nampilin antrian yang sudah selesai/dibatalkan
     */
     public function arsip()
-{
-    $customerId = session('customer_id');
+    {
+        // ambil id siapa yang login
+        $customerId = session('customer_id');
 
-    if (!$customerId) {
-        return redirect()->route('customer.login');
+        // kalau belum login → tendang ke login
+        if (!$customerId) {
+            return redirect()->route('customer.login');
+        }
+
+        // ambil data customer
+        $pengguna = Pengguna::findOrFail($customerId);
+
+        /*
+        Ambil daftar antrian yang statusnya "selesai" atau "dibatalkan"
+        Ini biar masuk ke arsip, bukan tampil di dashboard utama
+        */
+        $arsip = Antrian::with(['booth', 'paket'])
+            ->where('pengguna_id', $customerId)
+            ->whereIn('status', ['selesai', 'dibatalkan']) // filter status
+            ->orderBy('tanggal', 'DESC')
+            ->get();
+
+        // kirim data ke view arsip.blade.php
+        return view('customer.arsip', compact('arsip', 'pengguna'));
     }
 
-    $pengguna = Pengguna::findOrFail($customerId);
-
-    //  Ambil antrian yang statusnya selesai / dibatalkan
-    $arsip = Antrian::with(['booth', 'paket'])
-        ->where('pengguna_id', $customerId)
-        ->whereIn('status', ['selesai', 'dibatalkan'])
-        ->orderBy('tanggal', 'DESC')
-        ->get();
-
-    return view('customer.arsip', compact('arsip', 'pengguna'));
 }
-
-    }

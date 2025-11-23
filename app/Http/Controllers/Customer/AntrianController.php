@@ -123,8 +123,7 @@ class AntrianController extends Controller
         return redirect()->route('customer.dashboard')
             ->with('success', 'Antrian berhasil diperbarui.');
     }
-
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $antrian = Antrian::findOrFail($id);
 
@@ -133,10 +132,26 @@ class AntrianController extends Controller
                 ->with('error', 'Antrian tidak bisa dibatalkan.');
         }
 
-        // ubah status (jangan delete)
-        $antrian->update(['status' => 'dibatalkan']);
+        $request->validate([
+            'alasan' => 'required|string|max:500',
+            'catatan_tambahan' => 'nullable|string|max:500',
+        ]);
+
+        $antrian->update([
+            'status' => 'dibatalkan',
+            'catatan' => $request->alasan . 
+                                ($request->catatan_tambahan ? " | Catatan: ".$request->catatan_tambahan : ''),
+        ]);
+
+        \App\Models\Log::create([
+            'pengguna_id' => $antrian->pengguna_id,
+            'antrian_id'  => $antrian->id,
+            'aksi'        => 'hapus_antrian',
+            'keterangan'  => 'Antrian dibatalkan. Alasan: ' . $antrian->catatan_operator,
+        ]);
 
         return redirect()->route('customer.dashboard')
             ->with('success', 'Antrian berhasil dibatalkan.');
     }
 }
+ 

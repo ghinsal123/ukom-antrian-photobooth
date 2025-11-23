@@ -8,10 +8,12 @@ use App\Models\Booth;
 
 class BoothController extends Controller
 {
+    // menampilkan daftar booth & fitur pencarian
     public function index(Request $request)
     {
         $query = Booth::query();
 
+        // filter pencarian jika ada input search
         if ($request->filled('search')) {
             $keyword = $request->search;
             $query->where('nama_booth', 'like', "%$keyword%");
@@ -21,6 +23,7 @@ class BoothController extends Controller
         return view('Operator.booth.index', compact('booths'));
     }
 
+    // menampilkan detail booth berdasarkan id
     public function show($id)
     {
         $booth = Booth::findOrFail($id);

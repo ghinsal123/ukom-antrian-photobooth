@@ -2,39 +2,44 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto mt-8">
+
+    <!-- judul halaman -->
     <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Edit Antrian</h2>
 
     @php
+        // cek jika status antrian sudah dibatalkan
         $isCanceled = $data->status === 'dibatalkan';
         $grayClass = $isCanceled ? 'bg-gray-200 text-gray-600 cursor-not-allowed' : '';
     @endphp
 
-    <form action="{{ route('operator.antrian.update', $data->id) }}" method="POST" class="bg-white p-8 shadow-lg rounded-xl space-y-6">
+    <form action="{{ route('operator.antrian.update', $data->id) }}" method="POST"
+          class="bg-white p-8 shadow-lg rounded-xl space-y-6">
+
         @csrf
         @method('PUT')
 
-        {{-- Nama Pengguna --}}
+        <!-- nama pengguna (readonly) -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Pengguna</label>
-            <input type="text" 
-                   value="{{ $data->pengguna->nama_pengguna }}" 
+            <input type="text"
+                   value="{{ $data->pengguna->nama_pengguna }}"
                    class="w-full border border-gray-300 p-3 rounded-lg bg-gray-100 cursor-not-allowed"
                    readonly>
         </div>
 
-        {{-- Nomor Telepon --}}
+        <!-- nomor telepon (readonly) -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
-            <input type="text" 
+            <input type="text"
                    value="{{ $data->pengguna->no_telp ?? '-' }}"
                    class="w-full border border-gray-300 p-3 rounded-lg bg-gray-100 cursor-not-allowed"
                    readonly>
         </div>
 
-        {{-- Booth --}}
-        <select name="booth_id" 
-            class="w-full border border-gray-300 p-3 rounded-lg {{ $grayClass }}"
-            @disabled($isCanceled)>
+        <!-- pilih booth -->
+        <select name="booth_id"
+                class="w-full border border-gray-300 p-3 rounded-lg {{ $grayClass }}"
+                @disabled($isCanceled)>
             @foreach ($booth as $b)
                 <option value="{{ $b->id }}" @selected($b->id == $data->booth_id)>
                     {{ $b->nama_booth }}
@@ -42,10 +47,10 @@
             @endforeach
         </select>
 
-        {{-- Paket --}}
+        <!-- pilih paket -->
         <select name="paket_id"
-            class="w-full border border-gray-300 p-3 rounded-lg {{ $grayClass }}"
-            @disabled($isCanceled)>
+                class="w-full border border-gray-300 p-3 rounded-lg {{ $grayClass }}"
+                @disabled($isCanceled)>
             @foreach ($paket as $p)
                 <option value="{{ $p->id }}" @selected($p->id == $data->paket_id)>
                     {{ $p->nama_paket }}
@@ -53,15 +58,16 @@
             @endforeach
         </select>
 
-        {{-- Nomor Antrian --}}
+        <!-- nomor antrian (readonly) -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Nomor Antrian</label>
-            <input type="text" value="{{ $data->nomor_antrian }}" 
+            <input type="text"
+                   value="{{ $data->nomor_antrian }}"
                    class="w-full border border-gray-300 p-3 rounded-lg bg-gray-100 cursor-not-allowed"
                    readonly>
         </div>
 
-        {{-- Tanggal & Waktu--}}
+        <!-- tanggal dan waktu -->
         <div class="py-3 hover:bg-gray-50 transition">
             <span class="font-medium text-gray-700 block">Tanggal & Waktu</span>
             <span class="text-gray-900 text-lg italic mt-1 block">
@@ -69,11 +75,11 @@
             </span>
         </div>
 
-        {{-- Status --}}
+        <!-- status antrian -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Status</label>
             <select name="status"
-                    class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+                    class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-pink-400"
                     @disabled($isCanceled)>
                 <option value="menunggu" @selected($data->status == 'menunggu')>Menunggu</option>
                 <option value="proses" @selected($data->status == 'proses')>Proses</option>
@@ -88,26 +94,27 @@
             @endif
         </div>
 
-        {{-- Catatan --}}
+        <!-- catatan -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Catatan</label>
             <textarea name="catatan" rows="4"
-                class="w-full border border-gray-300 p-3 rounded-lg {{ $grayClass }} resize-none"
-                @disabled($isCanceled)
-            >{{ $data->catatan }}</textarea>
+                      class="w-full border border-gray-300 p-3 rounded-lg {{ $grayClass }} resize-none"
+                      @disabled($isCanceled)>{{ $data->catatan }}</textarea>
         </div>
 
-        {{-- Tombol --}}
+        <!-- tombol aksi -->
         <div class="flex gap-4">
-            <button type="submit" 
+            <button type="submit"
                     class="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition duration-300">
                 Edit Antrian
             </button>
-            <a href="{{ route('operator.antrian.index') }}" 
+
+            <a href="{{ route('operator.antrian.index') }}"
                class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg text-center transition duration-300">
                Batal
             </a>
         </div>
+
     </form>
 </div>
 @endsection

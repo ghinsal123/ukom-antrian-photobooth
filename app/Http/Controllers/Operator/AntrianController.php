@@ -13,18 +13,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-
 class AntrianController extends Controller
 {
     /**
-     * Tampilkan daftar antrian + search + pagination
+     * Menampilkan daftar antrian & pencarian & paginasi
      */
     public function index(Request $request)
     {
         $query = Antrian::with(['pengguna', 'booth', 'paket']);
 
+        // fitur pencarian
         if ($request->filled('search')) {
             $keyword = $request->search;
+
             $query->where(function ($q) use ($keyword) {
                 $q->whereHas('pengguna', fn($q2) =>
                         $q2->where('nama_pengguna', 'like', "%$keyword%"))
@@ -58,15 +59,47 @@ class AntrianController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'pengguna_id'   => 'nullable|exists:pengguna,id',
-            'nama_pengguna' => 'nullable|string|max:255',
-            'no_telp'       => 'nullable|string|max:20',
-            'booth_id'      => 'required|exists:booth,id',
-            'paket_id'      => 'required|exists:paket,id',
-            'catatan'       => 'nullable|string|max:500',
-        ]);
+// validasi input
+$request->validate([
+    'pengguna_id'   => 'nullable|exists:pengguna,id',
+    'nama_pengguna' => 'nullable|string|max:255',
+    'no_telp'       => 'required|numeric|digits_between:10,15',
+    'booth_id'      => 'required|exists:booth,id',
+    'paket_id'      => 'required|exists:paket,id',
+    'catatan'       => 'nullable|string|max:500',
+], [
+    'no_telp.required'        => 'Nomor telepon wajib diisi.',
+    'no_telp.numeric'         => 'Nomor telepon hanya boleh berisi angka.',
+    'no_telp.digits_between'  => 'Nomor telepon harus terdiri dari 10 hingga 15 angka.',
+    'booth_id.required'       => 'Booth wajib dipilih.',
+    'paket_id.required'       => 'Paket wajib dipilih.',
+]);
 
+        // cek apakah nomor telepon dipakai orang lain
+        if ($request->pengguna_id == null) {
+
+            // membuat pengguna baru 
+            if (Pengguna::where('no_telp', $request->no_telp)->exists()) {
+                return back()->withErrors([
+                    'no_telp' => 'Nomor telepon sudah digunakan pengguna lain.'
+                ])->withInput();
+            }
+
+        } else {
+
+            // pilih pengguna lama 
+            if (
+                Pengguna::where('no_telp', $request->no_telp)
+                        ->where('id', '!=', $request->pengguna_id)
+                        ->exists()
+            ) {
+                return back()->withErrors([
+                    'no_telp' => 'Nomor telepon sudah digunakan pengguna lain.'
+                ])->withInput();
+            }
+        }
+
+        // buat pengguna baru jika tidak memilih pengguna lama
         if (!$request->pengguna_id && $request->nama_pengguna) {
             $user = Pengguna::create([
                 'nama_pengguna' => $request->nama_pengguna,
@@ -83,8 +116,10 @@ class AntrianController extends Controller
         $boothId = $request->booth_id;
         $antrian = null;
 
-
+        // transaksi untuk memastikan nomor antrian tidak bentrok
         DB::transaction(function () use ($boothId, $tanggal, $penggunaId, $request, &$antrian) {
+
+            // dapatkan nomor antrian terakhir untuk booth & tanggal
             $lastNomor = Antrian::where('booth_id', $boothId)
                 ->where('tanggal', $tanggal)
                 ->lockForUpdate()
@@ -92,6 +127,7 @@ class AntrianController extends Controller
 
             $nomorAntrian = ($lastNomor ?? 0) + 1;
 
+            // simpan antrian baru
             $antrian = Antrian::create([
                 'pengguna_id'   => $penggunaId,
                 'booth_id'      => $boothId,
@@ -102,6 +138,7 @@ class AntrianController extends Controller
                 'catatan'       => $request->catatan,
             ]);
 
+            // catat log
             Log::create([
                 'pengguna_id' => Auth::id(),
                 'antrian_id'  => $antrian->id,
@@ -125,7 +162,7 @@ class AntrianController extends Controller
     }
 
     /**
-     * Form edit
+     * Form edit antrian
      */
     public function edit($id)
     {
@@ -144,12 +181,13 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::findOrFail($id);
 
+        // tidak boleh edit jika status dibatalkan
         if ($antrian->status === 'dibatalkan') {
             return redirect()->route('operator.antrian.index')
-                            ->with('error', 'Antrian yang dibatalkan tidak dapat diedit.');
+                ->with('error', 'Antrian yang dibatalkan tidak dapat diedit.');
         }
 
-        // Validasi normal
+        // validasi input update
         $request->validate([
             'booth_id' => 'required|exists:booth,id',
             'paket_id' => 'required|exists:paket,id',
@@ -160,6 +198,7 @@ class AntrianController extends Controller
 
         DB::transaction(function () use ($antrian, $request) {
 
+            // update data antrian
             $antrian->update([
                 'booth_id' => $request->booth_id,
                 'paket_id' => $request->paket_id,
@@ -167,42 +206,48 @@ class AntrianController extends Controller
                 'status'   => $request->status,
             ]);
 
+            // update nomor telepon pengguna jika ada
             if ($request->no_telp && $antrian->pengguna) {
-                $antrian->pengguna->update(['no_telp' => $request->no_telp]);
+                $antrian->pengguna->update([
+                    'no_telp' => $request->no_telp
+                ]);
             }
 
+            // log aktivitas
             Log::create([
                 'pengguna_id' => Auth::id(),
                 'antrian_id'  => $antrian->id,
                 'aksi'        => 'update_antrian',
-                'keterangan'  => 'Update antrian (tidak dibatalkan)',
+                'keterangan'  => 'Operator mengupdate antrian',
             ]);
         });
 
         return redirect()->route('operator.antrian.index')
-                        ->with('success', 'Antrian berhasil diedit!');
+            ->with('success', 'Antrian berhasil diedit!');
     }
+
     /**
- * Hapus antrian
- */
-public function destroy($id)
-{
-    $antrian = Antrian::findOrFail($id);
+     * Hapus antrian
+     */
+    public function destroy($id)
+    {
+        $antrian = Antrian::findOrFail($id);
 
-    DB::transaction(function () use ($antrian) {
-        // Log sebelum dihapus
-        Log::create([
-            'pengguna_id' => Auth::id(),
-            'antrian_id'  => $antrian->id,
-            'aksi'        => 'hapus_antrian',
-            'keterangan'  => 'Operator menghapus antrian ID ' . $antrian->id,
-        ]);
+        DB::transaction(function () use ($antrian) {
 
-        // Hapus antrian
-        $antrian->delete();
-    });
+            // simpan log sebelum hapus
+            Log::create([
+                'pengguna_id' => Auth::id(),
+                'antrian_id'  => $antrian->id,
+                'aksi'        => 'hapus_antrian',
+                'keterangan'  => 'Operator menghapus antrian ID ' . $antrian->id,
+            ]);
 
-    return redirect()->route('operator.antrian.index')
-                     ->with('success', 'Antrian berhasil dihapus!');
-}
+            // hapus antrian
+            $antrian->delete();
+        });
+
+        return redirect()->route('operator.antrian.index')
+            ->with('success', 'Antrian berhasil dihapus!');
+    }
 }

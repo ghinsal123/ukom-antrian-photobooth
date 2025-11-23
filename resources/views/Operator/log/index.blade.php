@@ -1,6 +1,7 @@
 @extends('Operator.layout')
 
 @section('content')
+<div class="bg-white p-6 rounded-2xl shadow">
 <div class="container mx-auto px-4 py-6">
 
     <!-- Header -->
@@ -82,7 +83,7 @@
 
 <tbody>
     @forelse($logs as $log)
-    <tr class="bg-white hover:bg-pink-50">
+    <tr class="text-center bg-white hover:bg-pink-50">
         <td class="px-2 py-1 text-center border">{{ $loop->iteration }}</td>
         <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
         <td class="px-2 py-1 border">{{ $log->pengguna->nama_pengguna ?? '-' }}</td>

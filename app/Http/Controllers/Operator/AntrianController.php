@@ -142,19 +142,24 @@ class AntrianController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $antrian = Antrian::findOrFail($id);
+
+        if ($antrian->status === 'dibatalkan') {
+            return redirect()->route('operator.antrian.index')
+                            ->with('error', 'Antrian yang dibatalkan tidak dapat diedit.');
+        }
+
+        // Validasi normal
         $request->validate([
-            'booth_id'    => 'required|exists:booth,id',
-            'paket_id'    => 'required|exists:paket,id',
-            'no_telp'     => 'nullable|string|max:20',
-            'catatan'     => 'nullable|string|max:500',
+            'booth_id' => 'required|exists:booth,id',
+            'paket_id' => 'required|exists:paket,id',
+            'no_telp'  => 'nullable|string|max:20',
+            'catatan'  => 'nullable|string|max:500',
             'status'   => 'required|in:menunggu,proses,selesai,dibatalkan',
         ]);
 
-        $antrian = Antrian::findOrFail($id);
-
-        // Update hanya booth, paket, catatan, nomor telepon pengguna
         DB::transaction(function () use ($antrian, $request) {
-            // Update data booth & paket
+
             $antrian->update([
                 'booth_id' => $request->booth_id,
                 'paket_id' => $request->paket_id,
@@ -162,27 +167,20 @@ class AntrianController extends Controller
                 'status'   => $request->status,
             ]);
 
-            // Update no_telp pengguna jika ada
-            if ($request->no_telp) {
+            if ($request->no_telp && $antrian->pengguna) {
                 $antrian->pengguna->update(['no_telp' => $request->no_telp]);
             }
 
-            // Log perubahan
             Log::create([
                 'pengguna_id' => Auth::id(),
                 'antrian_id'  => $antrian->id,
                 'aksi'        => 'update_antrian',
-                'keterangan'  => json_encode([
-                    'booth_id' => $request->booth_id,
-                    'paket_id' => $request->paket_id,
-                    'catatan'  => $request->catatan,
-                    'no_telp'  => $request->no_telp ?? null,
-                ]),
+                'keterangan'  => 'Update antrian (tidak dibatalkan)',
             ]);
         });
 
         return redirect()->route('operator.antrian.index')
-            ->with('success', 'Antrian berhasil diedit!');
+                        ->with('success', 'Antrian berhasil diedit!');
     }
     /**
  * Hapus antrian

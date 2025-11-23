@@ -1,10 +1,9 @@
 @extends('Operator.layout')
 
 @section('content')
+<div class="bg-white p-6 rounded-2xl shadow">
 
-<div class="container mx-auto px-4">
-
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
+       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
         <h2 class="text-3xl md:text-2xl font-bold text-gray-800">Daftar Antrian</h2>
 
         <div class="flex gap-3">
@@ -32,116 +31,85 @@
         </div>
     </div>
 
-    @php
-    function boothColor($name) {
-        $colors = ['purple', 'blue', 'green', 'yellow', 'purple', 'pink', 'indigo', 'teal', 'orange'];
-        $index = abs(crc32($name)) % count($colors);
-        $color = $colors[$index];
-        return "bg-{$color}-500 text-white";
-    }
-    @endphp
-
-    <div class="overflow-x-auto">
-        <table class="table-auto w-full border-collapse rounded-3xl shadow-2xl overflow-hidden">
-            <thead class="bg-linear-to-r from-pink-300 to-pink-500 text-white">
-                <tr>
-                    <th class="px-6 py-3">Nomor</th>
-                    <th class="px-6 py-3">Nama</th>
-                    <th class="px-6 py-3">No. Telp</th>
-                    <th class="px-6 py-3">Booth</th>
-                    <th class="px-6 py-3">Paket</th>
-                    <th class="px-6 py-3">Tanggal</th>
-                    <th class="px-6 py-3">Catatan</th>
-                    <th class="px-6 py-3">Status</th>
-                    <th class="px-6 py-3">Aksi</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach ($antrian as $item)
-                <tr class="bg-white shadow-md hover:shadow-lg">
-
-                    {{-- Nomor Antrian --}}
-                    <td class="px-4 py-3 font-bold text-pink-700">
-                        {{ $item->nomor_antrian }}
-                    </td>
-
-                    {{-- Nama --}}
-                    <td class="px-4 py-3 font-medium text-pink-600">
-                        {{ $item->pengguna->nama_pengguna ?? '-' }}
-                    </td>
-
-                    {{-- No. Telp --}}
-                    <td class="px-4 py-3 text-gray-700 font-semibold">
-                        {{ $item->pengguna->no_telp ?? '-' }}
-                    </td>
-
-                    {{-- Booth --}}
-                    <td class="px-4 py-3 font-semibold text-center
-                        {{ $item->booth ? boothColor($item->booth->nama_booth) : 'bg-gray-300 text-gray-800' }}">
-                        {{ $item->booth->nama_booth ?? '-' }}
-                    </td>
-
-                    {{-- Paket --}}
-                    <td class="px-4 py-3 text-pink-500 font-semibold">
-                        {{ $item->paket->nama_paket }}
-                    </td>
-
-                    {{-- Tanggal --}}
-                    <td class="px-4 py-3 text-pink-500 font-semibold">
-                        {{ $item->tanggal }}
-                    </td>
-
-                    {{-- Catatan --}}
-                    <td class="px-4 py-3 text-gray-600 italic max-w-[200px] truncate">
-                        {{ $item->catatan ?? '-' }}
-                    </td>
-
-                    {{-- Status --}}
-                    <td class="px-4 py-3 text-center">
-                        @if($item->status === 'menunggu')
-                            <span class="bg-yellow-100 text-yellow-500 px-2 py-1 rounded-full text-sm font-semibold">
-                                Menunggu
-                            </span>
-                        @elseif($item->status === 'proses')
-                            <span class="bg-blue-100 text-blue-500 px-2 py-1 rounded-full text-sm font-semibold">
-                                Proses
-                            </span>
-                        @elseif($item->status === 'selesai')
-                            <span class="bg-green-100 text-green-500 px-2 py-1 rounded-full text-sm font-semibold">
-                                Selesai
-                            </span>
-                        @elseif($item->status === 'dibatalkan')
-                            <span class="bg-red-100 text-red-500 px-2 py-1 rounded-full text-sm font-semibold">
-                                Dibatalkan
-                            </span>
-                        @endif
-                    </td>
-
-                    {{-- Aksi --}}
-                    <td class="px-4 py-3 text-center flex gap-2 justify-center">
-                        <a href="{{ route('operator.antrian.show', $item->id) }}" 
-                           class="bg-blue-500 text-white px-3 py-1 rounded-xl hover:bg-blue-600 shadow-md transition-all">
-                           Detail
-                        </a>
-                        <a href="{{ route('operator.antrian.edit', $item->id) }}" 
-                           class="bg-yellow-400 text-white px-3 py-1 rounded-xl hover:bg-yellow-500 shadow-md transition-all">
-                           Edit
-                        </a>
-                        <form action="{{ route('operator.antrian.delete', $item->id) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                class="bg-red-500 text-white px-3 py-1 rounded-xl hover:bg-red-600 shadow-md transition-all">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
-
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    {{-- Notifikasi Sukses --}}
+    @if (session('success'))
+    <div id="popupSuccess" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+        <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center scale-75 opacity-0 animate-zoomIn">
+            <div class="mx-auto w-20 h-20 flex items-center justify-center rounded-full border border-green-400 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <p class="text-lg font-semibold text-gray-700 mb-4">
+                {{ session('success') }}
+            </p>
+            <button onclick="document.getElementById('popupSuccess').remove()"
+                    class="px-5 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600">
+                OK
+            </button>
+        </div>
     </div>
+
+    <style>
+        @keyframes zoomIn {
+            0% { transform: scale(0.6); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-zoomIn { animation: zoomIn 0.25s ease-out forwards; }
+    </style>
+    @endif
+
+    {{-- TABEL ANTRIAN --}}
+    <table class="w-full border-collapse">
+        <thead>
+            <tr class="bg-pink-100 text-center">
+                <th class="p-3">#</th>
+                <th class="p-3">Pengguna</th>
+                <th class="p-3">Booth</th>
+                <th class="p-3">Paket</th>
+                <th class="p-3">Nomor</th>
+                <th class="p-3">Tanggal</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Catatan</th>
+                <th class="p-3">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($antrian as $index => $a)
+            <tr class="text-center border-b hover:bg-pink-50">
+                <td class="p-3">{{ $index + 1 }}</td>
+                <td class="p-3">{{ $a->pengguna->nama_pengguna }}</td>
+                <td class="p-3">{{ $a->booth->nama_booth }}</td>
+                <td class="p-3">{{ $a->paket->nama_paket }}</td>
+                <td class="p-3">{{ $a->nomor_antrian }}</td>
+                <td class="p-3">{{ \Carbon\Carbon::parse($a->tanggal)->format('d/m/Y') }}</td>
+                <td class="p-3">{{ ucfirst($a->status) }}</td>
+                <td class="p-3">{{ $a->catatan ?? '-' }}</td>
+                <td class="p-3 flex gap-2">
+                    <a href="{{ route('operator.antrian.show', $a->id) }}" class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                        Detail
+                    </a>
+                    <a href="{{ route('operator.antrian.edit', $a->id) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        Edit
+                    </a>
+                    <form action="{{ route('operator.antrian.delete', $a->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus antrian?')">
+                        @csrf @method('DELETE')
+                        <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    {{-- Pagination --}}
+    <div class="mt-4">
+        {{ $antrian->links() }}
+    </div>
+
 </div>
 @endsection

@@ -1,8 +1,8 @@
 @extends('Operator.layout')
 
 @section('content')
-<div class="flex flex-col md:flex-row justify-between items-center mb-4">
-    <!-- JUDUL -->
+<div class="bg-white p-6 rounded-2xl shadow">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
     <h2 class="text-3xl font-bold text-gray-800 mb-2 md:mb-0">Daftar Paket</h2>
 
     <!-- FORM PENCARIAN -->
@@ -17,9 +17,9 @@
 </div>
 
 <div class="overflow-x-auto">
-    <table class="table-auto w-full border-collapse rounded-3xl shadow-2xl overflow-hidden">
-        <thead class="bg-linear-to-r from-pink-300 to-pink-500 text-white">
-            <tr>
+    <table class="w-full border-collapse">
+        <thead>
+            <tr class="bg-pink-100 text-center">
                 <th class="px-6 py-3">Gambar</th>
                 <th class="px-6 py-3">Nama Paket</th>
                 <th class="px-6 py-3">Deskripsi</th>
@@ -29,7 +29,7 @@
         </thead>
         <tbody>
             @forelse ($pakets as $paket)
-            <tr class="bg-white shadow-md hover:shadow-lg">
+            <tr class="border-b hover:bg-pink-50">
                 <td class="px-4 py-3">
                     <div class="flex justify-center items-center">
                         @if($paket->gambar)

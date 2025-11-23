@@ -130,7 +130,7 @@
                         </button>
                     @else
                         <form action="{{ route('admin.pengguna.destroy', $user->id) }}" method="POST"
-                            onsubmit="return confirm('Yakin?')">
+                            onsubmit="return confirm('Yakin ingin menghapus operator?')">
                             @csrf
                             @method('DELETE')
                             <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">

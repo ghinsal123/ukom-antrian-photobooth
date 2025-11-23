@@ -23,26 +23,38 @@
         </div>
 
         <!-- MENU -->
-        <nav class="space-y-2 font-medium flex-1"> <!-- flex-1 biar menu tetap ke atas -->
-            <a href="/admin/dashboard" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/dashboard') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+        <nav class="space-y-2 font-medium flex-1">
+
+            <a href="/admin/dashboard"
+                class="block px-4 py-3 rounded-xl hover:bg-pink-100 
+                {{ request()->is('admin/dashboard') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-home mr-2"></i> Dashboard
             </a>
 
-            <a href="/admin/booth" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/booth') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/booth"
+                class="block px-4 py-3 rounded-xl hover:bg-pink-100 
+                {{ request()->is('admin/booth*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-camera mr-2"></i> Booth
             </a>
 
-            <a href="/admin/paket" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/paket') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/paket"
+                class="block px-4 py-3 rounded-xl hover:bg-pink-100 
+                {{ request()->is('admin/paket*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-box mr-2"></i> Paket
             </a>
 
-            <a href="/admin/pengguna" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/pengguna') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/pengguna"
+                class="block px-4 py-3 rounded-xl hover:bg-pink-100 
+                {{ request()->is('admin/pengguna*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-user mr-2"></i> Pengguna
             </a>
 
-            <a href="/admin/log" class="block px-4 py-3 rounded-xl hover:bg-pink-100 {{ request()->is('admin/log') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+            <a href="/admin/log"
+                class="block px-4 py-3 rounded-xl hover:bg-pink-100 
+                {{ request()->is('admin/log*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
                 <i class="fas fa-file-alt mr-2"></i> Laporan
             </a>
+
         </nav>
 
         <!-- LOGOUT BUTTON -->

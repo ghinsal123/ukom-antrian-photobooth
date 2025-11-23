@@ -148,11 +148,15 @@
                             <h4 class="text-center text-pink-600 font-bold mb-3"><?php echo e($bItem->nama_booth); ?></h4>
 
                             <?php
-                                $list = $bItem->antrian->filter(function($r) {
-                                    return in_array(strtolower($r->status), [
-                                        'menunggu','proses','diproses','selesai','dibatalkan'
-                                    ]);
-                                });
+                                $list = $bItem->antrian
+                                    ->filter(function($r) {
+                                        return in_array(strtolower($r->status), [
+                                            'menunggu','proses','diproses','selesai'
+                                        ]);
+                                    })
+                                    ->sortBy(function($q) {
+                                        return strtolower($q->status) === 'selesai' ? 1 : 0;
+                                    });
                             ?>
 
                             <?php if($list->isEmpty()): ?>
@@ -164,7 +168,6 @@
                                         <?php
                                             $status = strtolower($row->status);
 
-                                            // TANPA TERNARY BERTUMPUK → AMAN PHP 8
                                             if ($status === 'selesai') {
                                                 $wrapperClass = 'opacity-50 bg-gray-200';
                                             } elseif ($status === 'dibatalkan') {

@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="bg-pink-50">
-<h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
 
 <!-- Tanggal / Jadwal -->
     @php
@@ -10,8 +9,8 @@
         $hariIni = \Carbon\Carbon::now('Asia/Jakarta')->translatedFormat('l, d F Y'); 
     @endphp
 
-    <div class="flex items-center justify-between py-5">
-        <h2 class="text-2xl font-semibold text-gray-700">
+    <div class="flex items-center justify-between py-2">
+        <h2 class="text-xl font-semibold text-gray-700">
             Jadwal Hari Ini: 
             <span class="text-pink-400 font-bold">{{ $hariIni }}</span>
         </h2>
@@ -75,19 +74,21 @@
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     const chartData = @json($chartPerBooth);
     const labelBooth = @json($labelBooth);
     const customerData = @json($customerData);
 
+    // PIE CHART
     const ctx = document.getElementById('pieChart').getContext('2d');
-    let pieChart = new Chart(ctx, {
+    const pieChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: labelBooth, 
+            labels: labelBooth,
             datasets: [{
                 label: 'Jumlah Antrian',
-                data: chartData, 
+                data: chartData,
                 backgroundColor: [
                     'rgba(59,130,246,0.8)',
                     'rgba(253,224,71,0.8)',
@@ -107,49 +108,52 @@
                 borderWidth: 1
             }]
         },
-        options: { responsive: true }
+        options: { 
+            responsive: true 
+        }
     });
 
+    // DOM ELEMENTS
     const customerList = document.getElementById('customerList');
     const boothSelect = document.getElementById('boothSelect');
 
+    // FUNCTION RENDER CUSTOMER
     function renderCustomers(booth) {
         customerList.innerHTML = '';
 
-        if (customerData[booth]) {
-            customerData[booth].forEach(c => {
+        if (!customerData[booth]) return;
 
-                // Tentukan warna badge berdasarkan status
-                let badgeColor = '';
-                if (c.status === 'menunggu') badgeColor = 'bg-yellow-500';
-                else if (c.status === 'proses') badgeColor = 'bg-blue-500';
-                else if (c.status === 'selesai') badgeColor = 'bg-green-500';
-                else badgeColor = 'bg-red-500'; // pembatalan
+        customerData[booth].forEach(c => {
+            let badgeColor = '';
+                 if (c.status === 'menunggu') badgeColor = 'bg-yellow-500';
+            else if (c.status === 'proses')   badgeColor = 'bg-blue-500';
+            else if (c.status === 'selesai')  badgeColor = 'bg-green-500';
+            else                              badgeColor = 'bg-red-500';
 
-                const a = document.createElement('a');
-                a.href = `{{ url('operator/antrian/detail') }}/${c.id}`;
-                a.className = 'block bg-pink-50 hover:bg-pink-100 p-3 rounded-xl shadow flex justify-between items-center transition';
+            const a = document.createElement('a');
+            a.href = `{{ url('operator/antrian/detail') }}/${c.id}`;
+            a.className = 'block bg-pink-50 hover:bg-pink-100 p-3 rounded-xl shadow flex justify-between items-center transition';
 
-                a.innerHTML = `
-                    <div class="flex flex-col">
-                        <span class="text-pink-600 font-semibold">${c.name}</span>
-                        <span class="text-gray-500 text-sm">${c.time}</span>
-                    </div>
+            a.innerHTML = `
+                <div class="flex flex-col">
+                    <span class="text-pink-600 font-semibold">${c.name}</span>
+                    <span class="text-gray-500 text-sm">${c.time}</span>
+                </div>
+                <span class="px-2 py-1 text-xs text-white rounded-full ${badgeColor}">
+                    ${c.status.charAt(0).toUpperCase() + c.status.slice(1)}
+                </span>
+            `;
 
-                    <span class="px-2 py-1 text-xs text-white rounded-full ${badgeColor}">
-                        ${c.status.charAt(0).toUpperCase() + c.status.slice(1)}
-                    </span>
-                `;
-
-                customerList.appendChild(a);
-            });
-        }
+            customerList.appendChild(a);
+        });
     }
+
+    // RENDER PERTAMA
     renderCustomers(Object.keys(customerData)[0]);
 
+    // EVENT CHANGE BOOTH
     boothSelect.addEventListener('change', function() {
-        const booth = this.value;
-        renderCustomers(booth);
+        renderCustomers(this.value);
     });
 </script>
 @endsection

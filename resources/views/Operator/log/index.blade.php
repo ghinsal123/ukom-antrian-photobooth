@@ -39,13 +39,13 @@
             class="flex flex-row flex-wrap gap-3 p-4 md:pt-4 pt-0 rounded-2xl w-full md:w-auto">
 
             <div class="flex flex-col">
-                <label class="text-xs text-gray-600 mb-1">Start Date</label>
+                <label class="text-xs text-gray-600 mb-1">Tanggal Mulai</label>
                 <input type="date" name="start_date" value="{{ request('start_date') }}"
                     class="border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 md:w-34 w-40">
             </div>
 
             <div class="flex flex-col">
-                <label class="text-xs text-gray-600 mb-1">End Date</label>
+                <label class="text-xs text-gray-600 mb-1">Tanggal Selesai</label>
                 <input type="date" name="end_date" value="{{ request('end_date') }}"
                     class="border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 md:w-34 w-40">
             </div>

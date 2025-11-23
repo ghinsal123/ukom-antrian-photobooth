@@ -1,8 +1,10 @@
 @extends('Operator.layout')
 
 @section('content')
+<h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Detail Paket</h2>
+
 <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-    <!-- GAMBAR DI ATAS -->
+    <!-- GAMBAR -->
     <div class="flex justify-center mb-6">
         @if($paket->gambar)
             <img src="{{ asset('storage/' . $paket->gambar) }}" 

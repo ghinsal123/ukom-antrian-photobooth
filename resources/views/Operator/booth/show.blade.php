@@ -1,6 +1,8 @@
 @extends('Operator.layout')
 
 @section('content')
+<h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Detail Booth</h2>
+
 <div class="bg-white rounded-3xl shadow-2xl p-6 max-w-3xl mx-auto mt-8">
     <h2 class="text-3xl font-bold mb-6 text-pink-600">{{ $booth->nama_booth }}</h2>
 

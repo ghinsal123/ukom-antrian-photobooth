@@ -250,4 +250,29 @@ $request->validate([
         return redirect()->route('operator.antrian.index')
             ->with('success', 'Antrian berhasil dihapus!');
     }
+    /**
+     * Batalkan antrian oleh customer
+     */
+    public function cancel(Request $request, $id)
+    {
+        $request->validate([
+            'alasan' => 'required|string|max:500'
+        ]);
+
+        $antrian = Antrian::findOrFail($id);
+
+        $antrian->update([
+            'status' => 'dibatalkan',
+            'catatan' => $request->alasan, 
+        ]);
+
+        Log::create([
+            'pengguna_id' => $antrian->pengguna_id,
+            'antrian_id'  => $antrian->id,
+            'aksi'        => 'batal_customer',
+            'keterangan'  => $request->alasan, 
+        ]);
+
+        return back()->with('success', 'Antrian berhasil dibatalkan!');
+    }
 }

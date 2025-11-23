@@ -41,7 +41,7 @@ class AntrianController extends Controller
         // update nomor telepon
         $pengguna->update(['no_telp' => $request->no_telp]);
 
-        // nomor antrian otomatis untuk booth + tanggal yang sama
+        // nomor antrian otomatis
         $last = Antrian::where('booth_id', $request->booth_id)
             ->whereDate('tanggal', $request->tanggal)
             ->orderBy('nomor_antrian', 'DESC')
@@ -59,7 +59,7 @@ class AntrianController extends Controller
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Antrian berhasil ditambahkan.');
     }
 
     public function detail($id)
@@ -103,7 +103,7 @@ class AntrianController extends Controller
                 ->with('error', 'Antrian tidak bisa diubah.');
         }
 
-        // jika booth/tanggal berubah, hitung nomor baru
+        // hitung nomor baru jika booth/tanggal berubah
         if ($antrian->booth_id != $request->booth_id || $antrian->tanggal != $request->tanggal) {
             $last = Antrian::where('booth_id', $request->booth_id)
                 ->whereDate('tanggal', $request->tanggal)
@@ -121,7 +121,7 @@ class AntrianController extends Controller
         ]);
 
         return redirect()->route('customer.dashboard')
-            ->with('success', 'Perubahan berhasil disimpan.');
+            ->with('success', 'Antrian berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -133,7 +133,7 @@ class AntrianController extends Controller
                 ->with('error', 'Antrian tidak bisa dibatalkan.');
         }
 
-        // UBAH STATUS (jangan delete)
+        // ubah status (jangan delete)
         $antrian->update(['status' => 'dibatalkan']);
 
         return redirect()->route('customer.dashboard')

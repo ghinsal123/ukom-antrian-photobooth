@@ -119,7 +119,7 @@
                         <td class="py-3 px-2">
                             {{ $item->catatan ?? '-' }}
                         </td>
-
+                        
                         <td class="py-3 px-2">
                             {{ date('d M Y', strtotime($item->tanggal)) }}
                         </td>

@@ -20,29 +20,26 @@ class DashboardController extends Controller
         }
 
         $pengguna = Pengguna::find($customerId);
-        $today = now()->toDateString();
 
-        // Hapus antrian hari lama
-        Antrian::whereDate('tanggal', '<', $today)->delete();
-
-        // Antrian user hari ini
+        // Ambil semua antrian milik user (semua status, semua tanggal)
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
-            ->whereDate('tanggal', $today)
+            ->orderBy('tanggal', 'DESC')
             ->orderBy('id', 'DESC')
             ->get();
 
-        // Antrian semua booth
-        $booth = Booth::with(['antrian' => function($q) use ($today) {
-            $q->whereDate('tanggal', $today)
+        // Ambil semua booth + antriannya (semua tanggal). Jika ingin hanya hari ini,
+        // ubah whereDate('tanggal', now()->toDateString()) di query antrian.
+        $booth = Booth::with(['antrian' => function ($q) {
+            $q->orderBy('tanggal', 'DESC')
               ->orderBy('nomor_antrian', 'ASC')
               ->with(['pengguna', 'paket']);
         }])->get();
 
         return view('customer.dashboard', [
-            'booth'      => $booth,
-            'antrianku'  => $antrianku,
-            'pengguna'   => $pengguna
+            'booth'     => $booth,
+            'antrianku' => $antrianku,
+            'pengguna'  => $pengguna
         ]);
     }
 }

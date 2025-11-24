@@ -67,12 +67,16 @@
                    readonly>
         </div>
 
-        <!-- tanggal dan waktu -->
-        <div class="py-3 hover:bg-gray-50 transition">
-            <span class="font-medium text-gray-700 block">Tanggal & Waktu</span>
-            <span class="text-gray-900 text-lg italic mt-1 block">
-                {{ \Carbon\Carbon::parse($data->tanggal)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
-            </span>
+        <!-- tanggal dan waktu otomatis -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Tanggal & Waktu</label>
+
+            <p class="text-gray-600 text-lg italic">
+                {{ now('Asia/Jakarta')->format('d M Y H:i') }}
+            </p>
+
+            <input type="hidden" name="tanggal"
+                   value="{{ now('Asia/Jakarta')->format('Y-m-d H:i:s') }}">
         </div>
 
         <!-- status antrian -->

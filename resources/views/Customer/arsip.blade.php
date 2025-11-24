@@ -73,7 +73,7 @@
 
         @else
 
-        <!-- TABEL ARSIP (ASLI - CATATAN OPERATOR TETAP ADA) -->
+        <!-- TABEL ARSIP (ASLI - CATATAN  TETAP ADA) -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden">
 
             <table class="min-w-full text-sm">
@@ -84,7 +84,7 @@
                         <th class="py-3 px-2">Paket</th>
                         <th class="py-3 px-2">Booth</th>
                         <th class="py-3 px-2">Status</th>
-                        <th class="py-3 px-2">Catatan Operator</th>
+                        <th class="py-3 px-2">Catatan</th>
                         <th class="py-3 px-2">Tanggal</th>
                     </tr>
                 </thead>

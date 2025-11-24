@@ -62,7 +62,7 @@ class DashboardController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | ⭐ ARSIP PAGE CUSTOMER
+    | ARSIP PAGE CUSTOMER
     |--------------------------------------------------------------------------
     | Menampilkan semua antrian yang statusnya "selesai"
     */

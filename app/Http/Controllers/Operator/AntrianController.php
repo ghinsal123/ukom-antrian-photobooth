@@ -59,21 +59,21 @@ class AntrianController extends Controller
      */
     public function store(Request $request)
     {
-// validasi input
-$request->validate([
-    'pengguna_id'   => 'nullable|exists:pengguna,id',
-    'nama_pengguna' => 'nullable|string|max:255',
-    'no_telp'       => 'required|numeric|digits_between:10,15',
-    'booth_id'      => 'required|exists:booth,id',
-    'paket_id'      => 'required|exists:paket,id',
-    'catatan'       => 'nullable|string|max:500',
-], [
-    'no_telp.required'        => 'Nomor telepon wajib diisi.',
-    'no_telp.numeric'         => 'Nomor telepon hanya boleh berisi angka.',
-    'no_telp.digits_between'  => 'Nomor telepon harus terdiri dari 10 hingga 15 angka.',
-    'booth_id.required'       => 'Booth wajib dipilih.',
-    'paket_id.required'       => 'Paket wajib dipilih.',
-]);
+        // validasi input
+        $request->validate([
+            'pengguna_id'   => 'nullable|exists:pengguna,id',
+            'nama_pengguna' => 'nullable|string|max:255',
+            'no_telp'       => 'required|numeric|digits_between:10,15',
+            'booth_id'      => 'required|exists:booth,id',
+            'paket_id'      => 'required|exists:paket,id',
+            'catatan'       => 'nullable|string|max:500',
+        ], [
+            'no_telp.required'        => 'Nomor telepon wajib diisi.',
+            'no_telp.numeric'         => 'Nomor telepon hanya boleh berisi angka.',
+            'no_telp.digits_between'  => 'Nomor telepon harus terdiri dari 10 hingga 15 angka.',
+            'booth_id.required'       => 'Booth wajib dipilih.',
+            'paket_id.required'       => 'Paket wajib dipilih.',
+        ]);
 
         // cek apakah nomor telepon dipakai orang lain
         if ($request->pengguna_id == null) {

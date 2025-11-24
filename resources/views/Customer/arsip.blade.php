@@ -10,7 +10,7 @@
 
 <body class="bg-pink-50">
 
-    <!-- NAVBAR (SAMA DENGAN DASHBOARD) -->
+    <!-- NAVBAR -->
     <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-lg sm:text-xl font-bold text-pink-500">
@@ -109,19 +109,19 @@
 
                         <td class="py-3 px-2">
                             @if ($item->status === 'selesai')
-                                <!-- 🟣 STATUS SELESAI = PINK PEKAT -->
+                                <!--  STATUS SELESAI = PINK PEKAT -->
                                 <span class="px-3 py-1 rounded text-xs text-white" style="background:#ec4899;">
                                     Selesai
                                 </span>
                             @else
-                                <!-- 🔴 STATUS DIBATALKAN = MERAH -->
+                                <!--  STATUS DIBATALKAN = MERAH -->
                                 <span class="bg-red-500 text-white px-3 py-1 rounded text-xs">
                                     Dibatalkan
                                 </span>
                             @endif
                         </td>
 
-                        <!-- CATATAN OPERATOR (WAJIB ADA) -->
+                        <!-- CATATAN OPERATOR  -->
                         <td class="py-3 px-2">
                             {{ $item->catatan ?? '-' }}
                         </td>

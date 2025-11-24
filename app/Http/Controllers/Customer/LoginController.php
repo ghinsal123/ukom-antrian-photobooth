@@ -17,20 +17,16 @@ class LoginController extends Controller
     // Proses login customer
     public function login(Request $request)
     {
-        // Validasi input (nama harus diisi)
+        // Validasi input 
         $request->validate([
             'full_name' => 'required|string|max:255'
         ]);
 
         // Cek apakah nama customer sudah ada di database
-        // kalau ada → ambil data
+        // kalau ada  diambil data
         $user = Pengguna::where('nama_pengguna', $request->full_name)->first();
 
-        /*
-        Kalau nama customer belum ada → buat user baru
-        Passwordnya pake dummy "default123" biar tabel ga error
-        Role-nya otomatis "customer"
-        */
+        
         if (!$user) {
             $user = Pengguna::create([
                 'nama_pengguna' => $request->full_name,

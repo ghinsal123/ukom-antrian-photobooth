@@ -30,7 +30,7 @@ class ProfileController extends Controller
         // HANYA UPDATE FOTO
         if ($request->hasFile('foto')) {
 
-            // Hapus foto lama jika ada
+            // Hapus foto lama 
             if ($pengguna->foto && Storage::disk('public')->exists($pengguna->foto)) {
                 Storage::disk('public')->delete($pengguna->foto);
             }

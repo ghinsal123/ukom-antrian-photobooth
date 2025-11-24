@@ -12,11 +12,20 @@
     <nav class="bg-white shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row md:justify-between md:items-center gap-3">
             <h1 class="text-2xl font-bold text-pink-400 text-center md:text-left">PhotoBooth FlashFrame</h1>
+
             <div class="flex gap-6 items-center justify-center md:justify-end">
+
                 <a href="/customer/dashboard" class="text-gray-600 hover:text-pink-400">Dashboard</a>
+                
                 <a href="/customer/antrian" class="text-gray-600 hover:text-pink-400">+ Antrian</a>
+
+                <!-- 🔥 MENU ARSIP YANG KAMU MINTA -->
+                <a href="/customer/arsip" class="text-gray-600 hover:text-pink-400">Arsip</a>
+
                 <a href="#" onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin logout?')) { document.getElementById('logout-form').submit(); }" class="text-gray-600 hover:text-pink-400">Logout</a>
+
                 <form id="logout-form" action="{{ route('customer.logout') }}" method="POST" class="hidden">@csrf</form>
+
             </div>
         </div>
     </nav>
@@ -81,38 +90,30 @@
                         </div>
                     </div>
 
-                    <!-- PREVIEW -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                        <!-- Paket -->
                         <div class="border rounded-lg p-3 bg-gray-50">
                             <p class="text-sm font-semibold text-pink-500 mb-2">Paket</p>
                             <img id="previewPaket" src="{{ asset('storage/' . $antrian->paket->gambar) }}" class="w-full h-32 object-cover rounded-lg mb-2">
-
                             <p id="deskripsiPaket" class="text-xs text-gray-600">{{ $antrian->paket->deskripsi }}</p>
-
                             <p id="hargaPaket" class="text-xs font-semibold text-pink-600 mt-1">
                                 Rp{{ number_format($antrian->paket->harga, 0, ',', '.') }}
                             </p>
                         </div>
 
-                        <!-- Booth -->
                         <div class="border rounded-lg p-3 bg-gray-50">
                             <p class="text-sm font-semibold text-purple-500 mb-2">Booth</p>
                             <img id="previewBooth" src="{{ asset('storage/' . $antrian->booth->gambar) }}" class="w-full h-32 object-cover rounded-lg mb-2">
-
                             <p id="deskripsiBooth" class="text-xs text-gray-600">{{ $antrian->booth->deskripsi }}</p>
-
                             <p id="kapasitasBooth" class="text-xs font-semibold text-purple-600 mt-1">
                                 Maks: {{ $antrian->booth->kapasitas }} orang
                             </p>
                         </div>
-
                     </div>
 
                     <div class="pt-2">
                         <button type="submit" class="w-full bg-pink-400 text-white py-2.5 rounded-lg font-semibold hover:bg-pink-500 transition text-sm">Simpan Perubahan</button>
                     </div>
+
                 </div>
             </form>
         </div>

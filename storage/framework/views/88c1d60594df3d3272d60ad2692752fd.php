@@ -163,7 +163,8 @@
                                                     <label class="block text-sm text-gray-600 mb-1">Catatan pembatalan (Wajib)</label>
                                                     <textarea name="alasan" class="w-full border p-2 rounded mb-3 resize-none" required></textarea>
                                                     <div class="flex justify-end gap-2">
-                                                        <button type="button" onclick="closeCancelModal('<?php echo e($item->id); ?>')"
+                                                        <button type="button"
+                                                            onclick="closeCancelModal('<?php echo e($item->id); ?>')"
                                                             class="px-3 py-1 text-xs rounded-md bg-gray-200 text-gray-700">Batal</button>
 
                                                         <button type="submit"
@@ -207,10 +208,9 @@
                                         <?php
                                             $status = strtolower($row->status);
 
-                                            /* FRAME SUDAH DIPERBAIKI:
-                                               selesai = frame tetap putih */
+                                            // wrapper selesai → pink lembut
                                             $wrapperClass =
-                                                $status === 'selesai' ? 'bg-white border-gray-200' :
+                                                $status === 'selesai' ? 'bg-pink-100 border-pink-300' :
                                                 ($status === 'dibatalkan' ? 'bg-red-200 opacity-50' : 'bg-white');
                                         ?>
 
@@ -232,7 +232,7 @@
                                                     <span class="px-2 py-0.5 text-[11px] rounded-md
                                                         <?php if($status=='menunggu'): ?> bg-gray-200 text-gray-700
                                                         <?php elseif($status=='proses'||$status=='diproses'): ?> bg-green-500 text-white
-                                                        <?php elseif($status=='selesai'): ?> bg-pink-500 text-white
+                                                        <?php elseif($status=='selesai'): ?> bg-pink-600 text-white
                                                         <?php else: ?> bg-red-600 text-white
                                                         <?php endif; ?>">
                                                         <?php echo e(ucfirst($row->status)); ?>

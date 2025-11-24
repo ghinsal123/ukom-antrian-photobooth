@@ -55,7 +55,7 @@
     @endif
 
 
-    <!-- NAVBAR – versi dashboard -->
+    <!-- NAVBAR -->
     <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-lg sm:text-xl font-bold text-pink-500">
@@ -64,10 +64,7 @@
 
             <div class="hidden md:flex gap-6 items-center text-sm">
                 <a href="{{ route('customer.dashboard') }}" class="text-gray-600 hover:text-pink-500">Dashboard</a>
-
-                <!-- ACTIVE PAGE -->
                 <a href="{{ route('customer.antrian') }}" class="text-pink-500 font-semibold">+ Antrian</a>
-
                 <a href="{{ route('customer.arsip') }}" class="text-gray-600 hover:text-pink-500">Arsip</a>
 
                 <a href="#"
@@ -84,7 +81,7 @@
             <button class="md:hidden text-2xl text-pink-500" onclick="toggleMenu()">☰</button>
         </div>
 
-        <!-- MOBILE MENU -->
+        
         <div id="mobileMenu" class="hidden md:hidden px-4 pb-4 space-y-2">
             <a href="{{ route('customer.dashboard') }}" class="block text-gray-700 hover:text-pink-500">Dashboard</a>
             <a href="{{ route('customer.antrian') }}" class="block text-pink-500 font-semibold">+ Antrian</a>

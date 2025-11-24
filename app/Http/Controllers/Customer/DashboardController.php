@@ -3,56 +3,41 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Antrian;
 use App\Models\Booth;
 use App\Models\Paket;
 use App\Models\Pengguna;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Ambil customer ID dari session (cek siapa yang login)
+        // Ambil customer dari session, BUKAN Auth
         $customerId = session('customer_id');
 
-        // Kalau belum login balik ke halaman login
         if (!$customerId) {
             return redirect()->route('customer.login');
         }
 
-        // Ambil data user/customer yang lagi login
-        $pengguna = Pengguna::findOrFail($customerId);
+        $pengguna = Pengguna::find($customerId);
 
-        /*
-        1. AMBIL SEMUA ANTRIAN PUNYA CUSTOMER INI
-        Jadi ini buat nampilin daftar antrianku di dashboard
-        diurutkan dari tanggal terbaru → lalu id terbaru
-        */
+        // Ambil antrian milik customer
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
             ->orderBy('tanggal', 'DESC')
             ->orderBy('id', 'DESC')
             ->get();
 
-        /*
-        2. AMBIL SEMUA BOOTH + ANTRIAN DI DALAMNYA
-        Jadi customer bisa lihat booth apa aja dan antrinya
-        antrian diurutkan berdasarkan tanggal dan nomor
-        */
+        // Ambil semua booth
         $booth = Booth::with([
             'antrian' => function ($q) {
-                // ngambil antrian per booth, diurutkan
                 $q->orderBy('tanggal', 'DESC')
                   ->orderBy('nomor_antrian', 'ASC')
-                  ->with(['pengguna', 'paket']); // ikut ambil user & paket
+                  ->with(['pengguna', 'paket']);
             }
         ])->get();
 
-        /*
-        3. RETURN KE HALAMAN DASHBOARD CUSTOMER
-        Bawa data booth, antrian user, dan data loginnya
-        */
         return view('customer.dashboard', [
             'booth'     => $booth,
             'antrianku' => $antrianku,
@@ -60,35 +45,23 @@ class DashboardController extends Controller
         ]);
     }
 
-    /*
-    HALAMAN ARSIP
-    Ini halaman buat nampilin antrian yang sudah selesai/dibatalkan
-    */
+
     public function arsip()
     {
-        // ambil id siapa yang login
         $customerId = session('customer_id');
 
-        // kalau belum login → tendang ke login
         if (!$customerId) {
             return redirect()->route('customer.login');
         }
 
-        // ambil data customer
-        $pengguna = Pengguna::findOrFail($customerId);
+        $pengguna = Pengguna::find($customerId);
 
-        /*
-        Ambil daftar antrian yang statusnya "selesai" atau "dibatalkan"
-        Ini biar masuk ke arsip, bukan tampil di dashboard utama
-        */
         $arsip = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
-            ->whereIn('status', ['selesai', 'dibatalkan']) // filter status
+            ->whereIn('status', ['selesai', 'dibatalkan'])
             ->orderBy('tanggal', 'DESC')
             ->get();
 
-        // kirim data ke view arsip.blade.php
         return view('customer.arsip', compact('arsip', 'pengguna'));
     }
-
 }

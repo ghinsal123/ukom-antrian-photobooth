@@ -12,32 +12,30 @@
 
     {{-- POPUP SUCCESS --}}
     @if (session('success'))
-    <div id="popupSuccess" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-        <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center scale-75 opacity-0 animate-zoomIn">
-            <div class="mx-auto w-20 h-20 flex items-center justify-center rounded-full border border-green-400 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-            <p class="text-lg font-semibold text-gray-700 mb-4">{{ session('success') }}</p>
-            <button onclick="document.getElementById('popupSuccess').remove()"
+        <div id="popupSuccess" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+            <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center scale-75 opacity-0 animate-zoomIn">
+                <div class="mx-auto w-20 h-20 flex items-center justify-center rounded-full border border-green-400 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <p class="text-lg font-semibold text-gray-700 mb-4">{{ session('success') }}</p>
+                <button onclick="document.getElementById('popupSuccess').remove()"
                     class="px-5 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600">
-                OK
-            </button>
+                    OK
+                </button>
+            </div>
         </div>
-    </div>
 
-    <style>
-        @keyframes zoomIn {
-            0% { transform: scale(0.6); opacity: 0; }
-            70% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-zoomIn {
-            animation: zoomIn 0.25s ease-out forwards;
-        }
-    </style>
+        <style>
+            @keyframes zoomIn {
+                0% { transform: scale(0.6); opacity: 0; }
+                70% { transform: scale(1.05); opacity: 1; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-zoomIn { animation: zoomIn 0.25s ease-out forwards; }
+        </style>
     @endif
 
     <!-- NAVBAR -->
@@ -49,7 +47,7 @@
                 <a href="{{ route('customer.antrian') }}" class="text-gray-600 hover:text-pink-500">+ Antrian</a>
                 <a href="{{ route('customer.arsip') }}" class="text-gray-600 hover:text-pink-500">Arsip</a>
                 <a href="#" onclick="event.preventDefault(); if(confirm('Yakin ingin logout?')) document.getElementById('logout-form').submit();"
-                   class="text-gray-600 hover:text-pink-500">Logout</a>
+                    class="text-gray-600 hover:text-pink-500">Logout</a>
                 <form id="logout-form" action="{{ route('customer.logout') }}" method="POST" class="hidden">@csrf</form>
             </div>
             <button class="md:hidden text-2xl text-pink-500" onclick="toggleMenu()">☰</button>
@@ -60,25 +58,47 @@
             <a href="{{ route('customer.antrian') }}" class="block text-gray-700 hover:text-pink-500">+ Antrian</a>
             <a href="{{ route('customer.arsip') }}" class="block text-gray-700 hover:text-pink-500">Arsip</a>
             <a href="#" onclick="event.preventDefault(); if(confirm('Yakin ingin logout?')) document.getElementById('logout-form').submit();"
-               class="block text-gray-700 hover:text-pink-500">Logout</a>
+                class="block text-gray-700 hover:text-pink-500">Logout</a>
         </div>
     </nav>
 
     <script>
-        function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
-        function openCancelModal(id) { document.getElementById('cancelModal-' + id).classList.remove('hidden'); }
-        function closeCancelModal(id) { document.getElementById('cancelModal-' + id).classList.add('hidden'); }
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+        function openCancelModal(id) {
+            document.getElementById('cancelModal-' + id).classList.remove('hidden');
+        }
+        function closeCancelModal(id) {
+            document.getElementById('cancelModal-' + id).classList.add('hidden');
+        }
     </script>
 
     <!-- MAIN CONTENT -->
     <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
 
-        <!-- SAPAAN -->
-        <div class="bg-white p-6 rounded-xl shadow-sm">
-            <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Halo, {{ $pengguna->nama_pengguna }}</h3>
-            <p class="text-gray-500 text-sm mt-1">Selamat datang di FlashFrame Photo Booth.</p>
+        <!-- HEADER -->
+        <div class="flex justify-between items-center bg-white p-4 shadow-md rounded-lg mb-6">
+
+            <div>
+                <h1 class="text-lg font-semibold text-gray-800">
+                    Halo, {{ $pengguna->nama_pengguna ?? 'Customer' }}
+                </h1>
+                <p class="text-sm text-gray-500 -mt-1">
+                    Selamat datang di FrameFlash Photobooth!
+                </p>
+            </div>
+
+            <a href="{{ route('customer.profil.edit') }}" class="block">
+                <img src="{{ $pengguna->foto 
+                    ? asset('storage/' . $pengguna->foto) 
+                    : 'https://ui-avatars.com/api/?name=' . urlencode($pengguna->nama_pengguna) }}"
+                    class="w-12 h-12 rounded-full object-cover border-2 border-pink-300 hover:scale-105 transition">
+            </a>
+
         </div>
 
+        <!-- === ANTRIAN SAYA === -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <!-- ANTRIAN SAYA -->
@@ -86,9 +106,7 @@
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Antrian Saya</h3>
 
                 @php
-                    $antrianAktif = $antrianku->filter(function($x) {
-                        return in_array(strtolower($x->status), ['menunggu','proses','diproses']);
-                    });
+                    $antrianAktif = $antrianku->filter(fn($x) => in_array(strtolower($x->status), ['menunggu','proses','diproses']));
                 @endphp
 
                 @if ($antrianAktif->isEmpty())
@@ -118,30 +136,39 @@
 
                                 <div class="flex gap-2 mt-2 flex-wrap">
                                     <a href="{{ route('customer.antrian.detail', $item->id) }}"
-                                       class="px-3 py-1 text-xs rounded-md bg-blue-100 text-blue-800">Detail</a>
+                                        class="px-3 py-1 text-xs rounded-md bg-blue-100 text-blue-800">Detail</a>
 
                                     @if ($status == 'menunggu')
                                         <a href="{{ route('customer.antrian.edit', $item->id) }}"
-                                           class="px-3 py-1 text-xs rounded-md bg-yellow-100 text-yellow-800">Edit</a>
+                                            class="px-3 py-1 text-xs rounded-md bg-yellow-100 text-yellow-800">Edit</a>
 
-                       <!-- Tombol Batal dengan Modal -->
-                                        <button type="button" onclick="openCancelModal({{ $item->id }})"
-                                                class="px-3 py-1 text-xs rounded-md bg-red-100 text-red-700">
+                                        <button type="button"
+                                            onclick="openCancelModal('{{ $item->id }}')"
+                                            class="px-3 py-1 text-xs rounded-md bg-red-100 text-red-700">
                                             Batal
                                         </button>
 
-                                        <div id="cancelModal-{{ $item->id }}" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+                                        <!-- MODAL -->
+                                        <div id="cancelModal-{{ $item->id }}"
+                                            class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
                                             <div class="bg-white p-6 rounded-xl w-[350px]">
-                                                <h3 class="font-semibold text-gray-800 mb-3">Batalkan Antrian #{{ $item->nomor_antrian }}</h3>
+                                                <h3 class="font-semibold text-gray-800 mb-3">
+                                                    Batalkan Antrian #{{ $item->nomor_antrian }}
+                                                </h3>
                                                 <form action="{{ route('customer.antrian.delete', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <label class="block text-sm text-gray-600 mb-1">Catatan Alasan (Wajib)</label>
+                                                    <label class="block text-sm text-gray-600 mb-1">Catatan pembatalan (Wajib)</label>
                                                     <textarea name="alasan" class="w-full border p-2 rounded mb-3 resize-none" required></textarea>
                                                     <div class="flex justify-end gap-2">
-                                                        <button type="button" onclick="closeCancelModal({{ $item->id }})"
-                                                                class="px-3 py-1 text-xs rounded-md bg-gray-200 text-gray-700">Batal</button>
-                                                        <button type="submit" class="px-3 py-1 text-xs rounded-md bg-red-500 text-white">Konfirmasi</button>
+                                                        <button type="button"
+                                                            onclick="closeCancelModal('{{ $item->id }}')"
+                                                            class="px-3 py-1 text-xs rounded-md bg-gray-200 text-gray-700">Batal</button>
+
+                                                        <button type="submit"
+                                                            class="px-3 py-1 text-xs rounded-md bg-red-500 text-white">
+                                                            Konfirmasi
+                                                        </button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -155,11 +182,12 @@
                 @endif
             </div>
 
-            <!-- ANTRIAN PER BOOTH -->
+            <!-- === ANTRIAN PER BOOTH === -->
             <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Antrian Per Booth</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                     @foreach ($booth as $bItem)
                         <div class="border p-4 rounded-lg bg-pink-50 h-auto flex flex-col">
                             <h4 class="text-center text-pink-600 font-bold mb-3">{{ $bItem->nama_booth }}</h4>
@@ -177,9 +205,11 @@
                                     @foreach ($list as $row)
                                         @php
                                             $status = strtolower($row->status);
-                                            $wrapperClass = $status === 'selesai' ? 'opacity-50 bg-gray-200' :
-                                                            ($status === 'dibatalkan' ? 'opacity-50 bg-red-200' : 'bg-white');
+                                            $wrapperClass =
+                                                $status === 'selesai' ? 'opacity-50 bg-gray-200' :
+                                                ($status === 'dibatalkan' ? 'opacity-50 bg-red-200' : 'bg-white');
                                         @endphp
+
                                         <div class="border p-3 rounded-lg {{ $wrapperClass }}">
                                             <div class="flex justify-between items-start">
                                                 <div>
@@ -192,6 +222,7 @@
                                                     <p class="text-xs text-gray-600">Paket: {{ $row->paket->nama_paket }}</p>
                                                     <p class="text-xs text-gray-600">Nama: {{ $row->pengguna->nama_pengguna }}</p>
                                                 </div>
+
                                                 <div>
                                                     <span class="px-2 py-0.5 text-[11px] rounded-md
                                                         @if($status=='menunggu') bg-gray-200 text-gray-700
@@ -202,19 +233,21 @@
                                                         {{ ucfirst($row->status) }}
                                                     </span>
                                                 </div>
+
                                             </div>
                                         </div>
+
                                     @endforeach
                                 </div>
                             @endif
+
                         </div>
                     @endforeach
+
                 </div>
             </div>
-
         </div>
     </div>
 
 </body>
 </html>
-

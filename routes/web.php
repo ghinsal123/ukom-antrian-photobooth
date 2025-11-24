@@ -2,25 +2,45 @@
 
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PenggunaController;
 use App\Http\Controllers\Admin\BoothController;
 use App\Http\Controllers\Admin\PaketController;
 use App\Http\Controllers\Admin\LogController;
+
+/*
+|--------------------------------------------------------------------------
+| OPERATOR
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\Operator\LoginController as OperatorLoginController;
 use App\Http\Controllers\Operator\AntrianController as OperatorAntrianController;
 use App\Http\Controllers\Operator\LogController as OperatorLogController;
 use App\Http\Controllers\Operator\BoothController as OperatorBoothController;
 use App\Http\Controllers\Operator\PaketController as OperatorPaketController;
 use App\Http\Controllers\Operator\DashboardController as OperatorDashboardController;
+
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER
+|--------------------------------------------------------------------------
+*/
 use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 use App\Http\Controllers\Customer\DashboardController;
+use App\Http\Controllers\Customer\ProfileController;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,16 +49,19 @@ Route::get('/', function () {
 */
 Route::prefix('admin')->name('admin.')->group(function () {
 
+    // Guest
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AdminLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [AdminLoginController::class, 'login'])->name('login.submit');
     });
 
+    // Admin Logged In
     Route::middleware('admin')->group(function () {
+
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
 
-        // ⬇⬇ FIXED HERE
+        // CRUD Admin
         Route::resource('pengguna', PenggunaController::class)->names('pengguna');
         Route::resource('booth', BoothController::class)->names('booth');
         Route::resource('paket', PaketController::class)->names('paket');
@@ -47,6 +70,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 });
 
+
+
 /*
 |--------------------------------------------------------------------------
 | OPERATOR
@@ -54,25 +79,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
 */
 Route::prefix('operator')->name('operator.')->group(function () {
 
-    // Guest (belum login)
+    // Login
     Route::middleware('guest:operator')->group(function () {
         Route::get('login', [OperatorLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [OperatorLoginController::class, 'login'])->name('login.submit');
     });
 
-    // Sudah login
+    // Logged In
     Route::middleware('operator')->group(function () {
 
-        // DASHBOARD
-        Route::get('dashboard', [OperatorDashboardController::class, 'index'])
-        ->name('dashboard');
+        Route::get('dashboard', [OperatorDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [OperatorLoginController::class, 'logout'])->name('logout');
 
-        /*
-        |--------------------------------------------------------------------------
-        | ANTRIAN (CRUD)
-        |--------------------------------------------------------------------------
-        */
+        // ANTRIAN CRUD
         Route::prefix('antrian')->name('antrian.')->group(function () {
 
             Route::get('/', [OperatorAntrianController::class, 'index'])->name('index');
@@ -82,7 +101,6 @@ Route::prefix('operator')->name('operator.')->group(function () {
             Route::get('/detail/{id}', [OperatorAntrianController::class, 'show'])->name('show');
             Route::get('/edit/{id}', [OperatorAntrianController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [OperatorAntrianController::class, 'update'])->name('update');
-
             Route::delete('/delete/{id}', [OperatorAntrianController::class, 'destroy'])->name('delete');
         });
 
@@ -94,52 +112,49 @@ Route::prefix('operator')->name('operator.')->group(function () {
         Route::get('/paket', [OperatorPaketController::class, 'index'])->name('paket.index');
         Route::get('/paket/{id}', [OperatorPaketController::class, 'show'])->name('paket.show');
 
-        // Logs
-        Route::get('/laporan', [OperatorLogController::class, 'index'])
-            ->name('log.index')
-            ->middleware('operator'); 
-
+        // Laporan Log
+        Route::get('/laporan', [OperatorLogController::class, 'index'])->name('log.index');
     });
 
 });
+
+
 
 /*
 |--------------------------------------------------------------------------
 | CUSTOMER
 |--------------------------------------------------------------------------
 */
-
 Route::prefix('customer')->name('customer.')->group(function () {
 
-    //  LOGIN
+    // Belum Login
     Route::middleware('guest:customer')->group(function () {
         Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
     });
 
-    // CUSTOMER 
+    // Sudah Login
     Route::middleware('customer')->group(function () {
+
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
-        // ARSIP
+
+        // Arsip
         Route::get('arsip', [DashboardController::class, 'arsip'])->name('arsip');
 
-
-        // CREATE
+        // Antrian Customer
         Route::get('antrian', [CustomerAntrianController::class, 'create'])->name('antrian');
         Route::post('antrian/store', [CustomerAntrianController::class, 'store'])->name('antrian.store');
 
-        // DETAIL
         Route::get('antrian/{id}/detail', [CustomerAntrianController::class, 'detail'])->name('antrian.detail');
 
-        // EDIT + UPDATE
         Route::get('antrian/{id}/edit', [CustomerAntrianController::class, 'edit'])->name('antrian.edit');
         Route::put('antrian/{id}', [CustomerAntrianController::class, 'update'])->name('antrian.update');
 
-        Route::get('/customer/arsip', [DashboardController::class, 'arsip'])
-    ->name('customer.arsip')
-    ->middleware('customer');
-
         Route::delete('antrian/{id}', [CustomerAntrianController::class, 'destroy'])->name('antrian.delete');
+
+        // Edit Profile Customer
+        Route::get('profil/edit', [ProfileController::class, 'edit'])->name('profil.edit');
+        Route::put('profil/update', [ProfileController::class, 'update'])->name('profil.update');
     });
 });

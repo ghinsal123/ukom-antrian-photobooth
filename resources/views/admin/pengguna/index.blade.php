@@ -92,7 +92,7 @@
         <tbody>
             @foreach($pengguna as $index => $user)
             <tr class="border-b hover:bg-pink-50">
-                <td class="p-3">{{ $index + 1 }}</td>
+                <td class="p-3">{{ ($pengguna->currentPage() - 1) * $pengguna->perPage() + ($index + 1) }}</td>
                 <td class="p-3">{{ $user->nama_pengguna }}</td>
                 <td class="p-3">{{ $user->no_telp }}</td>
                 <td class="p-3">
@@ -143,8 +143,9 @@
             </tr>
             @endforeach
         </tbody>
-
     </table>
-
+    <div class="mt-5">
+        {{ $pengguna->links() }}
+    </div>
 </div>
 @endsection

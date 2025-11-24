@@ -29,6 +29,6 @@ class LoginController extends BaseLoginController
     public function logout()
     {
         auth()->logout();
-        return redirect()->route('operator.login');
+        return redirect()->route('operator.login')->with('logout_success', 'Anda berhasil logout!');
     }
 }

@@ -83,9 +83,11 @@
     </div>
 
     {{-- tombol logout --}}
-    <form action="{{ route('operator.logout') }}" method="POST" class="mt-auto pt-4">
+    <form id="logoutForm" action="{{ route('operator.logout') }}" method="POST" class="mt-auto pt-4">
         @csrf
-        <button class="flex items-center w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
+        <button type="button" 
+            onclick="confirmLogout()" 
+            class="flex items-center w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
             <i class="fas fa-sign-out-alt mr-2"></i> Logout
         </button>
     </form>
@@ -163,6 +165,15 @@ overlay.addEventListener('click', () => {
     sidebar.classList.add('-translate-x-full');
     overlay.classList.add('hidden');
 });
+</script>
+
+{{-- script confirm logout --}}
+<script>
+function confirmLogout() {
+    if (confirm('Yakin ingin logout?')) {
+        document.getElementById('logoutForm').submit();
+    }
+}
 </script>
 
 </body>

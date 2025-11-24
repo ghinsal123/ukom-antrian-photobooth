@@ -16,14 +16,9 @@
             <div class="flex gap-6 items-center justify-center md:justify-end">
 
                 <a href="/customer/dashboard" class="text-gray-600 hover:text-pink-400">Dashboard</a>
-                
                 <a href="/customer/antrian" class="text-gray-600 hover:text-pink-400">+ Antrian</a>
-
-                <!-- 🔥 MENU ARSIP YANG KAMU MINTA -->
                 <a href="/customer/arsip" class="text-gray-600 hover:text-pink-400">Arsip</a>
-
                 <a href="#" onclick="event.preventDefault(); if (confirm('Apakah Anda yakin ingin logout?')) { document.getElementById('logout-form').submit(); }" class="text-gray-600 hover:text-pink-400">Logout</a>
-
                 <form id="logout-form" action="{{ route('customer.logout') }}" method="POST" class="hidden">@csrf</form>
 
             </div>

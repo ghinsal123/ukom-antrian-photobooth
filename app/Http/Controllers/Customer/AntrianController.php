@@ -11,9 +11,7 @@ use App\Models\Pengguna;
 
 class AntrianController extends Controller
 {
-    // ==========================
     // HALAMAN BUAT FORM ANTRIAN
-    // ==========================
     public function create()
     {
         // cek apakah customer login
@@ -31,9 +29,8 @@ class AntrianController extends Controller
     }
 
 
-    // ==========================
-    // SIMPAN ANTRIAN BARU
-    // ==========================
+   
+    // MENYIMPAN ANTRIAN BARU
     public function store(Request $request)
     {
         $customerId = session('customer_id');
@@ -44,7 +41,7 @@ class AntrianController extends Controller
             'paket_id' => 'required|exists:paket,id',
             'tanggal'  => 'required|date',
 
-            // FIX TERPENTING = nomor telepon boleh sama untuk user yang sama
+            // nomor telepon gaboleh sama untuk user yang beda
             'no_telp'  => 'required|min:10|max:15|unique:pengguna,no_telp,' . $customerId,
         ], [
             'no_telp.unique' => 'Nomor telepon ini sudah digunakan oleh pengguna lain.',
@@ -78,9 +75,7 @@ class AntrianController extends Controller
     }
 
 
-    // ==========================
     // DETAIL ANTRIAN
-    // ==========================
     public function detail($id)
     {
         $detail = Antrian::with(['booth', 'paket', 'pengguna'])
@@ -88,11 +83,7 @@ class AntrianController extends Controller
 
         return view('customer.detail', compact('detail'));
     }
-
-
-    // ==========================
     // HALAMAN EDIT ANTRIAN
-    // ==========================
     public function edit($id)
     {
         $antrian = Antrian::with(['booth', 'paket', 'pengguna'])
@@ -112,10 +103,7 @@ class AntrianController extends Controller
         ]);
     }
 
-
-    // ==========================
     // PROSES UPDATE ANTRIAN
-    // ==========================
     public function update(Request $request, $id)
     {
         // Validasi input
@@ -158,9 +146,7 @@ class AntrianController extends Controller
     }
 
 
-    // ==========================
     // BATALKAN ANTRIAN
-    // ==========================
     public function destroy(Request $request, $id)
     {
         $antrian = Antrian::findOrFail($id);

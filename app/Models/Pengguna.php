@@ -15,11 +15,12 @@ class Pengguna extends Authenticatable
         'nama_pengguna',
         'no_telp',
         'password',
-        'role',
+        'role',     // admin / customer
         'foto',
     ];
 
     protected $hidden = [
         'password',
+        'remember_token'
     ];
 }

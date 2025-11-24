@@ -68,6 +68,12 @@ Route::prefix('operator')->name('operator.')->group(function () {
         ->name('dashboard');
         Route::post('logout', [OperatorLoginController::class, 'logout'])->name('logout');
 
+        // PROFILE
+        Route::middleware('operator')->group(function () {
+        Route::get('/profile', [\App\Http\Controllers\Operator\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [\App\Http\Controllers\Operator\ProfileController::class, 'update'])->name('profile.update');
+    });
+
         /*
         |--------------------------------------------------------------------------
         | ANTRIAN (CRUD)

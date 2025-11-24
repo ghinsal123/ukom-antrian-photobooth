@@ -120,7 +120,12 @@
                     <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
 
                     {{-- operator --}}
-                    <td class="px-2 py-1 border">{{ $log->pengguna->nama_pengguna ?? '-' }}</td>
+                    <td class="px-2 py-1 border">
+                        {{ $log->pengguna && $log->pengguna->role !== 'customer' 
+                            ? $log->pengguna->nama_pengguna 
+                            : '-' 
+                        }}
+                    </td>
 
                     {{-- customer --}}
                     <td class="px-2 py-1 border">{{ $log->antrian->pengguna->nama_pengguna ?? '-' }}</td>

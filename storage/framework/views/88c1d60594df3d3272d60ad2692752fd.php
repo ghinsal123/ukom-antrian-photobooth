@@ -74,9 +74,8 @@
         }
     </script>
 
-    <!-- MAIN CONTENT -->
-    <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
 
+    <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
         <!-- HEADER -->
         <div class="flex justify-between items-center bg-white p-4 shadow-md rounded-lg mb-6">
 
@@ -99,9 +98,7 @@
 
         </div>
 
-        <!-- === ANTRIAN SAYA === -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
             <!-- ANTRIAN SAYA -->
             <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Antrian Saya</h3>
@@ -187,9 +184,7 @@
             <!-- === ANTRIAN PER BOOTH === -->
             <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Antrian Per Booth</h3>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                     <?php $__currentLoopData = $booth; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bItem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="border p-4 rounded-lg bg-pink-50 h-auto flex flex-col">
                             <h4 class="text-center text-pink-600 font-bold mb-3"><?php echo e($bItem->nama_booth); ?></h4>

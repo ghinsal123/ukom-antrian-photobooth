@@ -73,7 +73,7 @@
 
         @else
 
-        <!-- TABEL ARSIP (ASLI - CATATAN  TETAP ADA) -->
+        <!-- TABEL ARSIP -->
         <div class="bg-white rounded-xl shadow-sm overflow-hidden">
 
             <table class="min-w-full text-sm">
@@ -109,13 +109,19 @@
 
                         <td class="py-3 px-2">
                             @if ($item->status === 'selesai')
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs">Selesai</span>
+                                <!-- 🟣 STATUS SELESAI = PINK PEKAT -->
+                                <span class="px-3 py-1 rounded text-xs text-white" style="background:#ec4899;">
+                                    Selesai
+                                </span>
                             @else
-                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded text-xs">Dibatalkan</span>
+                                <!-- 🔴 STATUS DIBATALKAN = MERAH -->
+                                <span class="bg-red-500 text-white px-3 py-1 rounded text-xs">
+                                    Dibatalkan
+                                </span>
                             @endif
                         </td>
 
-                        <!-- CATATAN OPERATOR (JANGAN DIHAPUS) -->
+                        <!-- CATATAN OPERATOR (WAJIB ADA) -->
                         <td class="py-3 px-2">
                             {{ $item->catatan ?? '-' }}
                         </td>

@@ -161,8 +161,7 @@
                                                     <label class="block text-sm text-gray-600 mb-1">Catatan pembatalan (Wajib)</label>
                                                     <textarea name="alasan" class="w-full border p-2 rounded mb-3 resize-none" required></textarea>
                                                     <div class="flex justify-end gap-2">
-                                                        <button type="button"
-                                                            onclick="closeCancelModal('{{ $item->id }}')"
+                                                        <button type="button" onclick="closeCancelModal('{{ $item->id }}')"
                                                             class="px-3 py-1 text-xs rounded-md bg-gray-200 text-gray-700">Batal</button>
 
                                                         <button type="submit"
@@ -205,9 +204,12 @@
                                     @foreach ($list as $row)
                                         @php
                                             $status = strtolower($row->status);
+
+                                            /* FRAME SUDAH DIPERBAIKI:
+                                               selesai = frame tetap putih */
                                             $wrapperClass =
-                                                $status === 'selesai' ? 'opacity-50 bg-gray-200' :
-                                                ($status === 'dibatalkan' ? 'opacity-50 bg-red-200' : 'bg-white');
+                                                $status === 'selesai' ? 'bg-white border-gray-200' :
+                                                ($status === 'dibatalkan' ? 'bg-red-200 opacity-50' : 'bg-white');
                                         @endphp
 
                                         <div class="border p-3 rounded-lg {{ $wrapperClass }}">
@@ -227,7 +229,7 @@
                                                     <span class="px-2 py-0.5 text-[11px] rounded-md
                                                         @if($status=='menunggu') bg-gray-200 text-gray-700
                                                         @elseif($status=='proses'||$status=='diproses') bg-green-500 text-white
-                                                        @elseif($status=='selesai') bg-gray-500 text-white
+                                                        @elseif($status=='selesai') bg-pink-500 text-white
                                                         @else bg-red-600 text-white
                                                         @endif">
                                                         {{ ucfirst($row->status) }}

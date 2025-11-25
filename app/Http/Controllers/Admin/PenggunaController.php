@@ -1,0 +1,125 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Pengguna;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class PenggunaController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Pengguna::query();
+
+        // Search
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_pengguna', 'like', '%' . $request->search . '%')
+                ->orWhere('no_telp', 'like', '%' . $request->search . '%')
+                ->orWhere('role', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Urutkan: admin > operator > customer
+        $query->orderByRaw("
+            CASE 
+                WHEN role = 'admin' THEN 1
+                WHEN role = 'operator' THEN 2
+                WHEN role = 'customer' THEN 3
+                ELSE 4
+            END
+        ");
+
+        // Customer terbaru
+        $query->orderBy('created_at', 'desc');
+
+        $pengguna = $query->paginate(10);
+        return view('admin.pengguna.index', compact('pengguna'));
+    }
+
+    public function create()
+    {
+        return view('admin.pengguna.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nama_pengguna' => 'required|string|max:255',
+            'no_telp' => 'nullable|unique:pengguna,no_telp',
+            'password' => 'required|min:6',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('foto')) {
+            $validated['foto'] = $request->file('foto')->store('pengguna', 'public');
+        }
+
+        $validated['password'] = bcrypt($validated['password']);
+        $validated['role'] = 'operator'; // hanya bisa buat operator
+
+        Pengguna::create($validated);
+
+        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan');
+    }
+
+    public function show(Pengguna $pengguna)
+    {
+        return view('admin.pengguna.show', compact('pengguna'));
+    }
+
+    public function edit(Pengguna $pengguna)
+    {
+        return view('admin.pengguna.edit', compact('pengguna'));
+    }
+
+    public function update(Request $request, Pengguna $pengguna)
+    {
+        $validated = $request->validate([
+            'nama_pengguna' => 'required|string|max:255',
+            'no_telp' => 'nullable|unique:pengguna,no_telp,' . $pengguna->id,
+            'password' => 'nullable|min:6',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Update foto
+        if ($request->hasFile('foto')) {
+            if ($pengguna->foto && Storage::disk('public')->exists($pengguna->foto)) {
+                Storage::disk('public')->delete($pengguna->foto);
+            }
+            $validated['foto'] = $request->file('foto')->store('pengguna', 'public');
+        }
+
+        // Update password jika diisi
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        // ROLE TIDAK BOLEH DIUBAH
+        $validated['role'] = $pengguna->role;
+
+        $pengguna->update($validated);
+
+        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diperbarui');
+    }
+
+    public function destroy(Pengguna $pengguna)
+    {
+        // Admin tidak boleh dihapus
+        if ($pengguna->role === 'admin') {
+            return back()->with('error', 'Admin tidak boleh dihapus.');
+        }
+
+        if ($pengguna->foto && Storage::disk('public')->exists($pengguna->foto)) {
+            Storage::disk('public')->delete($pengguna->foto);
+        }
+
+        $pengguna->delete();
+
+        return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus');
+    }
+}

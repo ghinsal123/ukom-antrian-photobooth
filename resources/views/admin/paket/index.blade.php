@@ -76,44 +76,55 @@
         }
     </script>
 
-    <table class="w-full border-collapse">
-        <thead>
-            <tr class="bg-pink-100 text-left">
-                <th class="p-3">#</th>
-                <th class="p-3">Nama Paket</th>
-                <th class="p-3">Harga</th>
-                <th class="p-3">Deskripsi</th>
-                <th class="p-3">Aksi</th>
-            </tr>
-        </thead>
+    <div class="overflow-x-auto">
+        <table class="min-w-[650px] w-full border-collapse text-xs sm:text-sm md:text-base">
+            <thead>
+                <tr class="bg-pink-100 text-left">
+                    <th class="p-3">#</th>
+                    <th class="p-3">Nama Paket</th>
+                    <th class="p-3">Harga</th>
+                    <th class="p-3">Deskripsi</th>
+                    <th class="p-3">Aksi</th>
+                </tr>
+            </thead>
 
-        <tbody>
-            @foreach($paket as $index => $paket)
-            <tr class="border-b hover:bg-pink-50">
-                <td class="p-3">{{ $index + 1 }}</td>
-                <td class="p-3">{{ $paket->nama_paket }}</td>
-                <td class="p-3">Rp {{ number_format($paket->harga, 0, ',', '.') }}</td>
-                <td class="p-3">{{ Str::limit($paket->deskripsi, 40) }}</td>
+            <tbody>
+                @foreach($paket as $index => $paket)
+                <tr class="border-b hover:bg-pink-50">
+                    <td class="p-3">{{ $index + 1 }}</td>
+                    <td class="p-3">{{ $paket->nama_paket }}</td>
 
-                <td class="p-3 flex gap-2">
-                    <a href="{{ route('admin.paket.show', $paket->id) }}" class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
-                        Detail
-                    </a>
-                    <a href="{{ route('admin.paket.edit', $paket->id) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                        Edit
-                    </a>
-                    <form action="{{ route('admin.paket.destroy', $paket->id) }}" method="POST"
-                          onsubmit="return confirm('Yakin ingin menghapus paket?')">
-                        @csrf @method('DELETE')
-                        <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                            Hapus
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
+                    <td class="p-3">
+                        Rp {{ number_format($paket->harga, 0, ',', '.') }}
+                    </td>
 
-    </table>
+                    <td class="p-3">
+                        {{ Str::limit($paket->deskripsi, 50) }}
+                    </td>
+
+                    <td class="p-3 flex flex-wrap gap-2">
+                        <a href="{{ route('admin.paket.show', $paket->id) }}"
+                        class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                            Detail
+                        </a>
+
+                        <a href="{{ route('admin.paket.edit', $paket->id) }}"
+                        class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            Edit
+                        </a>
+
+                        <form action="{{ route('admin.paket.destroy', $paket->id) }}" method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus paket?')">
+                            @csrf @method('DELETE')
+                            <button class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

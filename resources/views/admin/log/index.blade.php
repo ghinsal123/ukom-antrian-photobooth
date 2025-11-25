@@ -88,7 +88,7 @@
                     </thead>
 
                     <tbody>
-                        @forelse($logs as $log)
+                        @forelse($log as $log)
                         <tr class="text-center bg-white hover:bg-pink-50">
 
                             <td class="px-2 py-1 border">{{ $loop->iteration }}</td>

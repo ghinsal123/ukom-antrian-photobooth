@@ -110,7 +110,7 @@
 
             {{-- isi tabel --}}
             <tbody>
-                @forelse($logs as $log)
+                @forelse($log as $log)
                 <tr class="text-center bg-white hover:bg-pink-50">
 
                     {{-- nomor urut --}}

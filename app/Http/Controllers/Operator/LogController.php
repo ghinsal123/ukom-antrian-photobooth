@@ -13,7 +13,7 @@ class LogController extends Controller
     public function index(Request $request)
     {
         // ambil id log terbaru untuk setiap antrian
-        $latestLogsSub = Log::select(DB::raw('MAX(id) as id'))
+        $latestLogSub = Log::select(DB::raw('MAX(id) as id'))
             ->groupBy('antrian_id');
 
         // query utama + load relasi
@@ -22,7 +22,7 @@ class LogController extends Controller
             'antrian.pengguna',
             'antrian.booth',
             'antrian.paket'
-        ])->whereIn('id', $latestLogsSub);
+        ])->whereIn('id', $latestLogSub);
 
         // filter tanggal
         if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -54,7 +54,7 @@ class LogController extends Controller
         }
 
         // ambil hasil + set timezone WIB
-        $logs = $query->orderBy('created_at', 'desc')->get()->map(function($log) {
+        $log = $query->orderBy('created_at', 'desc')->get()->map(function($log) {
             $log->created_at = $log->created_at->clone()->timezone('Asia/Jakarta');
             $log->updated_at = $log->updated_at->clone()->timezone('Asia/Jakarta');
 
@@ -70,6 +70,6 @@ class LogController extends Controller
             return $log;
         });
 
-        return view('Operator.log.index', compact('logs', 'request'));
+        return view('Operator.log.index', compact('log', 'request'));
     }
 }

@@ -13,7 +13,7 @@ class LogController extends Controller
     public function index(Request $request)
     {
         // Ambil hanya log dari operator (role = operator)
-        $operatorLogsSub = Log::select(DB::raw('MAX(id) as id'))
+        $operatorLogSub = Log::select(DB::raw('MAX(id) as id'))
             ->whereHas('pengguna', function ($q) {
                 $q->where('role', 'operator'); // khusus operator
             })
@@ -25,7 +25,7 @@ class LogController extends Controller
             'antrian.pengguna',
             'antrian.booth',
             'antrian.paket'
-        ])->whereIn('id', $operatorLogsSub);
+        ])->whereIn('id', $operatorLogSub);
 
         // Filter tanggal
         if ($request->filled('start_date') && $request->filled('end_date')) {
@@ -58,7 +58,7 @@ class LogController extends Controller
         }
 
         // Ambil hasil + ubah timezone
-        $logs = $query->orderBy('created_at', 'desc')->get()->map(function ($log) {
+        $log = $query->orderBy('created_at', 'desc')->get()->map(function ($log) {
             $log->created_at = $log->created_at->clone()->timezone('Asia/Jakarta');
             $log->updated_at = $log->updated_at->clone()->timezone('Asia/Jakarta');
 
@@ -74,6 +74,6 @@ class LogController extends Controller
             return $log;
         });
 
-        return view('Admin.log.index', compact('logs', 'request'));
+        return view('Admin.log.index', compact('log', 'request'));
     }
 }

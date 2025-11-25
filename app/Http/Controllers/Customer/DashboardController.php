@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Antrian;
 use App\Models\Booth;
-use App\Models\Paket;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 

@@ -91,6 +91,12 @@ Route::prefix('operator')->name('operator.')->group(function () {
         Route::get('dashboard', [OperatorDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [OperatorLoginController::class, 'logout'])->name('logout');
 
+        // PROFILE
+        Route::middleware('operator')->group(function () {
+        Route::get('/profile', [\App\Http\Controllers\Operator\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [\App\Http\Controllers\Operator\ProfileController::class, 'update'])->name('profile.update');
+    });
+
         // ANTRIAN CRUD
         Route::prefix('antrian')->name('antrian.')->group(function () {
 

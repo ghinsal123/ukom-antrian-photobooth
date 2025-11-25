@@ -58,13 +58,14 @@
         </nav>
 
         <!-- LOGOUT BUTTON -->
-        <form action="{{ route('admin.logout') }}" method="POST" class="pt-4 pb-8">
+        <form id="logout-admin" action="{{ route('admin.logout') }}" method="POST" class="pt-4 pb-8">
             @csrf
-            <button class="block w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
+            <button type="button"
+                onclick="if(confirm('Yakin ingin logout?')) document.getElementById('logout-admin').submit();"
+                class="block w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
                 <i class="fas fa-sign-out-alt mr-2"></i> Logout
             </button>
         </form>
-
     </aside>
 
     <!-- CONTENT -->

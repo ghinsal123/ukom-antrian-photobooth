@@ -3,6 +3,28 @@
 @section('content')
 <div class="bg-pink-50">
 
+{{-- popup notifikasi sukses --}}
+@if(session('success'))
+<div id="popupSuccess" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+    <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center transform scale-100 transition-all duration-300 opacity-100">
+        
+        {{-- icon sukses --}}
+        <div class="mx-auto w-20 h-20 flex items-center justify-center rounded-full border border-green-400 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+
+        <p class="text-gray-800 text-lg">{{ session('success') }}</p>
+
+        <button onclick="document.getElementById('popupSuccess').remove()"
+                class="mt-4 px-4 py-2 bg-green-500 text-white rounded-xl hover:bg-green-600">
+            OK
+        </button>
+    </div>
+</div>
+@endif
+
 {{-- set locale tanggal & format hari ini --}}
 @php
     \Carbon\Carbon::setLocale('id');

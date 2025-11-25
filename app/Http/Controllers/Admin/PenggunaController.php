@@ -99,7 +99,7 @@ class PenggunaController extends Controller
             unset($validated['password']);
         }
 
-        // ⛔ ROLE TIDAK BOLEH DIUBAH
+        // ROLE TIDAK BOLEH DIUBAH
         $validated['role'] = $pengguna->role;
 
         $pengguna->update($validated);
@@ -109,7 +109,7 @@ class PenggunaController extends Controller
 
     public function destroy(Pengguna $pengguna)
     {
-        // ⛔ Admin tidak boleh dihapus
+        // Admin tidak boleh dihapus
         if ($pengguna->role === 'admin') {
             return back()->with('error', 'Admin tidak boleh dihapus.');
         }

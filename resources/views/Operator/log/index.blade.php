@@ -110,7 +110,7 @@
 
             {{-- isi tabel --}}
             <tbody>
-                @forelse($logs as $log)
+                @forelse($log as $log)
                 <tr class="text-center bg-white hover:bg-pink-50">
 
                     {{-- nomor urut --}}
@@ -120,7 +120,12 @@
                     <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
 
                     {{-- operator --}}
-                    <td class="px-2 py-1 border">{{ $log->pengguna->nama_pengguna ?? '-' }}</td>
+                    <td class="px-2 py-1 border">
+                        {{ $log->pengguna && $log->pengguna->role !== 'customer' 
+                            ? $log->pengguna->nama_pengguna 
+                            : '-' 
+                        }}
+                    </td>
 
                     {{-- customer --}}
                     <td class="px-2 py-1 border">{{ $log->antrian->pengguna->nama_pengguna ?? '-' }}</td>

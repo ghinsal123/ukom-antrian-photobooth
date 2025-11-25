@@ -14,7 +14,7 @@
             <img 
                 src="{{ asset('storage/' . $paket->gambar) }}" 
                 alt="{{ $paket->nama_paket }}" 
-                class="w-64 h-64 object-cover rounded-xl shadow-md"
+                class="w-64 h-full object-cover rounded-xl shadow-md"
             >
         @else
             <div class="w-64 h-64 flex items-center justify-center bg-gray-100 text-gray-400 rounded-xl">

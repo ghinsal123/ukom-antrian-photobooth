@@ -35,7 +35,7 @@ class Antrian extends Model
         return $this->belongsTo(Pengguna::class, 'pengguna_id');
     }
 
-        public function logs()
+        public function log()
     {
         return $this->hasMany(Log::class, 'antrian_id');
     }

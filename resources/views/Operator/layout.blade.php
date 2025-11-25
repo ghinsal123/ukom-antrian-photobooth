@@ -83,9 +83,11 @@
     </div>
 
     {{-- tombol logout --}}
-    <form action="{{ route('operator.logout') }}" method="POST" class="mt-auto pt-4">
+    <form id="logoutForm" action="{{ route('operator.logout') }}" method="POST" class="mt-auto pt-4">
         @csrf
-        <button class="flex items-center w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
+        <button type="button" 
+            onclick="confirmLogout()" 
+            class="flex items-center w-full text-left px-4 py-3 rounded-xl hover:bg-red-100 text-red-600 font-medium">
             <i class="fas fa-sign-out-alt mr-2"></i> Logout
         </button>
     </form>
@@ -97,42 +99,47 @@
 {{-- area konten utama --}}
 <div class="flex-1 ml-0 lg:ml-60">
 
-    {{-- topbar mobile --}}
+  {{-- topbar mobile --}}
     <div class="lg:hidden flex justify-between items-center p-4 bg-white shadow-sm sticky top-0 z-50">
+        {{-- tombol toggle sidebar --}}
         <button id="sidebarToggle" class="text-gray-700 focus:outline-none">
-
-            {{-- icon toggle sidebar --}}
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M4 6h16M4 12h16M4 18h16"/>
+                    d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
         </button>
 
         {{-- info user mobile --}}
-        <div class="flex items-center gap-3">
+        <a href="{{ route('operator.profile.edit') }}" class="flex items-center gap-3">
+            {{-- Foto --}}
             <img src="{{ auth()->user()->foto 
                     ? asset('storage/' . auth()->user()->foto) 
                     : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
-                 class="w-10 h-10 rounded-full object-cover border">
+                class="w-11 h-11 rounded-full object-cover border">
 
+            {{-- Nama & Role --}}
             <div class="text-right leading-tight">
-                <p class="font-semibold text-gray-800 text-sm">{{ auth()->user()->nama_pengguna }}</p>
+                <p class="font-semibold text-gray-800 text-md">{{ auth()->user()->nama_pengguna }}</p>
+                <p class="text-gray-500 text-xs">{{ ucfirst(auth()->user()->role) }}</p>
             </div>
-        </div>
+        </a>
     </div>
 
-    {{-- topbar desktop --}}
+   {{-- topbar desktop --}}
     <div class="hidden lg:flex w-full px-6 py-3 justify-end items-center bg-white shadow-sm rounded-b-lg sticky top-0 z-50">
-        <div class="flex items-center gap-3">
+        <a href="{{ route('operator.profile.edit') }}" class="flex items-center gap-3">
+            {{-- Foto klik untuk edit --}}
             <img src="{{ auth()->user()->foto 
                     ? asset('storage/' . auth()->user()->foto) 
                     : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
-                 class="w-10 h-10 rounded-full object-cover border">
+                class="w-12 h-12 rounded-full object-cover border">
 
+            {{-- Nama & Role --}}
             <div class="text-right leading-tight">
-                <p class="font-semibold text-gray-800 text-sm">{{ auth()->user()->nama_pengguna }}</p>
+                <p class="font-semibold text-gray-800 text-lg">{{ auth()->user()->nama_pengguna }}</p>
+                <p class="text-gray-500 text-sm">{{ ucfirst(auth()->user()->role) }}</p>
             </div>
-        </div>
+        </a>
     </div>
 
     {{-- konten halaman --}}
@@ -158,6 +165,15 @@ overlay.addEventListener('click', () => {
     sidebar.classList.add('-translate-x-full');
     overlay.classList.add('hidden');
 });
+</script>
+
+{{-- script confirm logout --}}
+<script>
+function confirmLogout() {
+    if (confirm('Yakin ingin logout?')) {
+        document.getElementById('logoutForm').submit();
+    }
+}
 </script>
 
 </body>

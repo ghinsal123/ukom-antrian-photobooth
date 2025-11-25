@@ -24,8 +24,8 @@ class DashboardController extends Controller
         $pengguna = Pengguna::find($customerId);
 
         
-        // FILTER ANTRIAN 
-        // Tampilkan:
+        //  ANTRIAN 
+        // menampilkan:
         // - Semua antrian aktif (menunggu, proses)
         // - Antrian selesai/dibatalkan hanya jika masih <= 1 hari
         $antrianku = Antrian::with(['booth', 'paket'])

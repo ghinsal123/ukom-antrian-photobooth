@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 class AntrianController extends Controller
 {
     /**
-     * Menampilkan daftar antrian & pencarian & paginasi
+     * Menampilkan daftar antrian & pencarian 
      */
     public function index(Request $request)
     {

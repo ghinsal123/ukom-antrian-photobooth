@@ -74,6 +74,6 @@ class LogController extends Controller
             return $log;
         });
 
-        return view('Admin.log.index', compact('log', 'request'));
+        return view('admin.log.index', compact('log', 'request'));
     }
 }

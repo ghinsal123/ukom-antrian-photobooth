@@ -89,7 +89,7 @@
             </thead>
 
             <tbody>
-                @foreach($paket as $index => $paket)
+                @forelse($paket as $index => $paket)
                 <tr class="border-b hover:bg-pink-50">
                     <td class="p-3">{{ $index + 1 }}</td>
                     <td class="p-3">{{ $paket->nama_paket }}</td>
@@ -122,7 +122,13 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">
+                        Paket tidak ditemukan.
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

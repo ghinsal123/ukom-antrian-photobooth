@@ -56,7 +56,7 @@
         <input type="number" name="kapasitas" class="w-full p-2 border rounded-lg mb-4" required>
 
         <label class="block mb-2">Gambar Booth</label>
-        <input type="file" name="gambar" accept="image/*" class="w-full p-2 border rounded-lg mb-4">
+        <input type="file" name="gambar" accept="image/*" class="w-full p-2 border rounded-lg mb-4" required>
 
         <div class="flex justify-between mt-6">
             <a href="{{ route('admin.booth.index') }}"

@@ -10,7 +10,7 @@
 
 <body class="bg-pink-50">
 
-<!-- Background popup -->
+<!-- bg popup -->
 <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"></div>
 
 <!-- Popup card -->

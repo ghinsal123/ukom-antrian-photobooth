@@ -133,7 +133,7 @@ Route::prefix('operator')->name('operator.')->group(function () {
 */
 Route::prefix('customer')->name('customer.')->group(function () {
 
-    // Belum Login
+    //  Login
     Route::middleware('guest:customer')->group(function () {
         Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
         Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');

@@ -11,10 +11,10 @@ use App\Models\Pengguna;
 
 class AntrianController extends Controller
 {
-    // HALAMAN BUAT FORM ANTRIAN
+    // FORM ANTRIAN
     public function create()
     {
-        // cek apakah customer login
+        // cek customer login
         $customerId = session('customer_id');
 
         if (!$customerId) {
@@ -30,7 +30,7 @@ class AntrianController extends Controller
 
 
    
-    // MENYIMPAN ANTRIAN BARU
+    // ANTRIAN BARU
     public function store(Request $request)
     {
         $customerId = session('customer_id');
@@ -47,17 +47,17 @@ class AntrianController extends Controller
             'no_telp.unique' => 'Nomor telepon ini sudah digunakan oleh pengguna lain.',
         ]);
 
-        // Update nomor telepon customer
+        // Update no tlp
         $pengguna = Pengguna::find($customerId);
         $pengguna->update(['no_telp' => $request->no_telp]);
 
-        // Ambil antrian terakhir berdasarkan booth dan tanggal
+        // Ambil antrian terakhir
         $last = Antrian::where('booth_id', $request->booth_id)
             ->whereDate('tanggal', $request->tanggal)
             ->orderBy('nomor_antrian', 'DESC')
             ->first();
 
-        // Hitung nomor antrian berikutnya
+        // Hitung nomor antrian
         $nextNumber = $last ? $last->nomor_antrian + 1 : 1;
 
         // Simpan antrian baru
@@ -83,13 +83,13 @@ class AntrianController extends Controller
 
         return view('customer.detail', compact('detail'));
     }
-    // HALAMAN EDIT ANTRIAN
+    // EDIT ANTRIAN
     public function edit($id)
     {
         $antrian = Antrian::with(['booth', 'paket', 'pengguna'])
             ->findOrFail($id);
 
-        // Hanya bisa edit jika status menunggu
+        // cuman bisa edit untk status menunggu
         if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
                 ->with('error', 'Antrian tidak bisa diubah.');
@@ -103,7 +103,7 @@ class AntrianController extends Controller
         ]);
     }
 
-    // PROSES UPDATE ANTRIAN
+    // UPDATE ANTRIAN
     public function update(Request $request, $id)
     {
         // Validasi input
@@ -121,7 +121,7 @@ class AntrianController extends Controller
                 ->with('error', 'Antrian tidak bisa diubah.');
         }
 
-        // Jika booth/tanggal berubah → hitung ulang nomor antrian
+        // hitung ulang nomor antrian
         if ($antrian->booth_id != $request->booth_id || $antrian->tanggal != $request->tanggal) {
 
             $last = Antrian::where('booth_id', $request->booth_id)
@@ -151,13 +151,13 @@ class AntrianController extends Controller
     {
         $antrian = Antrian::findOrFail($id);
 
-        // Hanya bisa dibatalkan jika masih menunggu
+        // untuk dibatalkan ketika status masih menunggu
         if (strtolower($antrian->status) !== 'menunggu') {
             return redirect()->route('customer.dashboard')
                 ->with('error', 'Antrian tidak bisa dibatalkan.');
         }
 
-        // Validasi alasan
+        // Validasi alasan atau catatan
         $request->validate([
             'alasan' => 'required|string|max:500',
             'catatan_tambahan' => 'nullable|string|max:500',

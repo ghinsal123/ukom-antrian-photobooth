@@ -8,20 +8,26 @@ return new class extends Migration
 {
     public function up(): void
     {
+        //  tabel antrian
         Schema::create('antrian', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // id utama
 
-            $table->unsignedBigInteger('pengguna_id');
-            $table->unsignedBigInteger('booth_id');
-            $table->unsignedBigInteger('paket_id');
+            $table->unsignedBigInteger('pengguna_id'); 
+            $table->unsignedBigInteger('booth_id'); 
+            $table->unsignedBigInteger('paket_id'); 
 
-            $table->integer('nomor_antrian');
-            $table->date('tanggal');
+            $table->integer('nomor_antrian'); 
+            $table->date('tanggal'); 
+
+           
             $table->unique(['booth_id', 'tanggal', 'nomor_antrian']);
-            $table->enum('status', ['menunggu', 'proses', 'selesai', 'dibatalkan'])->default('menunggu');
-            $table->text('catatan')->nullable();
+
+            $table->enum('status', ['menunggu', 'proses', 'selesai', 'dibatalkan'])
+                  ->default('menunggu'); 
+            $table->text('catatan')->nullable(); 
             $table->timestamps();
 
+            // relasi ke tabel lain
             $table->foreign('pengguna_id')->references('id')->on('pengguna')->onDelete('cascade');
             $table->foreign('booth_id')->references('id')->on('booth')->onDelete('cascade');
             $table->foreign('paket_id')->references('id')->on('paket')->onDelete('cascade');
@@ -30,6 +36,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('antrian');
+        Schema::dropIfExists('antrian'); // hapus tabel 
     }
 };

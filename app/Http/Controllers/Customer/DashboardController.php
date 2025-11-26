@@ -12,21 +12,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Ambil customer dari session
+        // mengambil customer dari session
         $customerId = session('customer_id');
 
         if (!$customerId) {
             return redirect()->route('customer.login');
         }
 
-        // Ambil data customer
+        // mengambil data customer
         $pengguna = Pengguna::find($customerId);
 
         
         //  ANTRIAN 
-        // menampilkan:
-        // - Semua antrian aktif (menunggu, proses)
-        // - Antrian selesai/dibatalkan hanya jika masih <= 1 hari
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
             ->where(function ($q) {
@@ -63,7 +60,7 @@ class DashboardController extends Controller
 
         $pengguna = Pengguna::find($customerId);
 
-        // Arsip tetap menampilkan semuanya
+        // Arsip 
         $arsip = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
             ->whereIn('status', ['selesai', 'dibatalkan'])

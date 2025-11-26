@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    // Tampilin halaman login customer
+    // halaman login customer
     public function showLogin()
     {
         return view('customer.login');
@@ -22,8 +22,7 @@ class LoginController extends Controller
             'full_name' => 'required|string|max:255'
         ]);
 
-        // Cek apakah nama customer sudah ada di database
-        // kalau ada  diambil data
+       // mengecek customer
         $user = Pengguna::where('nama_pengguna', $request->full_name)->first();
 
         
@@ -37,7 +36,6 @@ class LoginController extends Controller
 
         /*
         Simpen informasi login di session
-        session ini biar sistem tau siapa yang lagi login
         */
         session([
             'customer_id'   => $user->id,
@@ -51,10 +49,10 @@ class LoginController extends Controller
     //Logout customer
     public function logout()
     {
-        // hapus data session customer
+        // hapus data session 
         session()->forget(['customer_id', 'customer_name']);
 
-        // balik ke halaman login lagi
+        // balik ke halaman login 
         return redirect()->route('customer.login');
     }
 }

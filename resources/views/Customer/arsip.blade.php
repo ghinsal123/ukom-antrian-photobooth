@@ -58,14 +58,14 @@
 
     <div class="max-w-6xl mx-auto px-4 py-8">
 
-        <!-- JUDUL + NAMA USER + TANGGAL -->
+        <!-- judul + nama  + tanggal -->
         <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Arsip Antrian</h2>
 
         <p class="text-sm text-gray-600 mb-4">
             {{ $pengguna->nama_pengguna }} — {{ now()->format('d M Y') }}
         </p>
 
-        <!-- JIKA KOSONG -->
+        <!-- ketika arsip kosong -->
         @if ($arsip->isEmpty())
             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
                 <p class="text-yellow-700 text-sm">Belum ada antrian yang selesai atau dibatalkan.</p>
@@ -109,12 +109,12 @@
 
                         <td class="py-3 px-2">
                             @if ($item->status === 'selesai')
-                                <!--  STATUS SELESAI = PINK PEKAT -->
+                                <!--  STATUS SELESAI  -->
                                 <span class="px-3 py-1 rounded text-xs text-white" style="background:#ec4899;">
                                     Selesai
                                 </span>
                             @else
-                                <!--  STATUS DIBATALKAN = MERAH -->
+                                <!--  STATUS DIBATALKAN -->
                                 <span class="bg-red-500 text-white px-3 py-1 rounded text-xs">
                                     Dibatalkan
                                 </span>

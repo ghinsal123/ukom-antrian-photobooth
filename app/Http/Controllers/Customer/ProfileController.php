@@ -20,14 +20,14 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            // Nama tidak divalidasi karena tidak boleh diubah
+            // Nama tidak diubah
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $customerId = session('customer_id');
         $pengguna = Pengguna::findOrFail($customerId);
 
-        // HANYA UPDATE FOTO
+        //  UPDATE FOTO
         if ($request->hasFile('foto')) {
 
             // Hapus foto lama 

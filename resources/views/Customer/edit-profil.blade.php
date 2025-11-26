@@ -17,7 +17,7 @@
             @csrf
             @method('PUT')
 
-            <!-- NAMA (READONLY) -->
+            <!-- NAMA  -->
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-medium">Nama Pengguna</label>
                 <input type="text"

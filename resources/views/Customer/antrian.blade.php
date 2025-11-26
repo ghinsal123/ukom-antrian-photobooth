@@ -146,7 +146,7 @@
                                placeholder="Masukkan nomor aktif">
                     </div>
 
-                    <!-- GRID PILIHAN -->
+                    <!-- GRID -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                         <!-- TANGGAL -->
@@ -234,7 +234,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // Auto set tanggal hari ini
+        // Auto tanggal hari ini
         document.addEventListener("DOMContentLoaded", function () {
             const today = new Date();
             today.setMinutes(today.getMinutes() - today.getTimezoneOffset());

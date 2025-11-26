@@ -13,26 +13,11 @@ return new class extends Migration
     {
         Schema::create('log', function (Blueprint $table) {
             $table->id();
-            
-            // Foreign key ke tabel pengguna
-            $table->foreignId('pengguna_id')
-                  ->constrained('pengguna')
-                  ->onDelete('cascade');
-            
-            // Foreign key ke tabel antrian, bisa null
-            $table->foreignId('antrian_id')
-                  ->nullable()
-                  ->constrained('antrian')
-                  ->onDelete('cascade');
-            
-            // Enum aksi termasuk update_antrian
+            $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
+            $table->foreignId('antrian_id')->nullable()->constrained('antrian')->onDelete('cascade');
             $table->enum('aksi', ['buat_antrian', 'update_status', 'hapus_antrian', 'update_antrian'])
                   ->default('buat_antrian');
-            
-            // Keterangan log bisa null
             $table->text('keterangan')->nullable();
-            
-            // Timestamp created_at & updated_at
             $table->timestamps();
         });
     }

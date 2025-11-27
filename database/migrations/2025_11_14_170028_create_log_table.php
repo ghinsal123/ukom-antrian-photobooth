@@ -31,6 +31,8 @@ return new class extends Migration
             
             // Keterangan log 
             $table->text('keterangan')->nullable();
+
+            // Timestamp created_at & updated_at
             $table->timestamps();
         });
     }

@@ -20,14 +20,17 @@ class LoginController extends Controller
         // validasi input
         $request->validate([
             'full_name' => 'required|string|max:255',
-            'no_telp'   => 'required|min:10|max:15'
+            'no_telp'   => 'required|numeric|digits_between:10,15',
+        ], [
+            'no_telp.numeric' => 'Nomor telepon harus berupa angka, tidak boleh huruf.',
+            'no_telp.digits_between' => 'Nomor telepon harus terdiri dari 10 sampai 15 digit.',
         ]);
 
-        // cek customer udah ada / belum
+        // cek customer 
         $user = Pengguna::where('nama_pengguna', $request->full_name)->first();
 
         if (!$user) {
-            // jika belum ada, buat baru
+            // untuk user buat akun
             $user = Pengguna::create([
                 'nama_pengguna' => $request->full_name,
                 'no_telp'       => $request->no_telp,

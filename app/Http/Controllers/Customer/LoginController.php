@@ -8,51 +8,54 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    // halaman login customer
+    // login customer
     public function showLogin()
     {
         return view('customer.login');
     }
 
-    // Proses login customer
+    // proses login 
     public function login(Request $request)
     {
-        // Validasi input 
+        // validasi input
         $request->validate([
-            'full_name' => 'required|string|max:255'
+            'full_name' => 'required|string|max:255',
+            'no_telp'   => 'required|min:10|max:15'
         ]);
 
-       // mengecek customer
+        // cek customer udah ada / belum
         $user = Pengguna::where('nama_pengguna', $request->full_name)->first();
 
-        
         if (!$user) {
+            // jika belum ada, buat baru
             $user = Pengguna::create([
                 'nama_pengguna' => $request->full_name,
-                'password'      => bcrypt('default123'), // password dummy
+                'no_telp'       => $request->no_telp,
+                'password'      => bcrypt('default123'),
                 'role'          => 'customer'
+            ]);
+        } else {
+            // update nomor telepon
+            $user->update([
+                'no_telp' => $request->no_telp
             ]);
         }
 
-        /*
-        Simpen informasi login di session
-        */
+        // simpan session
         session([
             'customer_id'   => $user->id,
             'customer_name' => $user->nama_pengguna
         ]);
 
-        // Kembali ke dashboard customer
         return redirect()->route('customer.dashboard');
     }
 
-    //Logout customer
+    // logout customer
     public function logout()
     {
-        // hapus data session 
+        // hapus session
         session()->forget(['customer_id', 'customer_name']);
 
-        // balik ke halaman login 
         return redirect()->route('customer.login');
     }
 }

@@ -58,14 +58,14 @@
 
     <div class="max-w-6xl mx-auto px-4 py-8">
 
-        <!-- judul + nama  + tanggal -->
+        <!-- judul, nama, tanggal -->
         <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Arsip Antrian</h2>
 
         <p class="text-sm text-gray-600 mb-4">
             {{ $pengguna->nama_pengguna }} — {{ now()->format('d M Y') }}
         </p>
 
-        <!-- ketika arsip kosong -->
+        <!-- untuk arsip kosong -->
         @if ($arsip->isEmpty())
             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
                 <p class="text-yellow-700 text-sm">Belum ada antrian yang selesai atau dibatalkan.</p>
@@ -121,7 +121,7 @@
                             @endif
                         </td>
 
-                        <!-- CATATAN OPERATOR  -->
+                        <!-- CATATAN   -->
                         <td class="py-3 px-2">
                             {{ $item->catatan ?? '-' }}
                         </td>

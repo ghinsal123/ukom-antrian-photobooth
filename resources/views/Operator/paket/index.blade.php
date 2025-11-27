@@ -1,14 +1,8 @@
 @extends('Operator.layout')
 
 @section('content')
-
-{{-- container utama --}}
 <div class="bg-white p-6 rounded-2xl shadow">
-
-    {{-- header halaman --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
-        
-        {{-- judul halaman --}}
         <h2 class="text-3xl font-bold text-gray-800 mb-2 md:mb-0">daftar paket</h2>
 
         {{-- form pencarian paket --}}
@@ -37,8 +31,6 @@
     {{-- tabel daftar paket --}}
     <div class="overflow-x-auto">
         <table class="w-full border-collapse">
-
-            {{-- header tabel --}}
             <thead>
                 <tr class="bg-pink-100 text-center">
                     <th class="px-6 py-3">gambar</th>
@@ -74,7 +66,7 @@
                         {{ $paket->nama_paket }}
                     </td>
 
-                    {{-- deskripsi singkat --}}
+                    {{-- deskripsi --}}
                     <td class="px-4 py-3 text-gray-700 text-center">
                         {{ \Illuminate\Support\Str::limit($paket->deskripsi, 30, '...') ?? '-' }}
                     </td>
@@ -84,7 +76,7 @@
                         Rp {{ number_format($paket->harga, 0, ',', '.') }}
                     </td>
 
-                    {{-- tombol detail --}}
+                    {{-- tombol aksi --}}
                     <td class="px-4 py-3 text-center">
                         <a 
                             href="{{ route('operator.paket.show', $paket->id) }}" 
@@ -97,7 +89,7 @@
                 </tr>
                 @empty
                 
-                {{-- baris jika data kosong --}}
+                {{-- jika data kosong --}}
                 <tr>
                     <td colspan="5" class="text-center py-6 text-gray-500">
                         paket tidak ditemukan

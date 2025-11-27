@@ -11,7 +11,7 @@ class ProfileController extends Controller
     // Tampilkan halaman edit profile operator
     public function edit()
     {
-        $operator = Auth::user(); // ambil operator yang sedang login
+        $operator = Auth::user(); 
         return view('operator.profile.edit', compact('operator'));
     }
 

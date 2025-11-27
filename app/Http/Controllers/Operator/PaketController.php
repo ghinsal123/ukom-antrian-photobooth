@@ -18,8 +18,7 @@ class PaketController extends Controller
             $keyword = $request->search;
             $query->where('nama_paket', 'like', "%$keyword%");
         }
-
-        // ambil semua paket hasil query
+        
         $pakets = $query->get(); 
 
         // tampilkan view index paket dengan data paket

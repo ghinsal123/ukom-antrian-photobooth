@@ -242,8 +242,7 @@ class AntrianController extends Controller
                 'aksi'        => 'hapus_antrian',
                 'keterangan'  => 'Operator menghapus antrian ID ' . $antrian->id,
             ]);
-
-            // hapus antrian
+            
             $antrian->delete();
         });
 

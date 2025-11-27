@@ -1,11 +1,7 @@
 @extends('Operator.layout')
 
 @section('content')
-
-{{-- judul halaman --}}
 <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Detail booth</h2>
-
-{{-- container utama --}}
 <div class="bg-white rounded-3xl shadow-2xl p-6 max-w-3xl mx-auto mt-8">
 
     {{-- nama booth --}}
@@ -33,7 +29,7 @@
         <span class="text-pink-500">{{ $booth->kapasitas }}</span>
     </div>
 
-    {{-- informasi tanggal dibuat dan diperbarui --}}
+    {{-- informasi tanggal  --}}
     <div class="text-sm text-gray-500 mb-4">
         Dibuat: {{ $booth->created_at->format('d M Y, H:i') }} <br>
         Terakhir diperbarui: {{ $booth->updated_at->format('d M Y, H:i') }}

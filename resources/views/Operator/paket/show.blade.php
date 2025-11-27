@@ -2,10 +2,7 @@
 
 @section('content')
 
-{{-- judul halaman --}}
 <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">detail paket</h2>
-
-{{-- container utama --}}
 <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
 
     {{-- gambar paket --}}
@@ -26,22 +23,19 @@
     {{-- detail informasi paket --}}
     <div class="space-y-3 text-gray-700">
 
-        {{-- nama paket --}}
         <h2 class="text-2xl font-bold text-pink-600">
             {{ $paket->nama_paket }}
         </h2>
 
-        {{-- harga paket --}}
         <p class="text-lg font-semibold">
             harga: Rp {{ number_format($paket->harga, 0, ',', '.') }}
         </p>
 
-        {{-- deskripsi --}}
         <p>
             deskripsi: {{ $paket->deskripsi ?? '-' }}
         </p>
 
-        {{-- informasi waktu --}}
+        <!-- waktu -->
         <p class="text-sm text-gray-500">
             dibuat: {{ $paket->created_at->format('d M Y, H:i') }} <br>
             terakhir diupdate: {{ $paket->updated_at->format('d M Y, H:i') }}

@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto mt-8">
-
-    <!-- judul halaman -->
     <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Edit Antrian</h2>
 
     @php
@@ -106,7 +104,7 @@
                       @disabled($isCanceled)>{{ $data->catatan }}</textarea>
         </div>
 
-        <!-- tombol aksi -->
+        <!-- tombol  -->
         <div class="flex gap-4">
             <button type="submit"
                     class="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition duration-300">

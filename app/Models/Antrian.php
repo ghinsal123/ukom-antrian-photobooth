@@ -20,16 +20,19 @@ class Antrian extends Model
         'catatan',
     ];
 
+    // Relasi ke tabel booth
     public function booth()
     {
         return $this->belongsTo(Booth::class, 'booth_id');
     }
 
+    // Relasi ke tabel paket
     public function paket()
     {
         return $this->belongsTo(Paket::class, 'paket_id');
     }
 
+    // Relasi ke tabel pengguna
     public function pengguna()
     {
         return $this->belongsTo(Pengguna::class, 'pengguna_id');

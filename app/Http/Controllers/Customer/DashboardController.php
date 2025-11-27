@@ -27,8 +27,8 @@ class DashboardController extends Controller
         $antrianku = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
             ->where(function ($q) {
-                $q->whereNotIn('status', ['selesai', 'dibatalkan'])   // tampilkan aktif
-                  ->orWhereDate('tanggal', '>=', now()->subDay()->toDateString()); // selesai/dibatalkan tapi masih 1 hari
+                $q->whereNotIn('status', ['selesai', 'dibatalkan'])   
+                  ->orWhereDate('tanggal', '>=', now()->subDay()->toDateString()); 
             })
             ->orderBy('tanggal', 'DESC')
             ->orderBy('id', 'DESC')

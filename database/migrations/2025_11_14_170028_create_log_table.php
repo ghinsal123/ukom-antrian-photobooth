@@ -30,10 +30,6 @@ return new class extends Migration
                   ->default('buat_antrian');
             
             // Keterangan log 
-            $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
-            $table->foreignId('antrian_id')->nullable()->constrained('antrian')->onDelete('cascade');
-            $table->enum('aksi', ['buat_antrian', 'update_status', 'hapus_antrian', 'update_antrian'])
-                  ->default('buat_antrian');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

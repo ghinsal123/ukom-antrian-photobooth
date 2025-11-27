@@ -14,24 +14,24 @@ return new class extends Migration
         Schema::create('log', function (Blueprint $table) {
             $table->id();
             
-            // FK ke tabel pengguna
+            // Foreign key ke tabel pengguna
             $table->foreignId('pengguna_id')
                   ->constrained('pengguna')
                   ->onDelete('cascade');
             
-            // FK ke tabel antrian
+            // Foreign key ke tabel antrian, bisa null
             $table->foreignId('antrian_id')
                   ->nullable()
                   ->constrained('antrian')
                   ->onDelete('cascade');
             
-            // Enum aksi 
+            // Enum aksi termasuk update_antrian
             $table->enum('aksi', ['buat_antrian', 'update_status', 'hapus_antrian', 'update_antrian'])
                   ->default('buat_antrian');
             
-            // Keterangan log 
+            // Keterangan log bisa null
             $table->text('keterangan')->nullable();
-
+            
             // Timestamp created_at & updated_at
             $table->timestamps();
         });

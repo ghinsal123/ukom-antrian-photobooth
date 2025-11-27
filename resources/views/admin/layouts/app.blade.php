@@ -104,7 +104,7 @@
                 </a>
 
                 {{-- Logout --}}
-                <form id="logout-admin-mobile" action="{{ route('admin.logout') }}" method="POST" class="pt-4 pb-8">
+                <form id="logout-admin-mobile" action="{{ route('admin.logout') }}" method="POST" class="pt-4 pb-4">
                     @csrf
                     <button type="button"
                         onclick="if(confirm('Yakin ingin logout?')) document.getElementById('logout-admin-mobile').submit();"
@@ -170,12 +170,6 @@
         @yield('content')
 
     </main>
-
-    {{-- FOOTER --}}
-    <footer class="fixed bottom-0 left-0 w-full text-center py-3 bg-white text-gray-400 text-sm shadow-inner">
-        © FlashFrame • 2025
-    </footer>
-
 
     {{-- JS SCRIPT --}}
     <script>

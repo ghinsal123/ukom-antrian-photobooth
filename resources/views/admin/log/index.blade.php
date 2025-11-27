@@ -5,22 +5,36 @@
 @section('content')
 
 <div class="print-area">
+
+    {{-- Container utama untuk halaman laporan log --}}
     <div class="bg-white p-6 rounded-2xl shadow">
         <div class="container mx-auto px-4 py-6">
+
+            {{-- Judul halaman --}}
             <h2 class="text-2xl font-semibold text-gray-700">Laporan Aktivitas Harian</h2>
+
+            {{-- Informasi tanggal (hanya muncul saat print) --}}
             <div class="mb-4 hidden print:block">
                 <p class="text-sm">
                     laporan dari: {{ request('start_date') ?? '-' }} 
                     sampai: {{ request('end_date') ?? '-' }}
                 </p>
             </div>
+
+            {{-- Bagian pencarian dan filter tanggal (disembunyikan saat print) --}}
             <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 no-print">
+
+                {{-- Input pencarian --}}
                 <div class="w-full md:w-1/3 p-4 md:pt-10 rounded-2xl">
                     <form action="{{ route('admin.log.index') }}" method="GET" class="w-full">
                         <div class="relative w-full">
+
+                            {{-- Icon search --}}
                             <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
                                 <i class="fas fa-search text-sm"></i>
                             </span>
+
+                            {{-- Field input search --}}
                             <input 
                                 type="text" 
                                 name="search" 
@@ -31,11 +45,15 @@
                         </div>
                     </form>
                 </div>
+
+                {{-- Filter tanggal + tombol print --}}
                 <form 
                     action="{{ route('admin.log.index') }}" 
                     method="GET"
                     class="flex flex-row flex-wrap gap-3 p-4 md:pt-4 pt-0 rounded-2xl w-full md:w-auto"
                 >
+
+                    {{-- Tanggal mulai --}}
                     <div class="flex flex-col">
                         <label class="text-xs text-gray-600 mb-1">tanggal mulai</label>
                         <input 
@@ -45,6 +63,8 @@
                             class="border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 md:w-34 w-40"
                         >
                     </div>
+
+                    {{-- Tanggal selesai --}}
                     <div class="flex flex-col">
                         <label class="text-xs text-gray-600 mb-1">tanggal selesai</label>
                         <input 
@@ -54,12 +74,16 @@
                             class="border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 md:w-34 w-40"
                         >
                     </div>
+
+                    {{-- Tombol submit filter --}}
                     <button 
                         type="submit"
                         class="bg-pink-500 text-white px-3 py-10px rounded-xl hover:bg-pink-600 shadow-md transition transform hover:scale-105 text-sm flex items-center justify-center h-40px mt-4"
                     >
                         cari
                     </button>
+
+                    {{-- Tombol print --}}
                     <button 
                         type="button" 
                         onclick="window.print()"
@@ -70,9 +94,13 @@
                 </form>
             </div>
 
-            {{-- tabel log --}}
+            {{-- Tabel log --}}
             <div class="overflow-x-auto">
+
+                {{-- Tabel data log --}}
                 <table class="table-auto w-full border-collapse shadow-xl text-xs sm:text-sm md:text-base">
+
+                    {{-- Header tabel --}}
                     <thead class="border bg-pink-100 text-gray-800">
                         <tr>
                             <th class="px-3 py-2 border">no</th>
@@ -87,17 +115,30 @@
                         </tr>
                     </thead>
 
+                    {{-- Isi tabel --}}
                     <tbody>
                         @forelse($log as $log)
                         <tr class="text-center bg-white hover:bg-pink-50">
 
+                            {{-- Nomor urut --}}
                             <td class="px-2 py-1 border">{{ $loop->iteration }}</td>
+
+                            {{-- Waktu log dibuat --}}
                             <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
+
+                            {{-- Nama operator yang melakukan aksi --}}
                             <td class="px-2 py-1 border">{{ $log->pengguna->nama_pengguna ?? '-' }}</td>
+
+                            {{-- Nama customer dari data antrian --}}
                             <td class="px-2 py-1 border">{{ $log->antrian->pengguna->nama_pengguna ?? '-' }}</td>
+
+                            {{-- Nama booth --}}
                             <td class="px-2 py-1 border">{{ $log->antrian->booth->nama_booth ?? '-' }}</td>
+
+                            {{-- Nama paket --}}
                             <td class="px-2 py-1 border">{{ $log->antrian->paket->nama_paket ?? '-' }}</td>
 
+                            {{-- Status antrian --}}
                             <td class="px-2 py-1 border">
                                 @if($log->antrian)
                                     <span class="px-2 py-1 rounded-xl text-gray-800">
@@ -108,13 +149,17 @@
                                 @endif
                             </td>
 
+                            {{-- Catatan --}}
                             <td class="px-2 py-1 border">{{ $log->antrian->catatan ?? '-' }}</td>
 
+                            {{-- Aksi yang dilakukan (tanpa underscore) --}}
                             <td class="px-2 py-1 border no-print">
                                 {{ str_replace('_', ' ', strtolower($log->aksi)) }}
                             </td>
 
                         </tr>
+
+                        {{-- Pesan ketika log kosong --}}
                         @empty
                         <tr>
                             <td colspan="9" class="px-2 py-2 text-center border">tidak ada log</td>
@@ -122,26 +167,29 @@
                         @endforelse
                     </tbody>
                 </table>
+
             </div>
+
         </div>
     </div>
 </div>
 
+{{-- CSS khusus untuk mode print --}}
 <style>
 @media print {
 
-    /* Hilangkan SEMUA elemen di luar area print */
+    /* Sembunyikan semua elemen selain area print */
     body * {
         visibility: hidden !important;
     }
 
-    /* Tampilkan area print saja */
+    /* Tampilkan hanya elemen yang berada dalam print-area */
     .print-area, 
     .print-area * {
         visibility: visible !important;
     }
 
-    /* Atur posisi biar rapi */
+    /* Atur posisi agar full layout saat print */
     .print-area {
         position: absolute !important;
         left: 0 !important;
@@ -152,18 +200,18 @@
         box-shadow: none !important;
     }
 
-    /* Hilangkan semua search, filter, tanggal, tombol */
+    /* Sembunyikan form, tombol, dan elemen no-print */
     .no-print {
         display: none !important;
     }
 
-    /* Hilangkan kolom aksi */
+    /* Sembunyikan kolom aksi saat print */
     th.no-print,
     td.no-print {
         display: none !important;
     }
 
-    /* Hilangkan background gelap */
+    /* Hilangkan background gelap saat print */
     body {
         background: white !important;
     }

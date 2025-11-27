@@ -30,7 +30,7 @@
                 name="no_telp" 
                 placeholder="Contoh: 08123456789"
                 value="{{ old('no_telp') }}"
-                class="w-full border @error('no_telp') border-red-500 @else border-gray-300 @enderror 
+                class="w-full border {{ $errors->has('no_telp') ? 'border-red-500' : 'border-gray-300' }} 
                         p-3 rounded-lg focus:outline-none focus:ring-2 
                         focus:ring-pink-400 focus:border-pink-400">
 

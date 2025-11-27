@@ -51,11 +51,12 @@
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Status</span>
         <span class="
-            @if($data->status === 'menunggu') text-yellow-500
-            @elseif($data->status === 'proses') text-blue-500
-            @elseif($data->status === 'selesai') text-green-500
-            @elseif($data->status === 'batal') text-red-500
-            @endif
+        {{
+        $data->status === 'menunggu' ? 'text-yellow-500' :
+        ($data->status === 'proses' ? 'text-blue-500' :
+        ($data->status === 'selesai' ? 'text-green-500' :
+        ($data->status === 'batal' ? 'text-red-500' : 'text-gray-500')))
+        }}
             font-semibold flex items-center gap-2
         ">
             {{ ucfirst($data->status) }}

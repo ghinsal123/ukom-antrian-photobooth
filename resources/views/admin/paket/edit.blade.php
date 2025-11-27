@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Paket')
+@section('title', 'Paket')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
@@ -44,26 +44,26 @@
     @endif
 
     {{-- FORM --}}
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Paket</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Edit Paket</h2>
 
     <form action="{{ route('admin.paket.update', $paket->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        <label class="block mb-2">Nama Paket</label>
+        <label class="block text-gray-700 font-semibold mb-2">Nama Paket</label>
         <input type="text" name="nama_paket" value="{{ $paket->nama_paket }}" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Harga</label>
+        <label class="block text-gray-700 font-semibold mb-2">Harga</label>
         <input type="number" name="harga" value="{{ $paket->harga }}" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Gambar</label>
+        <label class="block text-gray-700 font-semibold mb-2">Gambar</label>
         @if($paket->gambar)
             <img src="{{ asset('storage/' . $paket->gambar) }}" class="w-24 h-24 object-cover rounded-lg mb-3">
         @endif
         <input type="file" name="gambar" accept="image/*" class="w-full p-2 border rounded-lg mb-4">
 
-        <label class="block mb-2">Deskripsi</label>
-        <textarea name="deskripsi" class="w-full p-2 border rounded-lg mb-4">{{ $paket->deskripsi }}</textarea>
+        <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
+        <textarea name="deskripsi" class="w-full p-2 border rounded-lg mb-4" required>{{ $paket->deskripsi }}</textarea>
 
         <div class="flex justify-between mt-6">
             <a href="{{ route('admin.paket.index') }}"

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Booth')
+@section('title', 'Booth')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
@@ -34,6 +34,7 @@
         </div>
     </div>
 
+    {{-- Animasi popup --}}
     <style>
         @keyframes popup {
             0% { transform: scale(0.6); opacity: 0; }
@@ -43,27 +44,40 @@
     </style>
     @endif
 
-    {{-- FORM --}}
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Tambah Booth</h2>
+    {{-- FORM INPUT DATA--}}
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center pb-2">Tambah Booth</h2>
 
+    {{-- Form tambah booth --}}
     <form action="{{ route('admin.booth.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <label class="block mb-2">Nama Booth</label>
+        {{-- Input nama booth --}}
+        <label class="block text-gray-700 font-semibold mb-2">Nama Booth
+            <span class="text-red-500">*</span>
+        </label>
         <input type="text" name="nama_booth" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Kapasitas (max 10)</label>
+        {{-- Input kapasitas --}}
+        <label class="block text-gray-700 font-semibold mb-2">Kapasitas (max 10)
+            <span class="text-red-500">*</span>
+        </label>
         <input type="number" name="kapasitas" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Gambar Booth</label>
+        {{-- Input upload gambar booth --}}
+        <label class="block text-gray-700 font-semibold mb-2">Gambar Booth
+            <span class="text-red-500">*</span>
+        </label>
         <input type="file" name="gambar" accept="image/*" class="w-full p-2 border rounded-lg mb-4" required>
 
+        {{-- Tombol aksi --}}
         <div class="flex justify-between mt-6">
+            {{-- Tombol batal kembali ke index --}}
             <a href="{{ route('admin.booth.index') }}"
                class="px-4 py-2 border rounded-xl hover:bg-gray-100">
                 Batal
             </a>
 
+            {{-- Tombol simpan data --}}
             <button type="submit"
                 class="px-4 py-2 bg-pink-500 text-white rounded-xl hover:bg-pink-600 shadow">
                 Simpan

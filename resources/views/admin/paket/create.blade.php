@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Paket')
+@section('title', 'Paket')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
@@ -44,22 +44,30 @@
     @endif
 
     {{-- FORM --}}
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Tambah Paket</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">Tambah Paket</h2>
 
     <form action="{{ route('admin.paket.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <label class="block mb-2">Nama Paket</label>
+        <label class="block text-gray-700 font-semibold mb-2">Nama Paket
+            <span class="text-red-500">*</span>
+        </label>
         <input type="text" name="nama_paket" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Harga</label>
+        <label class="block text-gray-700 font-semibold mb-2">Harga
+            <span class="text-red-500">*</span>
+        </label>
         <input type="number" name="harga" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Gambar</label>
-        <input type="file" name="gambar" accept="image/*" class="w-full p-2 border rounded-lg mb-4">
+        <label class="block text-gray-700 font-semibold mb-2">Gambar
+            <span class="text-red-500">*</span>
+        </label>
+        <input type="file" name="gambar" accept="image/*" class="w-full p-2 border rounded-lg mb-4" required>
 
-        <label class="block mb-2">Deskripsi</label>
-        <textarea name="deskripsi" class="w-full p-2 border rounded-lg mb-4"></textarea>
+        <label class="block text-gray-700 font-semibold mb-2">Deskripsi
+            <span class="text-red-500">*</span>
+        </label>
+        <textarea name="deskripsi" class="w-full p-2 border rounded-lg mb-4" required></textarea>
 
         <div class="flex justify-between mt-6">
             <a href="{{ route('admin.paket.index') }}"

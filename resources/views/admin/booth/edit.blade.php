@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Booth')
+@section('title', 'Booth')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
@@ -34,6 +34,7 @@
         </div>
     </div>
 
+    {{-- Animasi popup --}}
     <style>
         @keyframes popup {
             0% { transform: scale(0.6); opacity: 0; }
@@ -43,28 +44,36 @@
     </style>
     @endif
 
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Booth</h2>
+    {{-- FORM EDIT BOOTH --}}
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center pb-2">Edit Booth</h2>
 
+    {{-- Form update booth --}}
     <form action="{{ route('admin.booth.update', $booth->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        <label class="block mb-2">Nama Booth</label>
+        {{-- Input nama booth --}}
+        <label class="block text-gray-700 font-semibold mb-2">Nama Booth</label>
         <input type="text" name="nama_booth" class="w-full p-2 border rounded-lg mb-4"
                value="{{ $booth->nama_booth }}" required>
 
-        <label class="block mb-2">Kapasitas</label>
+        {{-- Input kapasitas --}}
+        <label class="block text-gray-700 font-semibold mb-2">Kapasitas</label>
         <input type="number" name="kapasitas" class="w-full p-2 border rounded-lg mb-4"
                value="{{ $booth->kapasitas }}" required>
 
-        <label class="block mb-2">Gambar Booth</label>
+        {{-- Input gambar + preview --}}
+        <label class="block text-gray-700 font-semibold mb-2">Gambar Booth</label>
+        {{-- Preview gambar lama --}}
         @if($booth->gambar)
             <img src="{{ asset('storage/' . $booth->gambar) }}" class="w-24 h-24 object-cover rounded-lg mb-3">
         @endif
 
+        {{-- Upload gambar baru --}}
         <input type="file" name="gambar" accept="image/*"
                class="w-full p-2 border rounded-lg mb-4">
 
+        {{-- Tombol aksi --}}
         <div class="flex justify-between mt-6">
             <a href="{{ route('admin.booth.index') }}"
                class="px-4 py-2 border rounded-xl hover:bg-gray-100">

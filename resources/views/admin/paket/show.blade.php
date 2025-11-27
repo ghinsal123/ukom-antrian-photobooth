@@ -1,16 +1,18 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Detail Paket')
+@section('title', 'Paket')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
 
-    <h2 class="text-2xl font-semibold text-gray-700 mb-5">Detail Paket</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-5 text-center">Detail Paket</h2>
 
-    @if($paket->gambar)
-        <img src="{{ asset('storage/'.$paket->gambar) }}" width="250" class="rounded-xl mb-4">
-    @endif
-
+    <div class="flex justify-center">
+        @if($paket->gambar)
+            <img src="{{ asset('storage/'.$paket->gambar) }}" width="250" class="rounded-xl mb-4">
+        @endif
+    </div>
+    
     <div class="space-y-3">
         <p><strong>Nama Paket:</strong> {{ $paket->nama_paket }}</p>
         <p><strong>Harga:</strong> Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>

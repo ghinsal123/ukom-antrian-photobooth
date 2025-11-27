@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+/**
+ * Controller untuk mengelola tampilan log aktivitas operator
+ * Menampilkan log terakhir dari setiap antrian yang dikerjakan operator,
+ * termasuk fitur filter tanggal, pencarian, dan penyesuaian timezone
+ */
 class LogController extends Controller
 {
     public function index(Request $request)

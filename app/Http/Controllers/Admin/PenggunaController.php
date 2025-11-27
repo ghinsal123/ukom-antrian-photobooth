@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class PenggunaController extends Controller
 {
+    /**
+     * Menampilkan daftar pengguna dengan fitur search & sorting role
+     */
     public function index(Request $request)
     {
         $query = Pengguna::query();
 
-        // Search
+        // Search berdasarkan nama, no telepon, atau role
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('nama_pengguna', 'like', '%' . $request->search . '%')
@@ -32,27 +35,39 @@ class PenggunaController extends Controller
             END
         ");
 
-        // Customer terbaru
+        // Urutkan berdasarkan tanggal pembuatan (terbaru)
         $query->orderBy('created_at', 'desc');
 
+        // Paginasi 10 per halaman
         $pengguna = $query->paginate(10);
         return view('admin.pengguna.index', compact('pengguna'));
     }
 
+    /**
+     * Menampilkan form tambah pengguna operator
+     */
     public function create()
     {
         return view('admin.pengguna.create');
     }
 
+    /**
+     * Menyimpan pengguna baru
+     * Hanya admin yang bisa membuat operator
+     */
     public function store(Request $request)
     {
+        // Validasi input form
         $validated = $request->validate([
             'nama_pengguna' => 'required|string|max:255',
             'no_telp' => 'nullable|unique:pengguna,no_telp',
             'password' => 'required|min:6',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'password.min' => 'Password tidak boleh kurang dari 6 karakter.',
         ]);
 
+        // Upload foto jika ada
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('pengguna', 'public');
         }
@@ -60,23 +75,34 @@ class PenggunaController extends Controller
         $validated['password'] = bcrypt($validated['password']);
         $validated['role'] = 'operator'; // hanya bisa buat operator
 
+        // Simpan ke database
         Pengguna::create($validated);
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil ditambahkan');
     }
 
+    /**
+     * Menampilkan detail pengguna
+     */
     public function show(Pengguna $pengguna)
     {
         return view('admin.pengguna.show', compact('pengguna'));
     }
 
+    /**
+     * Menampilkan form edit pengguna
+     */
     public function edit(Pengguna $pengguna)
     {
         return view('admin.pengguna.edit', compact('pengguna'));
     }
 
+    /**
+     * Memperbarui data pengguna
+     */
     public function update(Request $request, Pengguna $pengguna)
     {
+        // Validasi input
         $validated = $request->validate([
             'nama_pengguna' => 'required|string|max:255',
             'no_telp' => 'nullable|unique:pengguna,no_telp,' . $pengguna->id,
@@ -84,11 +110,13 @@ class PenggunaController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Update foto
+        /// Cek jika ada foto baru diupload
         if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
             if ($pengguna->foto && Storage::disk('public')->exists($pengguna->foto)) {
                 Storage::disk('public')->delete($pengguna->foto);
             }
+            // Upload foto baru
             $validated['foto'] = $request->file('foto')->store('pengguna', 'public');
         }
 
@@ -99,14 +127,19 @@ class PenggunaController extends Controller
             unset($validated['password']);
         }
 
-        // ROLE TIDAK BOLEH DIUBAH
+        // Role tidak boleh diubah (keamanan)
         $validated['role'] = $pengguna->role;
 
+        // Update ke DB
         $pengguna->update($validated);
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil diperbarui');
     }
 
+    /**
+     * Menghapus pengguna
+     * Admin tidak boleh dihapus
+     */
     public function destroy(Pengguna $pengguna)
     {
         // Admin tidak boleh dihapus
@@ -114,10 +147,12 @@ class PenggunaController extends Controller
             return back()->with('error', 'Admin tidak boleh dihapus.');
         }
 
+        // Hapus foto user jika ada
         if ($pengguna->foto && Storage::disk('public')->exists($pengguna->foto)) {
             Storage::disk('public')->delete($pengguna->foto);
         }
 
+        // Hapus data user
         $pengguna->delete();
 
         return redirect()->route('admin.pengguna.index')->with('success', 'Pengguna berhasil dihapus');

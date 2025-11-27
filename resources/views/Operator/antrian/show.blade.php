@@ -35,16 +35,12 @@
         <span class="text-gray-900">{{ $data->nomor_antrian }}</span>
     </div>
 
-        <!-- tanggal dan waktu -->
-        <div>
-            <label class="block text-gray-700 font-semibold mb-2">Tanggal & Waktu</label>
-
-            <p class="text-gray-600 text-lg italic">
-                {{ now('Asia/Jakarta')->format('d M Y H:i') }}
-            </p>
-
-            <input type="hidden" name="tanggal"
-                   value="{{ now('Asia/Jakarta')->format('Y-m-d H:i:s') }}">
+    <!-- tanggal dan waktu -->
+    <div>
+      <label class="block text-gray-700 font-semibold mb-2">Tanggal & Waktu</label>
+        <p class="text-gray-600 text-lg italic">
+            {{ $data->created_at->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+        </p>
         </div>
 
     {{-- status antrian saat ini --}}

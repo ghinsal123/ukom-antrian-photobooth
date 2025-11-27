@@ -45,13 +45,14 @@
                 Booth <span class="text-red-500">*</span>
             </label>
 
-            <select name="booth_id"
-                    class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
-                    required>
-                @foreach ($booth as $b)
-                    <option value="{{ $b->id }}">{{ $b->nama_booth }}</option>
-                @endforeach
-            </select>
+        <select name="booth_id"
+            class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+            required>
+            <option value="" disabled selected>-- Pilih Booth --</option>
+            @foreach ($booth as $b)
+                <option value="{{ $b->id }}">{{ $b->nama_booth }}</option>
+            @endforeach
+        </select>
         </div>
 
         <!-- data paket -->
@@ -60,13 +61,14 @@
                 Paket <span class="text-red-500">*</span>
             </label>
 
-            <select name="paket_id"
-                    class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
-                    required>
-                @foreach ($paket as $p)
-                    <option value="{{ $p->id }}">{{ $p->nama_paket }}</option>
-                @endforeach
-            </select>
+        <select name="paket_id"
+            class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400"
+            required>
+            <option value="" disabled selected>-- Pilih Paket --</option>
+            @foreach ($paket as $p)
+                <option value="{{ $p->id }}">{{ $p->nama_paket }}</option>
+            @endforeach
+        </select>
         </div>
 
         <!-- tanggal & waktu -->

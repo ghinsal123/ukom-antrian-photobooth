@@ -8,19 +8,21 @@
     <div class="flex justify-between items-center mb-5">
         <h2 class="text-2xl font-semibold text-gray-700">Data Booth</h2>
 
+        {{-- Tombol menuju halaman tambah --}}
         <a href="{{ route('admin.booth.create') }}" 
            class="px-4 py-2 bg-pink-500 text-white rounded-xl hover:bg-pink-600 shadow">
             + Tambah Booth
         </a>
     </div>
 
+    {{-- POPUP SUKSES --}}
     @if (session('success'))
     <div id="popupSuccess" 
         class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
         
         <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center scale-75 opacity-0 animate-zoomIn">
             
-            <!-- Icon -->
+            {{-- Icon sukses --}}
             <div class="mx-auto w-20 h-20 flex items-center justify-center 
                         rounded-full border border-green-400 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -31,12 +33,12 @@
                 </svg>
             </div>
 
-            <!-- Text -->
+            {{-- Pesan success --}}
             <p class="text-lg font-semibold text-gray-700 mb-4">
                 {{ session('success') }}
             </p>
 
-            <!-- Button -->
+            {{-- Tombol menutup popup --}}
             <button onclick="document.getElementById('popupSuccess').remove()"
                     class="px-5 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600">
                 OK
@@ -45,6 +47,7 @@
         </div>
     </div>
 
+    {{-- Animasi popup --}}
     <style>
         @keyframes zoomIn {
             0% { transform: scale(0.6); opacity: 0; }
@@ -63,12 +66,14 @@
             placeholder="Cari nama booth..."
             class="w-64 border rounded-xl px-3 py-2"
             oninput="handleSearch(this)">
+        {{-- Tombol submit --}}
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-xl">
             Cari
         </button>
     </form>
 
     <script>
+        // Auto-submit jika input dihapus
         function handleSearch(input) {
             if (input.value === "") {
                 document.getElementById("searchForm").submit();
@@ -89,11 +94,19 @@
             </thead>
 
             <tbody>
-                @foreach($booth as $index => $booth)
+                {{-- Loop data booth --}}
+                @forelse($booth as $index => $booth)
                 <tr class="border-b hover:bg-pink-50">
+                    {{-- Nomor urut --}}
                     <td class="p-3">{{ $index + 1 }}</td>
+                    
+                    {{-- Nama booth --}}
                     <td class="p-3">{{ $booth->nama_booth }}</td>
+
+                    {{-- Kapasitas --}}
                     <td class="p-3">max {{ $booth->kapasitas }} orang</td>
+
+                    {{-- Gambar booth --}}
                     <td class="p-3">
                         @if($booth->gambar)
                             <img src="{{ asset('storage/' . $booth->gambar) }}" class="w-16 h-16 object-cover rounded-lg">
@@ -101,6 +114,8 @@
                             <span class="text-gray-400">Tidak ada</span>
                         @endif
                     </td>
+
+                    {{-- Tombol aksi --}}
                     <td class="p-3 flex gap-2">
                         <a href="{{ route('admin.booth.show', $booth->id) }}" class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
                             Detail
@@ -116,7 +131,15 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+
+                {{-- Jika data kosong --}}
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">
+                        Booth tidak ditemukan.
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

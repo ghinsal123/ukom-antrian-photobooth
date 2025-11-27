@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow">
-
-    {{-- header: judul dan form pencarian --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
         <h2 class="text-3xl font-bold text-gray-800 mb-2 md:mb-0">Daftar Booth</h2>
 
@@ -35,7 +33,7 @@
                 <tr class="border-b hover:bg-pink-50">
                     <td class="px-4 py-3">
                         <div class="flex justify-center items-center">
-                            {{-- tampilkan gambar jika ada --}}
+                            {{-- tampilkan gambar --}}
                             @if($booth->gambar)
                                 <img src="{{ asset('storage/' . $booth->gambar) }}" 
                                      alt="{{ $booth->nama_booth }}" 
@@ -45,10 +43,11 @@
                             @endif
                         </div>
                     </td>
+                    <!-- data booth -->
                     <td class="px-4 py-3 font-semibold text-pink-600 text-center">{{ $booth->nama_booth }}</td>
                     <td class="px-4 py-3 font-bold text-pink-500 text-center">{{ $booth->kapasitas }}</td>
                     <td class="px-4 py-3 text-center">
-                        {{-- tombol detail booth --}}
+                        {{-- tombol aksi --}}
                         <a href="{{ route('operator.booth.show', $booth->id) }}" 
                            class="bg-pink-500 text-white px-4 py-2 rounded-xl hover:bg-pink-600 shadow-lg transition-all transform hover:scale-105">
                            Detail

@@ -77,7 +77,6 @@
         <canvas id="pieChart" width="200" height="200"></canvas>
     </div>
 
-    {{-- data customer berdasarkan booth --}}
     <div class="bg-white p-4 rounded-xl shadow-sm w-full md:w-1/2">
 
         {{-- dropdown pilih booth --}}

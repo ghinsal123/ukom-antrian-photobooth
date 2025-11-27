@@ -91,7 +91,7 @@
             </thead>
 
             <tbody>
-                @foreach($pengguna as $index => $user)
+                @forelse($pengguna as $index => $user)
                 <tr class="border-b hover:bg-pink-50">
                     <td class="p-3">
                         {{ ($pengguna->currentPage() - 1) * $pengguna->perPage() + ($index + 1) }}
@@ -141,7 +141,13 @@
 
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">
+                        Pengguna tidak ditemukan.
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

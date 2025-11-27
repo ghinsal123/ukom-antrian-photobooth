@@ -3,39 +3,39 @@
 @section('content')
 <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Detail antrian</h2>
 
+{{-- isi data detail --}}
 <div class="bg-white p-6 shadow-md rounded-xl divide-y divide-gray-200">
-
-    {{-- pengguna --}}
+    <!-- nama customer -->
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Pengguna</span>
         <span class="text-gray-900">{{ $data->pengguna->nama_pengguna ?? '-' }}</span>
     </div>
 
-    {{-- nomor telepon --}}
+    <!-- no telepon -->
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">No. telp</span>
         <span class="text-gray-900">{{ $data->pengguna->no_telp ?? '-' }}</span>
     </div>
 
-    {{-- booth --}}
+    <!-- booth yang dipilih -->
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Booth</span>
         <span class="text-gray-900">{{ $data->booth->nama_booth }}</span>
     </div>
 
-    {{-- paket --}}
+    <!-- paket yang dipilih -->
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Paket</span>
         <span class="text-gray-900">{{ $data->paket->nama_paket }}</span>
     </div>
 
-    {{-- nomor antrian --}}
+    <!-- nomor antrian --> 
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Nomor antrian</span>
         <span class="text-gray-900">{{ $data->nomor_antrian }}</span>
     </div>
 
-        <!-- tanggal dan waktu otomatis -->
+        <!-- tanggal dan waktu -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Tanggal & Waktu</label>
 
@@ -47,7 +47,7 @@
                    value="{{ now('Asia/Jakarta')->format('Y-m-d H:i:s') }}">
         </div>
 
-    {{-- status --}}
+    {{-- status antrian saat ini --}}
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Status</span>
         <span class="
@@ -70,6 +70,7 @@
 
 </div>
 
+<!-- tombol -->
 <a href="{{ route('operator.antrian.index') }}"
    class="mt-6 inline-block px-5 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition">
     Kembali

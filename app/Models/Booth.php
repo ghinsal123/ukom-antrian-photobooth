@@ -14,6 +14,7 @@ class Booth extends Model
         'gambar',
     ];
 
+    // Relasi ke tabel antrian
     public function antrian()
     {
         return $this->hasMany(Antrian::class, 'booth_id');

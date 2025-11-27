@@ -16,7 +16,7 @@ class LogController extends Controller
         $latestLogSub = Log::select(DB::raw('MAX(id) as id'))
             ->groupBy('antrian_id');
 
-        // query utama + load relasi
+        // query utama & load relasi
         $query = Log::with([
             'pengguna',
             'antrian.pengguna',
@@ -53,7 +53,7 @@ class LogController extends Controller
             $query->whereHas('antrian', fn($q) => $q->where('status', $status));
         }
 
-        // ambil hasil + set timezone WIB
+        // ambil hasil & set timezone 
         $log = $query->orderBy('created_at', 'desc')->get()->map(function($log) {
             $log->created_at = $log->created_at->clone()->timezone('Asia/Jakarta');
             $log->updated_at = $log->updated_at->clone()->timezone('Asia/Jakarta');

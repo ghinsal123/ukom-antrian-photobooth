@@ -7,8 +7,7 @@
     @if (session('success'))
     <div id="popupSuccess" class="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
         <div class="popupContent bg-white p-8 rounded-2xl shadow-xl w-[350px] text-center transform scale-100 transition-all duration-300 opacity-100">
-            
-            {{-- icon sukses --}}
+        
             <div class="mx-auto w-20 h-20 flex items-center justify-center rounded-full border border-green-400 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -25,7 +24,7 @@
     </div>
     @endif
 
-    {{-- header halaman: judul, form pencarian, tombol tambah --}}
+    {{-- header halaman --}}
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
         <h2 class="text-3xl md:text-2xl font-bold text-gray-800">Daftar Antrian</h2>
 
@@ -75,46 +74,24 @@
                 {{-- tampilkan setiap antrian --}}
                 @forelse($antrian as $index => $a)
                 <tr class="text-center border-b hover:bg-pink-50">
-
-                    {{-- nomor antrian --}}
                     <td class="p-3">{{ $a->nomor_antrian }}</td>
-
-                    {{-- pengguna --}}
                     <td class="p-3">{{ $a->pengguna->nama_pengguna }}</td>
-
-                    {{-- nomor telepon --}}
                     <td class="p-3">{{ $a->pengguna->no_telp ?? '-' }}</td>
-
-                    {{-- booth --}}
                     <td class="p-3">{{ $a->booth->nama_booth }}</td>
-
-                    {{-- paket --}}
                     <td class="p-3">{{ $a->paket->nama_paket }}</td>
-
-                    {{-- tanggal --}}
                     <td class="p-3">{{ \Carbon\Carbon::parse($a->tanggal)->format('d/m/Y') }}</td>
-
-                    {{-- status --}}
                     <td class="p-3">{{ ucfirst($a->status) }}</td>
-
-                    {{-- catatan --}}
                     <td class="p-3">{{ $a->catatan ?? '-' }}</td>
-
-                    {{-- aksi --}}
                     <td class="p-3 flex gap-2 justify-center">
-                        {{-- tombol detail --}}
+                        {{-- tombol aksi --}}
                         <a href="{{ route('operator.antrian.show', $a->id) }}"
                            class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
                             Detail
                         </a>
-
-                        {{-- tombol edit --}}
                         <a href="{{ route('operator.antrian.edit', $a->id) }}"
                            class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                             Edit
                         </a>
-
-                        {{-- tombol hapus --}}
                         <form action="{{ route('operator.antrian.delete', $a->id) }}"
                               method="POST"
                               onsubmit="return confirm('Yakin ingin menghapus antrian?')">

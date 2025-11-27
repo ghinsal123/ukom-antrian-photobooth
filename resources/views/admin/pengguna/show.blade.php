@@ -1,15 +1,17 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Detail Pengguna')
+@section('title', 'Pengguna')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
 
-    <h2 class="text-2xl font-semibold text-gray-700 mb-5">Detail Pengguna</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-5 text-center">Detail Pengguna</h2>
 
-    @if($pengguna->foto)
-        <img src="{{ asset('storage/'.$pengguna->foto) }}" width="150" class="rounded-xl mb-4">
-    @endif
+    <div class="flex justify-center">
+        @if($pengguna->foto)
+            <img src="{{ asset('storage/'.$pengguna->foto) }}" width="150" class="rounded-xl mb-4">
+        @endif
+    </div>
 
     <div class="space-y-3">
         <p><strong>Nama:</strong> {{ $pengguna->nama_pengguna }}</p>

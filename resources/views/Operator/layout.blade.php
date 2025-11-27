@@ -2,28 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-{{-- set viewport responsif --}}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Operator Panel</title>
-
-{{-- css utama --}}
 @vite('resources/css/app.css')
-
-{{-- icon fontawesome --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="bg-pink-50">
 <div class="flex">
-
-{{-- sidebar utama --}}
 <nav id="sidebar"
      class="w-60 h-screen bg-white text-gray-900 p-6 shadow-md fixed top-0 left-0 transform -translate-x-full 
             lg:translate-x-0 transition-transform duration-300 z-50 flex flex-col">
 
-    {{-- logo + nama aplikasi --}}
+    {{-- logo & nama aplikasi --}}
     <div>
         <div class="flex items-center gap-3 mb-10">
             <a href="{{ url('/operator/dashboard') }}" class="flex items-center gap-3">
@@ -93,15 +84,12 @@
     </form>
 </nav>
 
-{{-- overlay untuk mobile sidebar --}}
 <div id="overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
 
-{{-- area konten utama --}}
+{{-- mobile --}}
 <div class="flex-1 ml-0 lg:ml-60">
-
-  {{-- topbar mobile --}}
     <div class="lg:hidden flex justify-between items-center p-4 bg-white shadow-sm sticky top-0 z-50">
-        {{-- tombol toggle sidebar --}}
+
         <button id="sidebarToggle" class="text-gray-700 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -109,15 +97,15 @@
             </svg>
         </button>
 
-        {{-- info user mobile --}}
+        {{-- info user  --}}
         <a href="{{ route('operator.profile.edit') }}" class="flex items-center gap-3">
-            {{-- Foto --}}
+            {{-- foto --}}
             <img src="{{ auth()->user()->foto 
                     ? asset('storage/' . auth()->user()->foto) 
                     : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
                 class="w-11 h-11 rounded-full object-cover border">
 
-            {{-- Nama & Role --}}
+            {{-- nama & role --}}
             <div class="text-right leading-tight">
                 <p class="font-semibold text-gray-800 text-md">{{ auth()->user()->nama_pengguna }}</p>
                 <p class="text-gray-500 text-xs">{{ ucfirst(auth()->user()->role) }}</p>
@@ -125,24 +113,22 @@
         </a>
     </div>
 
-   {{-- topbar desktop --}}
+   {{-- desktop --}}
     <div class="hidden lg:flex w-full px-6 py-3 justify-end items-center bg-white shadow-sm rounded-b-lg sticky top-0 z-50">
         <a href="{{ route('operator.profile.edit') }}" class="flex items-center gap-3">
-            {{-- Foto klik untuk edit --}}
+            {{-- foto --}}
             <img src="{{ auth()->user()->foto 
                     ? asset('storage/' . auth()->user()->foto) 
                     : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->nama_pengguna) }}" 
                 class="w-12 h-12 rounded-full object-cover border">
 
-            {{-- Nama & Role --}}
+            {{-- nama & role --}}
             <div class="text-right leading-tight">
                 <p class="font-semibold text-gray-800 text-lg">{{ auth()->user()->nama_pengguna }}</p>
                 <p class="text-gray-500 text-sm">{{ ucfirst(auth()->user()->role) }}</p>
             </div>
         </a>
     </div>
-
-    {{-- konten halaman --}}
     <div class="p-6">
         @yield('content')
     </div>

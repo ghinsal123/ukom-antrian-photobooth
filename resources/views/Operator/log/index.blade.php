@@ -2,11 +2,8 @@
 
 @section('content')
 
-{{-- container utama --}}
 <div class="bg-white p-6 rounded-2xl shadow">
 <div class="container mx-auto px-4 py-6">
-
-    {{-- judul halaman --}}
     <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 text-center md:text-left mb-6">
         Laporan aktivitas antrian
     </h2>
@@ -19,7 +16,6 @@
         </p>
     </div>
 
-    {{-- filter pencarian dan tanggal --}}
     <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 no-print">
 
         {{-- input pencarian --}}
@@ -40,7 +36,7 @@
             </form>
         </div>
 
-        {{-- filter tanggal dan tombol --}}
+        {{-- filter tanggal  --}}
         <form 
             action="{{ route('operator.log.index') }}" 
             method="GET"
@@ -69,7 +65,6 @@
                 >
             </div>
 
-            {{-- tombol cari --}}
             <button 
                 type="submit"
                 class="bg-pink-500 text-white md:px-3 px-4 py-2 rounded-xl hover:bg-pink-600 shadow-md transition transform hover:scale-105 text-sm"
@@ -77,7 +72,6 @@
                 cari
             </button>
 
-            {{-- tombol cetak --}}
             <button 
                 type="button" 
                 onclick="window.print()"
@@ -112,14 +106,10 @@
             <tbody>
                 @forelse($log as $log)
                 <tr class="text-center bg-white hover:bg-pink-50">
-
-                    {{-- nomor urut --}}
                     <td class="px-2 py-1 border">{{ $loop->iteration }}</td>
-
-                    {{-- waktu log --}}
                     <td class="px-2 py-1 border">{{ $log->created_at->format('d-m-Y H:i') }}</td>
 
-                    {{-- operator --}}
+                    {{-- data khusus operator --}}
                     <td class="px-2 py-1 border">
                         {{ $log->pengguna && $log->pengguna->role !== 'customer' 
                             ? $log->pengguna->nama_pengguna 
@@ -127,13 +117,10 @@
                         }}
                     </td>
 
-                    {{-- customer --}}
+                    {{-- mengambil namacustomer --}}
                     <td class="px-2 py-1 border">{{ $log->antrian->pengguna->nama_pengguna ?? '-' }}</td>
 
-                    {{-- booth --}}
                     <td class="px-2 py-1 border">{{ $log->antrian->booth->nama_booth ?? '-' }}</td>
-
-                    {{-- paket --}}
                     <td class="px-2 py-1 border">{{ $log->antrian->paket->nama_paket ?? '-' }}</td>
 
                     {{-- status --}}

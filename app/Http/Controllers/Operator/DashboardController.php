@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // tanggal hari ini (zona waktu wib)
+        // tanggal hari ini 
         $hariIni = Carbon::now('Asia/Jakarta')->startOfDay();
 
         // hitung statistik utama berdasarkan tanggal hari ini
@@ -21,7 +21,6 @@ class DashboardController extends Controller
         $selesai        = Antrian::whereDate('tanggal', $hariIni)->where('status', 'selesai')->count();
         $batal          = Antrian::whereDate('tanggal', $hariIni)->where('status', 'dibatalkan')->count();
 
-        // ambil semua booth
         $booths = Booth::all();
 
         // siapkan data grafik (total antrian per booth)
@@ -35,7 +34,7 @@ class DashboardController extends Controller
                 ->count();
         }
 
-        // daftar customer per booth lengkap dengan nama dan jam (wib)
+        // daftar customer per booth lengkap dengan nama dan jam
         $customerData = [];
         foreach ($booths as $booth) {
             $customerData[$booth->id] = Antrian::with('pengguna')

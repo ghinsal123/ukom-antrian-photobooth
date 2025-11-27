@@ -15,6 +15,7 @@ class Paket extends Model
         'deskripsi',
     ];
 
+    // Relasi ke tabel antrian
     public function antrian()
     {
         return $this->hasMany(Antrian::class, 'paket_id');

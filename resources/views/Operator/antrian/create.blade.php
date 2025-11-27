@@ -2,16 +2,15 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto mt-8">
-
-    <!-- judul halaman -->
     <h2 class="text-4xl font-extrabold mb-6 text-gray-800 text-center">Tambah Antrian</h2>
 
     <form action="{{ route('operator.antrian.store') }}" method="POST"
           class="bg-white p-8 shadow-lg rounded-xl space-y-6">
         @csrf
 
-        <!-- input nama customer -->
+        <!-- input data customer -->
         <div>
+            <!-- nama customer -->
             <label class="block text-gray-700 font-semibold mb-2">
                 Nama Customer <span class="text-red-500">*</span>
             </label>
@@ -21,7 +20,7 @@
                    required>
         </div>
 
-        <!-- input nomor telepon -->
+         <!-- nomor telepon -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">
                 Nomor Telepon <span class="text-red-500">*</span>
@@ -40,7 +39,7 @@
             @enderror
         </div>
 
-        <!-- pilihan booth -->
+        <!-- data booth -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">
                 Booth <span class="text-red-500">*</span>
@@ -55,7 +54,7 @@
             </select>
         </div>
 
-        <!-- pilihan paket -->
+        <!-- data paket -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">
                 Paket <span class="text-red-500">*</span>
@@ -70,7 +69,7 @@
             </select>
         </div>
 
-        <!-- tanggal dan waktu otomatis -->
+        <!-- tanggal & waktu -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Tanggal & Waktu</label>
 
@@ -82,7 +81,7 @@
                    value="{{ now('Asia/Jakarta')->format('Y-m-d H:i:s') }}">
         </div>
 
-        <!-- catatan tambahan -->
+        <!-- catatan -->
         <div>
             <label class="block text-gray-700 font-semibold mb-2">Catatan</label>
 
@@ -92,7 +91,7 @@
                       rows="4"></textarea>
         </div>
 
-        <!-- tombol submit dan batal -->
+        <!-- tombol  -->
         <div class="flex gap-4">
             <button type="submit"
                     class="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-lg transition duration-300">

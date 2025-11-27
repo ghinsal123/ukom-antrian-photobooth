@@ -1,11 +1,11 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Pengguna')
+@section('title', 'Pengguna')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
 
-    <h2 class="text-2xl font-semibold text-gray-700 mb-5">Edit Pengguna</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-5 text-center">Edit Pengguna</h2>
 
     @if ($errors->any())
         <div class="bg-red-200 text-red-700 p-3 rounded mb-4">
@@ -58,6 +58,20 @@
             </div>
         @endif
 
+        {{-- ROLE KHUSUS ADMIN --}}
+        @if($pengguna->role === 'admin')
+        <div class="mb-4">
+            <label class="block mb-1 font-medium">Role</label>
+
+            <input type="text"
+                class="w-full p-2 border rounded-xl bg-gray-100 text-gray-600"
+                value="Admin"
+                disabled>
+
+            <input type="hidden" name="role" value="admin">
+        </div>
+        @endif
+        
         {{-- ROLE KHUSUS OPERATOR --}}
         @if($pengguna->role === 'operator')
         <div class="mb-4">

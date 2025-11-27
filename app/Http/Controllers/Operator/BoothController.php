@@ -13,7 +13,7 @@ class BoothController extends Controller
     {
         $query = Booth::query();
 
-        // filter pencarian jika ada input search
+        // filter pencarian 
         if ($request->filled('search')) {
             $keyword = $request->search;
             $query->where('nama_booth', 'like', "%$keyword%");

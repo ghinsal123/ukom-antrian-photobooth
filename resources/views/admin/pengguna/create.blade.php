@@ -1,11 +1,11 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Operator')
+@section('title', 'Operator')
 
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow w-full max-w-xl mx-auto">
 
-    <h2 class="text-2xl font-semibold text-gray-700 mb-5">Tambah Operator</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 mb-5 text-center">Tambah Operator</h2>
 
     @if ($errors->any())
         <div class="bg-red-200 text-red-700 p-3 rounded mb-4">
@@ -21,28 +21,36 @@
         @csrf
 
         <div class="mb-4">
-            <label class="block mb-1 font-medium">Nama Operator</label>
+            <label class="block mb-1 font-medium">Nama Operator
+                <span class="text-red-500">*</span>
+            </label>
             <input type="text" name="nama_pengguna" required
                    class="w-full p-2 border rounded-xl"
                    value="{{ old('nama_pengguna') }}">
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1 font-medium">Nomor Telepon</label>
+            <label class="block mb-1 font-medium">Nomor Telepon
+                <span class="text-red-500">*</span>
+            </label>
             <input type="text" name="no_telp" required
                    class="w-full p-2 border rounded-xl"
                    value="{{ old('no_telp') }}">
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1 font-medium">Password</label>
+            <label class="block mb-1 font-medium">Password
+                <span class="text-red-500">*</span>
+            </label>
             <input type="password" name="password" required
                    class="w-full p-2 border rounded-xl">
         </div>
 
         <div class="mb-4">
-            <label class="block mb-1 font-medium">Foto</label>
-            <input type="file" name="foto" accept="image/*"
+            <label class="block mb-1 font-medium">Foto
+                <span class="text-red-500">*</span>
+            </label>
+            <input type="file" name="foto" accept="image/*" required
                    class="w-full p-2 border rounded-xl">
         </div>
 

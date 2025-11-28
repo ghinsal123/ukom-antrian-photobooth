@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white p-6 rounded-2xl shadow">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
-        <h2 class="text-3xl font-bold text-gray-800 mb-2 md:mb-0">daftar paket</h2>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2 md:mb-0">Daftar Paket</h2>
 
         {{-- form pencarian paket --}}
         <form 

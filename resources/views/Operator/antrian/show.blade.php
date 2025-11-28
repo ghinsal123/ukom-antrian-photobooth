@@ -7,13 +7,13 @@
 <div class="bg-white p-6 shadow-md rounded-xl divide-y divide-gray-200">
     <!-- nama customer -->
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
-        <span class="font-medium text-gray-700">Pengguna</span>
+        <span class="font-medium text-gray-700">Nama Customer</span>
         <span class="text-gray-900">{{ $data->pengguna->nama_pengguna ?? '-' }}</span>
     </div>
 
     <!-- no telepon -->
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
-        <span class="font-medium text-gray-700">No. telp</span>
+        <span class="font-medium text-gray-700">No. telepon</span>
         <span class="text-gray-900">{{ $data->pengguna->no_telp ?? '-' }}</span>
     </div>
 

@@ -43,6 +43,33 @@ class PenggunaController extends Controller
         return view('admin.pengguna.index', compact('pengguna'));
     }
 
+    // Menampilkan hanya staff (admin + operator)
+    public function staff(Request $request)
+    {
+        $pengguna = Pengguna::whereIn('role', ['admin', 'operator'])
+            ->orderByRaw("
+                CASE 
+                    WHEN role = 'admin' THEN 1
+                    WHEN role = 'operator' THEN 2
+                    ELSE 3
+                END
+            ")
+            ->paginate(10);
+
+        return view('admin.pengguna.staff', compact('pengguna'));
+    }
+
+    // Menampilkan hanya customer
+    public function customer(Request $request)
+    {
+        $pengguna = Pengguna::where('role', 'customer')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.pengguna.customer', compact('pengguna'));
+    }
+
+
     /**
      * Menampilkan form tambah pengguna operator
      */

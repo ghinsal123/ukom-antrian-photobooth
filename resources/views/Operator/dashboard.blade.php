@@ -43,27 +43,37 @@
     </div>
 </div>
 
-{{-- kartu statistik status antrian --}}
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+{{-- Kartu Statistik Status Antrian --}}
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
 
+    {{-- Menunggu --}}
     <div class="bg-yellow-400 p-6 rounded-xl shadow-sm text-center">
-        <h3 class="font-bold text-white">menunggu</h3>
+        <h3 class="font-semibold text-white uppercase tracking-wide">Menunggu</h3>
         <p class="text-3xl font-bold mt-2 text-white">{{ $menunggu }}</p>
     </div>
 
+    {{-- Dalam Proses --}}
     <div class="bg-blue-400 p-6 rounded-xl shadow-sm text-center">
-        <h3 class="font-bold text-white">dalam proses</h3>
+        <h3 class="font-semibold text-white uppercase tracking-wide">Dalam Proses</h3>
         <p class="text-3xl font-bold mt-2 text-white">{{ $dalamProses }}</p>
     </div>
 
+    {{-- Selesai --}}
     <div class="bg-green-400 p-6 rounded-xl shadow-sm text-center">
-        <h3 class="font-bold text-white">selesai</h3>
+        <h3 class="font-semibold text-white uppercase tracking-wide">Selesai</h3>
         <p class="text-3xl font-bold mt-2 text-white">{{ $selesai }}</p>
     </div>
 
+    {{-- Pembatalan --}}
     <div class="bg-red-400 p-6 rounded-xl shadow-sm text-center">
-        <h3 class="font-bold text-white">pembatalan</h3>
+        <h3 class="font-semibold text-white uppercase tracking-wide">Dibatalkan</h3>
         <p class="text-3xl font-bold mt-2 text-white">{{ $batal }}</p>
+    </div>
+
+    {{-- Kadaluarsa --}}
+    <div class="bg-gray-500 p-6 rounded-xl shadow-sm text-center">
+        <h3 class="font-semibold text-white uppercase tracking-wide">Kadaluarsa</h3>
+        <p class="text-3xl font-bold mt-2 text-white">{{ $kadaluarsa }}</p>
     </div>
 
 </div>

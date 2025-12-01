@@ -20,6 +20,7 @@ class DashboardController extends Controller
         $dalamProses    = Antrian::whereDate('tanggal', $hariIni)->where('status', 'proses')->count();
         $selesai        = Antrian::whereDate('tanggal', $hariIni)->where('status', 'selesai')->count();
         $batal          = Antrian::whereDate('tanggal', $hariIni)->where('status', 'dibatalkan')->count();
+        $kadaluarsa     = Antrian::whereDate('tanggal', $hariIni)->where('status', 'kadaluarsa')->count();
 
         $booths = Booth::all();
 
@@ -61,6 +62,7 @@ class DashboardController extends Controller
             'dalamProses',
             'selesai',
             'batal',
+            'kadaluarsa',
             'chartPerBooth',
             'labelBooth',
             'customerData',

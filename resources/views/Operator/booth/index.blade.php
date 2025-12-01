@@ -49,7 +49,7 @@
                     <td class="px-4 py-3 text-center">
                         {{-- tombol aksi --}}
                         <a href="{{ route('operator.booth.show', $booth->id) }}" 
-                           class="bg-pink-500 text-white px-4 py-2 rounded-xl hover:bg-pink-600 shadow-lg transition-all transform hover:scale-105">
+                           class="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600 shadow-lg transition-all transform hover:scale-105">
                            Detail
                         </a>
                     </td>

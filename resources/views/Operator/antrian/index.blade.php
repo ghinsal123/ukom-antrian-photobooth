@@ -60,7 +60,7 @@
             <tr class="text-center border-b hover:bg-pink-50">
                 <td class="p-3">{{ $a->nomor_antrian }}</td>
                 <td class="p-3">{{ $a->pengguna->nama_pengguna }}</td>
-                <td class="p-3">+62{{ $a->pengguna->no_telp ?? '-' }}</td>
+                <td class="p-3">+62 {{ $a->pengguna->no_telp ?? '-' }}</td>
                 <td class="p-3">{{ $a->booth->nama_booth }}</td>
                 <td class="p-3">{{ $a->paket->nama_paket }}</td>
                 <td class="p-3">{{ \Carbon\Carbon::parse($a->tanggal)->format('d/m/Y') }}</td>

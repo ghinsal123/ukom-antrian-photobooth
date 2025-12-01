@@ -12,7 +12,7 @@
     </div>
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">No. Telepon</span>
-        <span class="text-gray-900">+62{{ $data->pengguna->no_telp ?? '-' }}</span>
+        <span class="text-gray-900">+62 {{ $data->pengguna->no_telp ?? '-' }}</span>
     </div>
 
     <!-- Booth & Paket -->

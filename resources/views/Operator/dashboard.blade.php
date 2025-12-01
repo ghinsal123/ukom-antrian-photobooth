@@ -166,7 +166,8 @@
             if (c.status === 'menunggu') badgeColor = 'bg-yellow-500';
             else if (c.status === 'proses') badgeColor = 'bg-blue-500';
             else if (c.status === 'selesai') badgeColor = 'bg-green-500';
-            else badgeColor = 'bg-red-500';
+            else if (c.status === 'dibatalkan') badgeColor = 'bg-red-500';
+            else badgeColor = 'bg-gray-500';
 
             // item customer
             const a = document.createElement('a');

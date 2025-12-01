@@ -18,6 +18,7 @@ class DashboardController extends Controller
         $antrianHariIni = Antrian::whereDate('tanggal', $hariIni)->count();
         $menunggu       = Antrian::whereDate('tanggal', $hariIni)->where('status', 'menunggu')->count();
         $dalamProses    = Antrian::whereDate('tanggal', $hariIni)->where('status', 'proses')->count();
+        $sesiFoto      = Antrian::whereDate('tanggal', $hariIni)->where('status', 'sesi_foto')->count();
         $selesai        = Antrian::whereDate('tanggal', $hariIni)->where('status', 'selesai')->count();
         $batal          = Antrian::whereDate('tanggal', $hariIni)->where('status', 'dibatalkan')->count();
         $kadaluarsa     = Antrian::whereDate('tanggal', $hariIni)->where('status', 'kadaluarsa')->count();
@@ -61,6 +62,7 @@ class DashboardController extends Controller
             'menunggu',
             'dalamProses',
             'selesai',
+            'sesiFoto',
             'batal',
             'kadaluarsa',
             'chartPerBooth',

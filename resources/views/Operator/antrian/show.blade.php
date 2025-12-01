@@ -91,16 +91,6 @@
     </form>
     @endif
 
-    <!-- Tombol Complete Manual -->
-    @if($data->status == 'proses')
-    <form action="{{ route('operator.antrian.complete', $data->id) }}" method="POST" class="mt-4 text-center">
-        @csrf
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-            Tandai Selesai
-        </button>
-    </form>
-    @endif
-
 </div>
 
 <a href="{{ route('operator.antrian.index') }}"

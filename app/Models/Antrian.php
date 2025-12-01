@@ -19,6 +19,7 @@ class Antrian extends Model
         'jam',
         'barcode',
         'start_time',
+        'foto_start_time',
         'end_time',
         'expired_at',
         'status',

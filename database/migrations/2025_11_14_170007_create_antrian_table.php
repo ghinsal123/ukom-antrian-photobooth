@@ -24,6 +24,7 @@ return new class extends Migration
 
             // filter waktu mulai dan selesai proses
             $table->timestamp('start_time')->nullable();
+            $table->timestamp('foto_start_time')->nullable();
             $table->timestamp('end_time')->nullable();
 
 

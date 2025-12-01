@@ -44,7 +44,7 @@
 </div>
 
 {{-- Kartu Statistik Status Antrian --}}
-<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
     {{-- Menunggu --}}
     <div class="bg-yellow-400 p-6 rounded-xl shadow-sm text-center">
@@ -53,9 +53,15 @@
     </div>
 
     {{-- Dalam Proses --}}
-    <div class="bg-blue-400 p-6 rounded-xl shadow-sm text-center">
+    <div class="bg-indigo-400 p-6 rounded-xl shadow-sm text-center">
         <h3 class="font-semibold text-white uppercase tracking-wide">Dalam Proses</h3>
         <p class="text-3xl font-bold mt-2 text-white">{{ $dalamProses }}</p>
+    </div>
+
+    {{-- Sesi Foto --}}
+    <div class="bg-blue-400 p-6 rounded-xl shadow-sm text-center">
+        <h3 class="font-semibold text-white uppercase tracking-wide">Sesi Foto</h3>
+        <p class="text-3xl font-bold mt-2 text-white">{{ $sesiFoto }}</p>
     </div>
 
     {{-- Selesai --}}
@@ -164,7 +170,7 @@
             // badge warna status
             let badgeColor = '';
             if (c.status === 'menunggu') badgeColor = 'bg-yellow-500';
-            else if (c.status === 'proses') badgeColor = 'bg-blue-500';
+            else if (c.status === 'sesi_foto') badgeColor = 'bg-blue-500';
             else if (c.status === 'selesai') badgeColor = 'bg-green-500';
             else if (c.status === 'dibatalkan') badgeColor = 'bg-red-500';
             else badgeColor = 'bg-gray-500';

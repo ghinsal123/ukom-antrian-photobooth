@@ -55,7 +55,7 @@
         <img src="{{ public_path('images/logo.png') }}" alt="Logo">
     </div>
 
-    <p><strong>Reservasi:</strong> {{ $data->tanggal }} {{ $data->jam }}</p>
+    <p><strong>Antrian:</strong> {{ $data->tanggal }} {{ $data->jam }}</p>
     <p><strong>Status:</strong> {{ ucfirst($data->status) }}</p>
 
     <p><strong>Customer:</strong> {{ $data->pengguna->nama_pengguna ?? '-' }}</p>

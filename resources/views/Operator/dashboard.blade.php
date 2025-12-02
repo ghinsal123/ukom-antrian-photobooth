@@ -170,6 +170,7 @@
             // badge warna status
             let badgeColor = '';
             if (c.status === 'menunggu') badgeColor = 'bg-yellow-500';
+            else if (c.status === 'proses') badgeColor = 'bg-indigo-500';
             else if (c.status === 'sesi_foto') badgeColor = 'bg-blue-500';
             else if (c.status === 'selesai') badgeColor = 'bg-green-500';
             else if (c.status === 'dibatalkan') badgeColor = 'bg-red-500';
@@ -204,5 +205,4 @@
     });
 
 </script>
-
 @endsection

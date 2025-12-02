@@ -30,11 +30,18 @@ class AntrianController extends Controller
             $keyword = $request->search;
             $query->where(function ($q) use ($keyword) {
                 $q->whereHas('pengguna', fn($q2) => $q2->where('nama_pengguna', 'like', "%$keyword%"))
-                  ->orWhere('nomor_antrian', 'like', "%$keyword%");
+                ->orWhere('nomor_antrian', 'like', "%$keyword%");
             });
         }
 
-        $antrian = $query->orderBy('tanggal', 'desc')->orderBy('jam')->paginate(10);
+        // Sorting berdasarkan jam
+        if ($request->filled('sort') && $request->sort === 'oldest') {
+            $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc'); // Terlama
+        } else {
+            $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc'); // Terbaru
+        }
+
+        $antrian = $query->paginate(10)->withQueryString(); // agar filter tetap ada saat pagination
 
         return view('Operator.antrian.index', compact('antrian'));
     }
@@ -86,6 +93,14 @@ class AntrianController extends Controller
             'booth_id'      => 'required|exists:booth,id',
             'paket_id'      => 'required|exists:paket,id',
             'jam'           => 'required|string',
+        ], [
+            'no_telp.required'          => 'Nomor telepon wajib diisi.',
+            'no_telp.numeric'           => 'Nomor telepon harus berupa angka.',
+            'no_telp.digits_between'    => 'Nomor telepon harus antara 10 sampai 15 digit.',
+            'booth_id.required'         => 'Booth wajib dipilih.',
+            'booth_id.exists'           => 'Booth tidak valid.',
+            'paket_id.required'         => 'Paket wajib dipilih.',
+            'paket_id.exists'           => 'Paket tidak valid.',
         ]);
 
         // buat pengguna baru jika tidak ada pengguna_id

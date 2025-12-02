@@ -33,6 +33,7 @@
         <table class="w-full border-collapse">
             <thead>
                 <tr class="bg-pink-100 text-center">
+                    <th class="px-6 py-3">No</th>
                     <th class="px-6 py-3">gambar</th>
                     <th class="px-6 py-3">nama paket</th>
                     <th class="px-6 py-3">deskripsi</th>
@@ -45,7 +46,10 @@
             <tbody>
                 @forelse ($pakets as $paket)
                 <tr class="border-b hover:bg-pink-50">
-
+                    {{-- nomor urut --}}
+                    <td class="px-4 py-3 text-center">
+                        {{ $loop->iteration }}
+                    </td>   
                     {{-- gambar paket --}}
                     <td class="px-4 py-3">
                         <div class="flex justify-center items-center">

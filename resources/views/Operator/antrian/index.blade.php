@@ -60,7 +60,7 @@
         <div class="flex gap-3 items-center">
             <form method="GET" action="{{ route('operator.antrian.index') }}" class="flex gap-2 items-center">
                 <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Cari nama / nomor telepon..."
+                    placeholder="Cari nama / no. telepon / waktu..."
                     class="px-3 py-2 w-70 rounded-lg border border-gray-500 focus:ring-2 focus:ring-pink-400 focus:outline-none"/>
 
                 <select name="sort" class="px-3 py-2 rounded-lg border border-gray-500 focus:ring-2 focus:ring-pink-400 focus:outline-none">
@@ -125,26 +125,47 @@
         </table>
     </div>
 
-    {{--  Pagination --}}
+    {{-- Pagination --}}
     @if ($antrian->hasPages())
     <div class="mt-4 flex justify-center space-x-1">
-        {{-- Previous Page Link --}}
+        {{-- Previous --}}
         @if ($antrian->onFirstPage())
             <span class="px-3 py-1 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed">&laquo;</span>
         @else
             <a href="{{ $antrian->previousPageUrl() }}" class="px-3 py-1 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition">&laquo;</a>
         @endif
 
-        {{-- Pagination Elements --}}
-        @foreach ($antrian->links()->elements[0] as $page => $url)
-            @if ($page == $antrian->currentPage())
-                <span class="px-3 py-1 bg-pink-300 text-white rounded-lg">{{ $page }}</span>
-            @else
-                <a href="{{ $url }}" class="px-3 py-1 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition">{{ $page }}</a>
-            @endif
-        @endforeach
+        @php
+            $start = max($antrian->currentPage() - 2, 1);
+            $end = min($antrian->currentPage() + 2, $antrian->lastPage());
+        @endphp
 
-        {{-- Next Page Link --}}
+        {{-- Awal --}}
+        @if($start > 1)
+            <a href="{{ $antrian->url(1) }}" class="px-3 py-1 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition">1</a>
+            @if($start > 2)
+                <span class="px-3 py-1">...</span>
+            @endif
+        @endif
+
+        {{-- Range tengah --}}
+        @for ($i = $start; $i <= $end; $i++)
+            @if ($i == $antrian->currentPage())
+                <span class="px-3 py-1 bg-pink-300 text-white rounded-lg">{{ $i }}</span>
+            @else
+                <a href="{{ $antrian->url($i) }}" class="px-3 py-1 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition">{{ $i }}</a>
+            @endif
+        @endfor
+
+        {{-- Akhir --}}
+        @if($end < $antrian->lastPage())
+            @if($end < $antrian->lastPage() - 1)
+                <span class="px-3 py-1">...</span>
+            @endif
+            <a href="{{ $antrian->url($antrian->lastPage()) }}" class="px-3 py-1 bg-pink-100 text-pink-700 rounded-lg hover:bg-pink-200 transition">{{ $antrian->lastPage() }}</a>
+        @endif
+
+        {{-- Next --}}
         @if ($antrian->hasMorePages())
             <a href="{{ $antrian->nextPageUrl() }}" class="px-3 py-1 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition">&raquo;</a>
         @else

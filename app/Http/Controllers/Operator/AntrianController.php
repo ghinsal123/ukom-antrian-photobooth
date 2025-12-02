@@ -19,32 +19,48 @@ use Milon\Barcode\DNS1D;
 class AntrianController extends Controller
 {
     // --- INDEX ---
-    public function index(Request $request)
-    {
-        $this->expireDueAntrian();
+public function index(Request $request)
+{
+    $query = Antrian::with(['pengguna', 'booth', 'paket']);
 
-        $query = Antrian::with(['pengguna', 'booth', 'paket']);
+    // Filter pencarian
+    if ($request->filled('search')) {
+        $keyword_text = $request->search; // untuk nama, tanggal, jam, nomor antrian
 
-        // Filter pencarian
-        if ($request->filled('search')) {
-            $keyword = $request->search;
-            $query->where(function ($q) use ($keyword) {
-                $q->whereHas('pengguna', fn($q2) => $q2->where('nama_pengguna', 'like', "%$keyword%"))
-                ->orWhere('nomor_antrian', 'like', "%$keyword%");
+        // normalize nomor telepon: hapus +62 di depan, hapus 0 awal, hapus spasi dan simbol
+        $keyword_number = preg_replace('/^(\+62|0)/', '', $request->search);
+        $keyword_number = preg_replace('/[^0-9]/', '', $keyword_number);
+
+        $query->where(function ($q) use ($keyword_text, $keyword_number) {
+
+            $q->whereHas('pengguna', function($q2) use ($keyword_text, $keyword_number) {
+                $q2->where('nama_pengguna', 'like', "%$keyword_text%")
+                ->orWhereRaw("REPLACE(no_telp, ' ', '') LIKE ?", ["%$keyword_number%"]);
             });
-        }
 
-        // Sorting berdasarkan jam
-        if ($request->filled('sort') && $request->sort === 'oldest') {
-            $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc'); // Terlama
-        } else {
-            $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc'); // Terbaru
-        }
-
-        $antrian = $query->paginate(10)->withQueryString(); // agar filter tetap ada saat pagination
-
-        return view('Operator.antrian.index', compact('antrian'));
+            $q->orWhere('nomor_antrian', 'like', "%$keyword_text%")
+            ->orWhere('tanggal', 'like', "%$keyword_text%")
+            ->orWhere('jam', 'like', "%$keyword_text%");
+        });
     }
+
+    // Filter sort
+    if ($request->filled('sort')) {
+        if ($request->sort === 'latest') {
+            $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc');
+        } elseif ($request->sort === 'oldest') {
+            $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc');
+        }
+    } else {
+        // Default sort
+        $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc');
+    }
+
+    // Pagination
+    $antrian = $query->paginate(10)->withQueryString();
+
+    return view('Operator.antrian.index', compact('antrian'));
+}
 
     // --- CREATE ---
     public function create()
@@ -54,7 +70,7 @@ class AntrianController extends Controller
 
         // generate jam list tiap 10 menit 
         $jamList = [];
-        for ($time = strtotime('01:00'); $time <= strtotime('22:00'); $time += 600) {
+        for ($time = strtotime('09:00'); $time <= strtotime('22:00'); $time += 600) {
             $jamList[] = date('H:i', $time);
         }
 

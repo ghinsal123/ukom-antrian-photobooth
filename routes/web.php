@@ -61,6 +61,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
 
+        // Khusus staff
+        Route::get('pengguna/staff', [PenggunaController::class, 'staff'])->name('pengguna.staff');
+        
+        // Khusus customer
+        Route::get('pengguna/customer', [PenggunaController::class, 'customer'])->name('pengguna.customer');
+        
         // CRUD Admin
         Route::resource('pengguna', PenggunaController::class)->names('pengguna');
         Route::resource('booth', BoothController::class)->names('booth');

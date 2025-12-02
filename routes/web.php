@@ -31,11 +31,10 @@ use App\Http\Controllers\Operator\DashboardController as OperatorDashboardContro
 | CUSTOMER
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\Customer\LandingPageController;
 use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
-use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
-use App\Http\Controllers\Customer\DashboardController;
 use App\Http\Controllers\Customer\ProfileController;
-
+use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -133,33 +132,37 @@ Route::prefix('operator')->name('operator.')->group(function () {
 */
 Route::prefix('customer')->name('customer.')->group(function () {
 
-    //  Login
-    Route::middleware('guest:customer')->group(function () {
-        Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
-        Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
-    });
+    // Landing page untuk semua
+    Route::get('/', [LandingPageController::class, 'index'])->name('landingpage');
+    Route::get('landingpage', [LandingPageController::class, 'index'])->name('landingpage');
 
-    // Sudah Login
+    // Auth Customer
+    Route::get('login', [CustomerLoginController::class, 'showLogin'])->name('login');
+    Route::post('login', [CustomerLoginController::class, 'login'])->name('login.submit');
+    
+    // Route Daftar
+    Route::get('daftar', [CustomerLoginController::class, 'showDaftar'])->name('daftar');
+    Route::post('daftar', [CustomerLoginController::class, 'daftar'])->name('daftar.submit');
+
+    // Setelah Login
     Route::middleware('customer')->group(function () {
-
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
-        // Arsip
-        Route::get('arsip', [DashboardController::class, 'arsip'])->name('arsip');
+        // Dashboard Customer - TAMBAHKAN INI
+        Route::get('dashboard', [LandingPageController::class, 'index'])->name('dashboard');
 
-        // Antrian Customer
+        // Arsip
+        Route::get('arsip', [LandingPageController::class, 'arsip'])->name('arsip');
+
+        // Antrian
         Route::get('antrian', [CustomerAntrianController::class, 'create'])->name('antrian');
         Route::post('antrian/store', [CustomerAntrianController::class, 'store'])->name('antrian.store');
-
         Route::get('antrian/{id}/detail', [CustomerAntrianController::class, 'detail'])->name('antrian.detail');
-
         Route::get('antrian/{id}/edit', [CustomerAntrianController::class, 'edit'])->name('antrian.edit');
         Route::put('antrian/{id}', [CustomerAntrianController::class, 'update'])->name('antrian.update');
-
         Route::delete('antrian/{id}', [CustomerAntrianController::class, 'destroy'])->name('antrian.delete');
 
-        // Edit Profile Customer
+        // Profil
         Route::get('profil/edit', [ProfileController::class, 'edit'])->name('profil.edit');
         Route::put('profil/update', [ProfileController::class, 'update'])->name('profil.update');
     });

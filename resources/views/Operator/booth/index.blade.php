@@ -21,6 +21,7 @@
         <table class="w-full border-collapse">
             <thead>
                 <tr class="bg-pink-100 text-center">
+                    <th class="px-6 py-3 align-middle">No</th>
                     <th class="px-6 py-3 align-middle">Gambar</th>
                     <th class="px-6 py-3 align-middle">Nama Booth</th>
                     <th class="px-6 py-3 align-middle">Kapasitas</th>
@@ -31,13 +32,16 @@
                 {{-- tampilkan setiap booth --}}
                 @forelse ($booths as $booth)
                 <tr class="border-b hover:bg-pink-50">
+                    <td class="px-4 py-3 text-center">
+                        {{ $loop->iteration }}
+                    </td>
                     <td class="px-4 py-3">
                         <div class="flex justify-center items-center">
                             {{-- tampilkan gambar --}}
-                            @if($booth->gambar)
-                                <img src="{{ asset('storage/' . $booth->gambar) }}" 
-                                     alt="{{ $booth->nama_booth }}" 
-                                     class="w-20 h-20 object-cover rounded-lg shadow-md">
+                            @if ($booth->gambar && count($booth->gambar) > 0)
+                                <img src="{{ asset('storage/' . $booth->gambar[0]) }}" 
+                                    alt="{{ $booth->nama_booth }}" 
+                                    class="w-20 h-20 object-cover rounded-lg shadow-md">
                             @else
                                 <span class="text-gray-400 italic">Tidak ada gambar</span>
                             @endif
@@ -49,7 +53,7 @@
                     <td class="px-4 py-3 text-center">
                         {{-- tombol aksi --}}
                         <a href="{{ route('operator.booth.show', $booth->id) }}" 
-                           class="bg-pink-500 text-white px-4 py-2 rounded-xl hover:bg-pink-600 shadow-lg transition-all transform hover:scale-105">
+                           class="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600 shadow-lg transition-all transform hover:scale-105">
                            Detail
                         </a>
                     </td>

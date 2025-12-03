@@ -44,7 +44,7 @@
             <div class="text-center flex justify-center gap-4">
                 <button type="submit" 
                     class="flex-1 bg-pink-500 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-pink-600 transition duration-200">
-                    Simpan Foto
+                    Edit Foto
                 </button>
 
                 <a href="{{ url()->previous() }}" 

@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id(); 
             $table->string('nama_pengguna'); 
             $table->string('no_telp')->nullable()->unique(); 
+            $table->string('email')->nullable()->unique();
             $table->string('password'); 
             $table->enum('role',['admin','operator','customer']); 
             $table->string('foto')->nullable(); 

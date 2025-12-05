@@ -12,266 +12,393 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Milon\Barcode\DNS1D;
 
 class AntrianController extends Controller
 {
-    /**
-     * Menampilkan daftar antrian & pencarian 
-     */
-    public function index(Request $request)
-    {
-        $query = Antrian::with(['pengguna', 'booth', 'paket']);
+    // --- INDEX ---
+public function index(Request $request)
+{
+    $query = Antrian::with(['pengguna', 'booth', 'paket']);
 
-        // fitur pencarian
-        if ($request->filled('search')) {
-            $keyword = $request->search;
+    // Filter pencarian
+    if ($request->filled('search')) {
+        $keyword_text = $request->search; // untuk nama, tanggal, jam, nomor antrian
 
-            $query->where(function ($q) use ($keyword) {
-                $q->whereHas('pengguna', fn($q2) =>
-                        $q2->where('nama_pengguna', 'like', "%$keyword%"))
-                  ->orWhere('nomor_antrian', 'like', "%$keyword%")
-                  ->orWhereHas('booth', fn($q3) =>
-                        $q3->where('nama_booth', 'like', "%$keyword%"))
-                  ->orWhereHas('paket', fn($q4) =>
-                        $q4->where('nama_paket', 'like', "%$keyword%"));
+        // normalize nomor telepon: hapus +62 di depan, hapus 0 awal, hapus spasi dan simbol
+        $keyword_number = preg_replace('/^(\+62|0)/', '', $request->search);
+        $keyword_number = preg_replace('/[^0-9]/', '', $keyword_number);
+
+        $query->where(function ($q) use ($keyword_text, $keyword_number) {
+
+            $q->whereHas('pengguna', function($q2) use ($keyword_text, $keyword_number) {
+                $q2->where('nama_pengguna', 'like', "%$keyword_text%")
+                ->orWhereRaw("REPLACE(no_telp, ' ', '') LIKE ?", ["%$keyword_number%"]);
             });
-        }
 
-        $antrian = $query->paginate(10);
-
-        return view('Operator.antrian.index', compact('antrian'));
+            $q->orWhere('nomor_antrian', 'like', "%$keyword_text%")
+            ->orWhere('tanggal', 'like', "%$keyword_text%")
+            ->orWhere('jam', 'like', "%$keyword_text%");
+        });
     }
 
-    /**
-     * Form tambah antrian
-     */
+    // Filter sort
+    if ($request->filled('sort')) {
+        if ($request->sort === 'latest') {
+            $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc');
+        } elseif ($request->sort === 'oldest') {
+            $query->orderBy('tanggal', 'asc')->orderBy('jam', 'asc');
+        }
+    } else {
+        // Default sort
+        $query->orderBy('tanggal', 'desc')->orderBy('jam', 'desc');
+    }
+
+    // Pagination
+    $antrian = $query->paginate(10)->withQueryString();
+
+    return view('Operator.antrian.index', compact('antrian'));
+}
+
+    // --- CREATE ---
     public function create()
     {
-        return view('Operator.antrian.create', [
-            'pengguna' => Pengguna::all(),
-            'paket'    => Paket::all(),
-            'booth'    => Booth::all(),
-        ]);
+        $booth = Booth::all();
+        $paket = Paket::all();
+
+        // generate jam list tiap 10 menit 
+        $jamList = [];
+        for ($time = strtotime('09:00'); $time <= strtotime('22:00'); $time += 600) {
+            $jamList[] = date('H:i', $time);
+        }
+
+        $jamTerpakai = [];
+
+        foreach ($booth as $b) {
+            $jamTerpakai[$b->id] = Antrian::where('booth_id', $b->id)
+                ->whereDate('tanggal', now('Asia/Jakarta'))
+                ->pluck('jam')
+                ->toArray();
+        }
+
+        // ambil semua antrian hari ini untuk keperluan lain (JS)
+        $antrianHariIni = Antrian::whereDate('tanggal', now('Asia/Jakarta'))->get();
+
+        // jam sekarang
+        $jamSekarang = Carbon::now('Asia/Jakarta')->format('H:i');
+
+        return view('Operator.antrian.create', compact(
+            'booth',
+            'paket',
+            'jamList',
+            'jamTerpakai',
+            'antrianHariIni',
+            'jamSekarang',
+        ));
     }
 
-    /**
-     * Simpan antrian baru
-     */
+    // --- STORE ---
     public function store(Request $request)
     {
-        // validasi input
         $request->validate([
             'pengguna_id'   => 'nullable|exists:pengguna,id',
             'nama_pengguna' => 'nullable|string|max:255',
             'no_telp'       => 'required|numeric|digits_between:10,15',
             'booth_id'      => 'required|exists:booth,id',
             'paket_id'      => 'required|exists:paket,id',
-            'catatan'       => 'nullable|string|max:500',
+            'jam'           => 'required|string',
         ], [
-            'no_telp.required'        => 'Nomor telepon wajib diisi.',
-            'no_telp.numeric'         => 'Nomor telepon hanya boleh berisi angka.',
-            'no_telp.digits_between'  => 'Nomor telepon harus terdiri dari 10 hingga 15 angka.',
-            'booth_id.required'       => 'Booth wajib dipilih.',
-            'paket_id.required'       => 'Paket wajib dipilih.',
+            'no_telp.required'          => 'Nomor telepon wajib diisi.',
+            'no_telp.numeric'           => 'Nomor telepon harus berupa angka.',
+            'no_telp.digits_between'    => 'Nomor telepon harus antara 10 sampai 15 digit.',
+            'booth_id.required'         => 'Booth wajib dipilih.',
+            'booth_id.exists'           => 'Booth tidak valid.',
+            'paket_id.required'         => 'Paket wajib dipilih.',
+            'paket_id.exists'           => 'Paket tidak valid.',
         ]);
 
-        // cek apakah nomor telepon dipakai orang lain
-        if ($request->pengguna_id == null) {
-
-            // membuat pengguna baru 
+        // buat pengguna baru jika tidak ada pengguna_id
+        if (!$request->pengguna_id) {
             if (Pengguna::where('no_telp', $request->no_telp)->exists()) {
-                return back()->withErrors([
-                    'no_telp' => 'Nomor telepon sudah digunakan pengguna lain.'
-                ])->withInput();
+                return back()->withErrors(['no_telp' => 'Nomor telepon sudah terdaftar'])->withInput();
             }
 
-        } else {
-
-            // pilih pengguna lama 
-            if (
-                Pengguna::where('no_telp', $request->no_telp)
-                        ->where('id', '!=', $request->pengguna_id)
-                        ->exists()
-            ) {
-                return back()->withErrors([
-                    'no_telp' => 'Nomor telepon sudah digunakan pengguna lain.'
-                ])->withInput();
-            }
-        }
-
-        // buat pengguna baru jika tidak memilih pengguna lama
-        if (!$request->pengguna_id && $request->nama_pengguna) {
             $user = Pengguna::create([
                 'nama_pengguna' => $request->nama_pengguna,
                 'no_telp'       => $request->no_telp,
                 'password'      => bcrypt('password123'),
                 'role'          => 'customer',
             ]);
+
             $penggunaId = $user->id;
         } else {
             $penggunaId = $request->pengguna_id;
         }
 
         $tanggal = Carbon::today('Asia/Jakarta')->format('Y-m-d');
-        $boothId = $request->booth_id;
         $antrian = null;
 
-        // transaksi untuk memastikan nomor antrian tidak bentrok
-        DB::transaction(function () use ($boothId, $tanggal, $penggunaId, $request, &$antrian) {
+        DB::transaction(function () use ($request, $tanggal, $penggunaId, &$antrian) {
 
-            // dapatkan nomor antrian terakhir untuk booth & tanggal
-            $lastNomor = Antrian::where('booth_id', $boothId)
+            // Ambil nomor terakhir
+            $lastNomor = Antrian::where('booth_id', $request->booth_id)
                 ->where('tanggal', $tanggal)
                 ->lockForUpdate()
                 ->max('nomor_antrian');
 
-            $nomorAntrian = ($lastNomor ?? 0) + 1;
-
-            // simpan antrian baru
-            $antrian = Antrian::create([
-                'pengguna_id'   => $penggunaId,
-                'booth_id'      => $boothId,
-                'paket_id'      => $request->paket_id,
-                'nomor_antrian' => $nomorAntrian,
-                'tanggal'       => $tanggal,
-                'status'        => 'menunggu',
-                'catatan'       => $request->catatan,
-            ]);
-
-            // catat log
-            Log::create([
-                'pengguna_id' => Auth::id(),
-                'antrian_id'  => $antrian->id,
-                'aksi'        => 'buat_antrian',
-                'keterangan'  => 'Operator membuat antrian ID ' . $antrian->id,
-            ]);
-        });
-
-        return redirect()->route('operator.antrian.index')
-            ->with('success', 'Antrian berhasil ditambahkan!');
-    }
-
-    /**
-     * Detail antrian
-     */
-    public function show($id)
-    {
-        $data = Antrian::with(['pengguna', 'booth', 'paket'])->findOrFail($id);
-
-        return view('Operator.antrian.show', compact('data'));
-    }
-
-    /**
-     * Form edit antrian
-     */
-    public function edit($id)
-    {
-        return view('Operator.antrian.edit', [
-            'data'     => Antrian::with(['pengguna', 'booth', 'paket'])->findOrFail($id),
-            'pengguna' => Pengguna::all(),
-            'paket'    => Paket::all(),
-            'booth'    => Booth::all(),
-        ]);
-    }
-
-    /**
-     * Update antrian
-     */
-    public function update(Request $request, $id)
-    {
-        $antrian = Antrian::findOrFail($id);
-
-        // tidak boleh edit jika status dibatalkan
-        if ($antrian->status === 'dibatalkan') {
-            return redirect()->route('operator.antrian.index')
-                ->with('error', 'Antrian yang dibatalkan tidak dapat diedit.');
-        }
-
-        // validasi input update
-        $request->validate([
-            'booth_id' => 'required|exists:booth,id',
-            'paket_id' => 'required|exists:paket,id',
-            'no_telp'  => 'nullable|string|max:20',
-            'catatan'  => 'nullable|string|max:500',
-            'status'   => 'required|in:menunggu,proses,selesai,dibatalkan',
-        ]);
-
-        DB::transaction(function () use ($antrian, $request) {
-
-            // update data antrian
-            $antrian->update([
-                'booth_id' => $request->booth_id,
-                'paket_id' => $request->paket_id,
-                'catatan'  => $request->catatan,
-                'status'   => $request->status,
-            ]);
-
-            // update nomor telepon pengguna jika ada
-            if ($request->no_telp && $antrian->pengguna) {
-                $antrian->pengguna->update([
-                    'no_telp' => $request->no_telp
-                ]);
+            $lastNomorInt = 0;
+            if ($lastNomor) {
+                $lastNomorInt = (int) $lastNomor;
             }
 
-            // log aktivitas
-            Log::create([
-                'pengguna_id' => Auth::id(),
-                'antrian_id'  => $antrian->id,
-                'aksi'        => 'update_antrian',
-                'keterangan'  => 'Operator mengupdate antrian',
-            ]);
-        });
+            $nomorAntrian = $lastNomorInt + 1;
+            $nomorAntrianFinal = str_pad($nomorAntrian, 3, '0', STR_PAD_LEFT); // 001, 002, 003
 
-        return redirect()->route('operator.antrian.index')
-            ->with('success', 'Antrian berhasil diedit!');
+            // Barcode
+            $barcodeValue = 'PB-' . $request->booth_id . '-' . time() . '-' . strtoupper(Str::random(5));
+            $expiredAt = Carbon::parse($tanggal . ' ' . $request->jam, 'Asia/Jakarta')->addMinutes(10);
+
+            // Simpan antrian
+            $antrian = Antrian::create([
+                'pengguna_id'   => $penggunaId,
+                'booth_id'      => $request->booth_id,
+                'paket_id'      => $request->paket_id,
+                'nomor_antrian' => $nomorAntrianFinal,
+                'tanggal'       => $tanggal,
+                'jam'           => $request->jam,
+                'barcode'       => $barcodeValue,
+                'expired_at'    => $expiredAt,
+                'status'        => 'menunggu',
+                'catatan'       => $request->catatan ?? null,
+            ]);
+
+            // catat log pembuatan antrian
+            Log::create([
+                 'pengguna_id' => Auth::id(),
+                 'antrian_id'  => $antrian->id,
+                 'aksi'        => 'buat_antrian',
+                 'keterangan'  => 'Operator membuat antrian ID ' . $antrian->id,
+                ]);
+            });
+
+        if (!$antrian) abort(500, 'Terjadi kesalahan saat membuat antrian.');
+
+        return redirect()->route('operator.antrian.tiket', $antrian->id)
+                 ->with('success', 'Antrian berhasil dibuat. Silakan tunjukkan tiket ini.');
     }
 
-    /**
-     * Hapus antrian
-     */
+    // --- SHOW ---
+    public function show($id)
+    {
+        $this->expireDueAntrian();
+
+        $data = Antrian::with(['pengguna','booth','paket'])->findOrFail($id);
+
+        // Generate barcode image
+        $barcodeImageBase64 = null;
+        if (!empty($data->barcode)) {
+            try {
+                $png = (new DNS1D())->getBarcodePNG($data->barcode, 'C128', 2, 50);
+                $barcodeImageBase64 = 'data:image/png;base64,' . $png;
+            } catch (\Throwable $e) {
+                $barcodeImageBase64 = null;
+            }
+        }
+
+        return view('Operator.antrian.show', compact('data','barcodeImageBase64'));
+    }
+
+    // --- SCAN BARCODE ---
+    public function scanBarcode(Request $request)
+    {
+        $this->expireDueAntrian(); 
+
+        // Validasi input barcode
+        $request->validate(['barcode' => 'required|string']);
+        $barcode = trim($request->barcode);
+        $antrian = Antrian::where('barcode', $barcode)->first();
+
+        if (!$antrian) 
+            return back()->with('error', 'Barcode tidak ditemukan.');
+
+        if (in_array($antrian->status, ['kadaluarsa','dibatalkan'])) 
+            return back()->with('error', 'Antrian sudah expired atau dibatalkan.');
+
+        if ($antrian->status === 'proses') 
+            return back()->with('info', 'Antrian sudah diproses sebelumnya.');
+
+        // Cek apakah sudah waktunya scan
+        $nowTime = Carbon::now('Asia/Jakarta');
+        $jamAntrian = Carbon::parse($antrian->tanggal.' '.$antrian->jam, 'Asia/Jakarta');
+
+        if ($nowTime->lt($jamAntrian)) {
+            return redirect()->route('operator.antrian.index')
+                    ->with('error', 'Belum waktunya scan. Harap tunggu hingga jam ' . $antrian->jam);
+        }
+        // Proses scan barcode
+        $start = Carbon::now('Asia/Jakarta');
+        $slotDuration = 10; // menit
+        $durasiProses = 3;
+        $durasiSesiFoto = 7;
+        $durasiSelesai = 1;
+
+        $fotoStartTime = $start->copy()->addMinutes($durasiProses);
+        
+        // Update status antrian
+        $antrian->update([
+            'status'    => 'proses',
+            'scan_at'   => $start,
+            'start_time'=> $start,
+            'proses_start_time' => $start->copy()->addMinutes($durasiProses),
+            'foto_start_time'  => $fotoStartTime,
+            'end_time'  => $start->copy()->addMinutes($slotDuration),
+            'step_durasi' => json_encode([
+                'proses'     => $durasiProses,
+                'sesi_foto'  => $durasiSesiFoto,
+                'selesai'    => $durasiSelesai,
+            ]),
+        ]);
+
+        Log::create([
+            'pengguna_id' => Auth::id(),
+            'antrian_id'  => $antrian->id,
+            'aksi'        => 'update_status',
+            'keterangan'  => 'Operator/Scanner mulai sesi untuk antrian ID ' . $antrian->id,
+        ]);
+
+        return back()->with('success', 'Barcode terdeteksi — sesi dimulai untuk nomor ' . $antrian->nomor_antrian);
+    }
+
+    // --- DESTROY ---
     public function destroy($id)
     {
         $antrian = Antrian::findOrFail($id);
 
-        DB::transaction(function () use ($antrian) {
-
-            // simpan log sebelum hapus
-            Log::create([
-                'pengguna_id' => Auth::id(),
-                'antrian_id'  => $antrian->id,
-                'aksi'        => 'hapus_antrian',
-                'keterangan'  => 'Operator menghapus antrian ID ' . $antrian->id,
-            ]);
-            
-            $antrian->delete();
-        });
-
-        return redirect()->route('operator.antrian.index')
-            ->with('success', 'Antrian berhasil dihapus!');
-    }
-    /**
-     * Batalkan antrian oleh customer
-     */
-    public function cancel(Request $request, $id)
-    {
-        $request->validate([
-            'alasan' => 'required|string|max:500'
+        Log::create([
+            'pengguna_id' => Auth::id(),
+            'antrian_id'  => $antrian->id,
+            'aksi'        => 'hapus_antrian',
+            'keterangan'  => 'Operator menghapus antrian ID ' . $antrian->id,
         ]);
 
+        $antrian->delete();
+
+        return redirect()->route('operator.antrian.index')->with('success','Antrian dihapus.');
+    }
+
+    // --- EXPIRE DUE ANTRIAN ---
+    public function expireDueAntrian()
+    {
+        $now = Carbon::now('Asia/Jakarta');
+
+        // kadaluarsa jika melewati expired_at
+        Antrian::where('status', 'menunggu')
+            ->whereNotNull('expired_at')
+            ->where('expired_at', '<=', $now)
+            ->update(['status' => 'kadaluarsa', 'catatan' => 'Tidak discan tepat waktu.']);
+
+        // update status otomatis berdasarkan waktu
+        Antrian::where('status', 'proses')
+            ->whereNotNull('foto_start_time')
+            ->where('foto_start_time', '<=', $now)
+            ->update(['status' => 'sesi_foto', 'catatan' => 'Sedang melakukan sesi foto.']);
+
+        // selesai otomatis jika end_time terlewati
+        Antrian::where('status', 'sesi_foto')
+            ->whereNotNull('end_time')
+            ->where('end_time', '<=', $now)
+            ->update(['status' => 'selesai', 'catatan' => 'Sudah melakukan sesi foto.']);
+    }
+
+    // --- API CHECK BARCODE ---
+    public function apiCheckBarcode(Request $request)
+    {
+        $request->validate(['barcode' => 'required|string']);
+        $antrian = Antrian::where('barcode', $request->barcode)->first();
+
+        if (!$antrian) return response()->json(['ok'=>false,'message'=>'Not found'], 404);
+
+        return response()->json([
+            'ok' => true,
+            'data' => $antrian->only(['id','nomor_antrian','tanggal','jam','status','barcode'])
+        ]);
+    }
+
+    // --- VIEW TIKET ANTRIAN ---
+    public function tiket($id)
+    {
+        $this->expireDueAntrian();
+
+        $data = Antrian::with(['pengguna','booth','paket'])->findOrFail($id);
+
+        // Generate barcode image
+        $barcodeImageBase64 = null;
+        if (!empty($data->barcode)) {
+            try {
+                $png = (new DNS1D())->getBarcodePNG($data->barcode, 'C128', 2, 50);
+                $barcodeImageBase64 = 'data:image/png;base64,' . $png;
+            } catch (\Throwable $e) {
+                $barcodeImageBase64 = null;
+            }
+        }
+
+        return view('Operator.antrian.tiket', compact('data', 'barcodeImageBase64'));
+    }
+
+    // --- CETAK PDF TIKET ANTRIAN ---
+    public function cetakPdf($id)
+    {
+        $data = Antrian::with(['pengguna','booth','paket'])->findOrFail($id);
+
+        // Generate barcode image
+        $barcodeImageBase64 = null;
+        if (!empty($data->barcode)) {
+            try {
+                $png = (new DNS1D())->getBarcodePNG($data->barcode, 'C128', 2, 50);
+                $barcodeImageBase64 = 'data:image/png;base64,' . $png;
+            } catch (\Throwable $e) {
+                $barcodeImageBase64 = null;
+            }
+        }
+
+        // Generate PDF
+        $pdf = Pdf::loadView('Operator.antrian.pdf', compact('data', 'barcodeImageBase64'))
+          ->setPaper('a6', 'portrait')
+          ->setOption('title', 'Tiket Antrian #'.$data->nomor_antrian.' - '.($data->pengguna->nama_pengguna ?? 'Customer'))
+          ->setOption('isHtml5ParserEnabled', true)
+          ->setOption('isPhpEnabled', true);
+
+        $filename = 'tiket-antrian-'.$data->nomor_antrian.'.pdf';
+
+        return $pdf->stream($filename); 
+    }
+
+    // --- CANCEL ANTRIAN ---
+    public function cancel($id)
+    {
         $antrian = Antrian::findOrFail($id);
 
+        // hanya bisa batalkan jika status menunggu
+        if ($antrian->status !== 'menunggu') {
+            return back()->with('error', 'Antrian tidak bisa dibatalkan.');
+        }
+
+        // lakukan pembatalan
         $antrian->update([
-            'status' => 'dibatalkan',
-            'catatan' => $request->alasan, 
+            'status'  => 'dibatalkan',
+            'catatan' => 'Dibatalkan oleh operator',
         ]);
 
+        // catat log pembatalan
         Log::create([
-            'pengguna_id' => $antrian->pengguna_id,
+            'pengguna_id' => Auth::id(),
             'antrian_id'  => $antrian->id,
-            'aksi'        => 'batal_customer',
-            'keterangan'  => $request->alasan, 
+            'aksi'        => 'hapus_antrian',
+            'keterangan'  => 'Operator membatalkan antrian ID ' . $antrian->id,
         ]);
 
-        return back()->with('success', 'Antrian berhasil dibatalkan!');
+        return redirect()->route('operator.antrian.index')->with('success', 'Antrian berhasil dibatalkan.');
     }
 }

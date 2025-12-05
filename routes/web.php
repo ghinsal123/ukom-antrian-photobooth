@@ -61,6 +61,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
 
+        // Khusus staff
+        Route::get('pengguna/staff', [PenggunaController::class, 'staff'])->name('pengguna.staff');
+        
+        // Khusus customer
+        Route::get('pengguna/customer', [PenggunaController::class, 'customer'])->name('pengguna.customer');
+        
         // CRUD Admin
         Route::resource('pengguna', PenggunaController::class)->names('pengguna');
         Route::resource('booth', BoothController::class)->names('booth');
@@ -108,23 +114,45 @@ Route::prefix('operator')->name('operator.')->group(function () {
             Route::get('/edit/{id}', [OperatorAntrianController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [OperatorAntrianController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [OperatorAntrianController::class, 'destroy'])->name('delete');
+
+            // Barcode & Ticketing
+            Route::get('/tiket/{id}', [OperatorAntrianController::class, 'tiket'])->name('tiket');
+            Route::post('/scan', [OperatorAntrianController::class, 'scanBarcode'])->name('scan');
+
+            // Manual complete
+            Route::post('/{id}/complete', [OperatorAntrianController::class, 'complete'])->name('complete');
+            Route::get('/cetak-pdf/{id}', [OperatorAntrianController::class, 'cetakPdf'])->name('cetakPdf');
+            Route::patch('/{id}/cancel', [OperatorAntrianController::class, 'cancel'])->name('cancel');
+             /*
+            |--------------------------------------------------------------------------
+            | STEP 1 DAN STEP 2
+            |--------------------------------------------------------------------------
+            */
+            Route::get('/step1', [OperatorAntrianController::class, 'step1'])
+                ->name('step1');
+
+            Route::post('/step1', [OperatorAntrianController::class, 'step1Store'])
+                ->name('step1.store');
+
+            Route::get('/step2', [OperatorAntrianController::class, 'step2'])
+                ->name('step2');
+
+            Route::post('/step2', [OperatorAntrianController::class, 'step2Store'])
+                ->name('step2.store');
+                });
+
+            // Booth
+            Route::get('/booth', [OperatorBoothController::class, 'index'])->name('booth.index');
+            Route::get('/booth/{id}', [OperatorBoothController::class, 'show'])->name('booth.show');
+
+            // Paket
+            Route::get('/paket', [OperatorPaketController::class, 'index'])->name('paket.index');
+            Route::get('/paket/{id}', [OperatorPaketController::class, 'show'])->name('paket.show');
+
+            // Laporan Log
+            Route::get('/laporan', [OperatorLogController::class, 'index'])->name('log.index');
         });
-
-        // Booth
-        Route::get('/booth', [OperatorBoothController::class, 'index'])->name('booth.index');
-        Route::get('/booth/{id}', [OperatorBoothController::class, 'show'])->name('booth.show');
-
-        // Paket
-        Route::get('/paket', [OperatorPaketController::class, 'index'])->name('paket.index');
-        Route::get('/paket/{id}', [OperatorPaketController::class, 'show'])->name('paket.show');
-
-        // Laporan Log
-        Route::get('/laporan', [OperatorLogController::class, 'index'])->name('log.index');
-    });
-
 });
-
-
 
 /*
 |--------------------------------------------------------------------------

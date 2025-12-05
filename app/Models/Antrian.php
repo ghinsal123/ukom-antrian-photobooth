@@ -16,6 +16,12 @@ class Antrian extends Model
         'paket_id',
         'tanggal',
         'nomor_antrian',
+        'jam',
+        'barcode',
+        'start_time',
+        'foto_start_time',
+        'end_time',
+        'expired_at',
         'status',
         'catatan',
     ];

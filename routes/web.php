@@ -32,13 +32,9 @@ use App\Http\Controllers\Operator\DashboardController as OperatorDashboardContro
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\Customer\LandingPageController;
-use App\Http\Controllers\Customer\AntrianController as CustomerAntrianController;
+use App\Http\Controllers\Customer\AntrianController;
 use App\Http\Controllers\Customer\ProfileController;
 use App\Http\Controllers\Customer\LoginController as CustomerLoginController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 
 /*
@@ -176,22 +172,50 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::middleware('customer')->group(function () {
         Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
 
-        // Dashboard Customer - TAMBAHKAN INI
+        // Dashboard Customer
         Route::get('dashboard', [LandingPageController::class, 'index'])->name('dashboard');
 
         // Arsip
         Route::get('arsip', [LandingPageController::class, 'arsip'])->name('arsip');
 
-        // Antrian
-        Route::get('antrian', [CustomerAntrianController::class, 'create'])->name('antrian');
-        Route::post('antrian/store', [CustomerAntrianController::class, 'store'])->name('antrian.store');
-        Route::get('antrian/{id}/detail', [CustomerAntrianController::class, 'detail'])->name('antrian.detail');
-        Route::get('antrian/{id}/edit', [CustomerAntrianController::class, 'edit'])->name('antrian.edit');
-        Route::put('antrian/{id}', [CustomerAntrianController::class, 'update'])->name('antrian.update');
-        Route::delete('antrian/{id}', [CustomerAntrianController::class, 'destroy'])->name('antrian.delete');
+        // Antrian Routes - PERBAIKAN DIBUAT DI SINI
+        Route::prefix('antrian')->group(function () {
+            Route::get('/', [AntrianController::class, 'create'])->name('antrian'); // Form buat antrian baru
+            Route::post('/store', [AntrianController::class, 'store'])->name('antrian.store');
+            
+            // 🔥 ROUTE BARU - Check Availability (AJAX)
+            Route::get('/check-availability', [AntrianController::class, 'checkAvailability'])->name('antrian.check');
+            
+            // 🔥 ROUTE BARU YANG DITAMBAHKAN (untuk GET /customer/antrian/{id})
+            Route::get('/{id}', [AntrianController::class, 'show'])->name('antrian.show');
+            
+            // ROUTE DETAIL ANTRIAN
+            Route::get('/{id}/detail', [AntrianController::class, 'detail'])->name('antrian.detail');
+            
+            // ROUTE EDIT ANTRIAN
+            Route::get('/{id}/edit', [AntrianController::class, 'edit'])->name('antrian.edit');
+            
+            // 🔥 FIX: Route PUT harus menggunakan parameter {id}
+            Route::put('/{id}', [AntrianController::class, 'update'])->name('antrian.update');
+            
+            // 🔥 FIX: Route DELETE harus menggunakan parameter {id}
+            Route::delete('/{id}', [AntrianController::class, 'destroy'])->name('antrian.delete');
+            
+            // ROUTE TIKET
+            Route::get('/{id}/tiket', [AntrianController::class, 'tiket'])->name('antrian.tiket');
+        });
 
         // Profil
         Route::get('profil/edit', [ProfileController::class, 'edit'])->name('profil.edit');
         Route::put('profil/update', [ProfileController::class, 'update'])->name('profil.update');
     });
+    
+    // Route untuk update status antrian (biasanya dipanggil via AJAX)
+    Route::get('/update-antrian-status', [LandingPageController::class, 'updateStatusAntrian'])
+        ->name('update.antrian.status');
+});
+
+// Fallback route
+Route::fallback(function () {
+    return redirect()->route('customer.landingpage');
 });

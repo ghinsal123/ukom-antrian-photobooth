@@ -6,49 +6,49 @@ use App\Http\Controllers\Controller;
 use App\Models\Antrian;
 use App\Models\Booth;
 use App\Models\Pengguna;
-use App\Models\Paket; // Jangan lupa import model Paket
+use App\Models\Paket;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class LandingPageController extends Controller
 {
     public function index()
     {
-        // cek session
-        $customerId = session('customer_id');
+        // Update status antrian yang kadaluarsa
+        $this->updateAntrianKadaluarsa();
 
-        // kalau belum login → tetap bisa lihat landing page
+        $customerId = session('customer_id');
         $pengguna = $customerId ? Pengguna::find($customerId) : null;
 
-        // data booth + antrian tetap ditampilkan
+        // Ambil booth dengan antrian HARI INI & AKTIF saja
         $booth = Booth::with([
             'antrian' => function ($q) {
-                $q->orderBy('tanggal', 'DESC')
-                    ->orderBy('nomor_antrian', 'ASC')
-                    ->with(['pengguna', 'paket']);
+                $q->hariIni() // Hanya hari ini
+                  ->aktif() // Hanya menunggu & proses
+                  ->belumKadaluarsa() // Belum lewat 10 menit
+                  ->orderBy('jam', 'ASC')
+                  ->with(['pengguna', 'paket']);
             }
         ])->get();
 
-        // TAMBAHKIN INI: Ambil data paket
-        $paket = Paket::all(); // atau Paket::where('status', 'aktif')->get() jika ada kolom status
+        // Ambil semua paket
+        $paket = Paket::all();
 
-        // jika login → tampilkan antrian miliknya
+        // Antrian milik user yang login (hari ini & aktif)
         $antrianku = [];
         if ($customerId) {
             $antrianku = Antrian::with(['booth', 'paket'])
                 ->where('pengguna_id', $customerId)
-                ->where(function ($q) {
-                    $q->whereNotIn('status', ['selesai', 'dibatalkan'])
-                        ->orWhereDate('tanggal', '>=', now()->subDay()->toDateString());
-                })
-                ->orderBy('tanggal', 'DESC')
-                ->orderBy('id', 'DESC')
+                ->hariIni()
+                ->aktif()
+                ->orderBy('jam', 'ASC')
                 ->get();
         }
 
         return view('customer.landingpage', [
             'pengguna' => $pengguna,
             'booth' => $booth,
-            'paket' => $paket, // TAMBAHKAN INI
+            'paket' => $paket,
             'antrianku' => $antrianku,
         ]);
     }
@@ -65,10 +65,34 @@ class LandingPageController extends Controller
 
         $arsip = Antrian::with(['booth', 'paket'])
             ->where('pengguna_id', $customerId)
-            ->whereIn('status', ['selesai', 'dibatalkan'])
+            ->whereIn('status', ['selesai', 'dibatalkan', 'kadaluarsa'])
             ->orderBy('tanggal', 'DESC')
             ->get();
 
         return view('customer.arsip', compact('arsip', 'pengguna'));
+    }
+
+    // Method untuk update antrian yang kadaluarsa
+    private function updateAntrianKadaluarsa()
+    {
+        $antrianKadaluarsa = Antrian::where('status', 'menunggu')
+            ->hariIni()
+            ->whereRaw("TIMESTAMPDIFF(MINUTE, CONCAT(tanggal, ' ', jam), NOW()) > 10")
+            ->get();
+
+        foreach ($antrianKadaluarsa as $antrian) {
+            $antrian->setKadaluarsa();
+        }
+    }
+
+    // API endpoint untuk auto-update via JavaScript
+    public function updateStatusAntrian()
+    {
+        $this->updateAntrianKadaluarsa();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status antrian berhasil diperbarui'
+        ]);
     }
 }

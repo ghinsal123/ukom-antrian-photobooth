@@ -7,9 +7,12 @@
 
     <div class="mb-4 text-left">
         <div class="flex justify-between pb-4">
-            <span class="text-gray-900">{{ $data->tanggal . ' ' . $data->jam }}</span>
+            <span class="text-gray-900">
+                {{ \Carbon\Carbon::parse($data->tanggal)->format('d/m/Y') }} {{ $data->jam }}
+            </span>
             <span class="font-bold text-yellow-600">{{ ucfirst($data->status) }}</span>
         </div>
+
         <p><strong>Customer:</strong> {{ $data->pengguna->nama_pengguna ?? '-' }}</p>
         <p><strong>Telepon:</strong> {{ $data->pengguna->no_telp ?? '-' }}</p>
         <p><strong>Booth:</strong> {{ $data->booth->nama_booth }}</p>

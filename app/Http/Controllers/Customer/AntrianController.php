@@ -146,7 +146,7 @@ class AntrianController extends Controller
         for ($i = 1; $i <= $maxAttempts; $i++) {
             $exists = Antrian::where('booth_id', $request->booth_id)
                 ->whereDate('tanggal', $request->tanggal)
-                ->where('nomor_antrian', $i)
+                ->where('nomor_antrian', str_pad($i, 3, '0', STR_PAD_LEFT))
                 ->exists();
             
             if (!$exists) {
@@ -161,7 +161,8 @@ class AntrianController extends Controller
                 ->orderBy('nomor_antrian', 'DESC')
                 ->first();
             
-            $nextNumber = $last ? (int)$last->nomor_antrian + 1 : 1;
+            $nextInt = $last ? ((int)$last->nomor_antrian + 1) : 1;
+            $nextNumber = str_pad($nextInt, 3, '0', STR_PAD_LEFT);
         }
 
         // Generate barcode unik
@@ -182,7 +183,7 @@ class AntrianController extends Controller
             'paket_id'      => $request->paket_id,
             'tanggal'       => $request->tanggal,
             'jam'           => $request->jam,
-            'nomor_antrian' => $nextNumber,
+            'nomor_antrian' => str_pad($nextNumber, 3, '0', STR_PAD_LEFT),
             'barcode'       => $barcode,
             'status'        => 'menunggu',
             'catatan'       => $catatan

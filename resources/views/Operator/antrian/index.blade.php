@@ -102,11 +102,13 @@
                 <td class="p-3">{{ $loop->iteration }}</td>
                 <td class="p-3">{{ $a->nomor_antrian }}</td>
                 <td class="p-3">{{ $a->pengguna->nama_pengguna }}</td>
-                <td class="p-3">+62 {{ $a->pengguna->no_telp ?? '-' }}</td>
+                <td class="p-3">{{ $a->pengguna->no_telp ?? '-' }}</td>
                 <td class="p-3">{{ \Carbon\Carbon::parse($a->tanggal)->format('d/m/Y') }}</td>
                 <td class="p-3">{{ $a->jam }}</td>
                 <td class="p-3">{{ ucfirst($a->status) }}</td>
-                <td class="p-3">{{ $a->catatan ?? '-' }}</td>
+                <td class="p-3" title="{{ $a->catatan ?? '-' }}">
+                    {{ \Illuminate\Support\Str::limit($a->catatan, 30, '...') ?? '-' }}
+                </td>
                 <td class="p-3 flex gap-2 justify-center">
                     <a href="{{ route('operator.antrian.show', $a->id) }}" class="px-3 py-1 bg-purple-500 text-white rounded-lg hover:bg-purple-600">Detail</a>
                     <form action="{{ route('operator.antrian.delete', $a->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus antrian?')">

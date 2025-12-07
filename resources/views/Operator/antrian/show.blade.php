@@ -12,7 +12,7 @@
     </div>
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">No. Telepon</span>
-        <span class="text-gray-900">+62 {{ $data->pengguna->no_telp ?? '-' }}</span>
+        <span class="text-gray-900">{{ $data->pengguna->no_telp ?? '-' }}</span>
     </div>
 
     <!-- Booth & Paket -->
@@ -51,9 +51,17 @@
     </div>
 
     <!-- Catatan -->
-    <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
+    <div class="py-3 hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">Catatan</span>
-        <span class="text-gray-900">{{ $data->catatan ?? '-' }}</span>
+        <ul class="text-gray-900 list-disc list-inside">
+            @if($data->catatan)
+                @foreach(explode("\n", $data->catatan) as $line)
+                    <li>{{ $line }}</li>
+                @endforeach
+            @else
+                <li>-</li>
+            @endif
+        </ul>
     </div>
 
     <!-- Barcode & Expired in One Row -->

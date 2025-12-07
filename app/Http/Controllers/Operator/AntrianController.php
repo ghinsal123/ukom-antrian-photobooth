@@ -70,7 +70,7 @@ public function index(Request $request)
 
         // generate jam list tiap 10 menit 
         $jamList = [];
-        for ($time = strtotime('09:00'); $time <= strtotime('22:00'); $time += 600) {
+        for ($time = strtotime('09:00'); $time <= strtotime('21:30'); $time += 600) {
             $jamList[] = date('H:i', $time);
         }
 
@@ -119,6 +119,17 @@ public function index(Request $request)
             'paket_id.exists'           => 'Paket tidak valid.',
         ]);
 
+            // normalisasi nomor telepon ke format +62xxxx
+            $no = preg_replace('/[^0-9]/', '', $request->no_telp); // hapus semua non-digit
+            if (Str::startsWith($no, '0')) {
+                $no = '+62' . substr($no, 1); // ganti 0 diawal dengan +62
+            } elseif (Str::startsWith($no, '62')) {
+                $no = '+'.$no; // jika sudah 62 di depan, tinggal tambah +
+            } elseif (!Str::startsWith($no, '+62')) {
+                $no = '+62'.$no; // jika nomor lain, tambahkan +62
+            }
+         $request->merge(['no_telp' => $no]);
+
         // buat pengguna baru jika tidak ada pengguna_id
         if (!$request->pengguna_id) {
             if (Pengguna::where('no_telp', $request->no_telp)->exists()) {
@@ -127,7 +138,7 @@ public function index(Request $request)
 
             $user = Pengguna::create([
                 'nama_pengguna' => $request->nama_pengguna,
-                'no_telp'       => $request->no_telp,
+                'no_telp'       => $no,
                 'password'      => bcrypt('password123'),
                 'role'          => 'customer',
             ]);

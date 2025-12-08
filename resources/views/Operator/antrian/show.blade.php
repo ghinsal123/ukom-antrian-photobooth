@@ -11,6 +11,10 @@
         <span class="text-gray-900">{{ $data->pengguna->nama_pengguna ?? '-' }}</span>
     </div>
     <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
+        <span class="font-medium text-gray-700">Email</span>
+        <span class="text-gray-900">{{ $data->pengguna->email ?? '-' }}</span>
+    </div>
+    <div class="py-3 flex justify-between items-center hover:bg-gray-50 transition">
         <span class="font-medium text-gray-700">No. Telepon</span>
         <span class="text-gray-900">{{ $data->pengguna->no_telp ?? '-' }}</span>
     </div>

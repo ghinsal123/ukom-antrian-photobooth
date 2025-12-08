@@ -105,6 +105,7 @@ public function index(Request $request)
         $request->validate([
             'pengguna_id'   => 'nullable|exists:pengguna,id',
             'nama_pengguna' => 'nullable|string|max:255',
+            'email'         => 'required|email|max:255',
             'no_telp'       => 'required|numeric|digits_between:10,15',
             'booth_id'      => 'required|exists:booth,id',
             'paket_id'      => 'required|exists:paket,id',
@@ -139,6 +140,7 @@ public function index(Request $request)
             $user = Pengguna::create([
                 'nama_pengguna' => $request->nama_pengguna,
                 'no_telp'       => $no,
+                'email'         => $request->email,
                 'password'      => bcrypt('password123'),
                 'role'          => 'customer',
             ]);

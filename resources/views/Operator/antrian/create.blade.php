@@ -29,16 +29,24 @@
                     class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
                     required>
             </div>
-
-            <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon <span class="text-red-500">*</span></label>
-            <div class="flex">
-                <span class="px-4 py-3 bg-gray-200 border border-gray-300 rounded-l-lg font-semibold">+62</span>
-                <input type="text" id="no_telp" name="no_telp" placeholder="8123456789"
-                    value="{{ old('no_telp') }}"
-                    class="w-full border border-gray-300 p-3 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+            <div class="mb-4">  
+                <label class="block text-gray-700 font-semibold mb-2">Email <span class="text-red-500">*</span> </label>
+                <input type="email" id="email" name="email" placeholder="contoh: putri@gmail.com"
+                    value="{{ old('email') }}"
+                    class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
                     required>
             </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon <span class="text-red-500">*</span></label>
+                <div class="flex">
+                    <span class="px-4 py-3 bg-gray-200 border border-gray-300 rounded-l-lg font-semibold">+62</span>
+                    <input type="text" id="no_telp" name="no_telp" placeholder="8123xxxxxxx"
+                        value="{{ old('no_telp') }}"
+                        class="w-full border border-gray-300 p-3 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        required>
+                </div>
             <p id="errorTelp" class="text-red-500 text-sm mt-1"></p>
+            </div>
 
             <div class="flex gap-3 mt-5">
                 <a href="{{ route('operator.antrian.index') }}"
@@ -173,17 +181,35 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // --- Validasi Step 1 ---
+    const nama = document.getElementById('nama_pengguna');
+    const email = document.getElementById('email');
     const telp = document.getElementById('no_telp');
     const btnStep1 = document.getElementById('btnStep1');
     const errorTelp = document.getElementById('errorTelp');
 
     function validateStep1() {
+        const name = nama.value.trim();
+        const emailVal = email.value.trim();
         const no = telp.value.trim();
+
+        let valid = true;
+
+        // --- VALIDASI NAMA ---
+        if (name === "") valid = false;
+
+        // --- VALIDASI EMAIL ---
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailVal === "" || !emailPattern.test(emailVal)) {
+            valid = false;
+        }
+
+        // --- VALIDASI NOMOR TELEPON ---
         let validTelp = true;
         errorTelp.textContent = "";
 
-        if (no === "") validTelp = false;
-        else if (!/^[0-9]+$/.test(no)) {
+        if (no === "") {
+            validTelp = false;
+        } else if (!/^[0-9]+$/.test(no)) {
             errorTelp.textContent = "Nomor telepon hanya boleh berisi angka.";
             validTelp = false;
         } else if (no.startsWith("0")) {
@@ -197,7 +223,10 @@ document.addEventListener('DOMContentLoaded', function() {
             validTelp = false;
         }
 
-        if (no.length > 0 && validTelp) {
+        if (!validTelp) valid = false;
+
+        // --- KONDISI FINAL: AKTIFKAN / NON-AKTIFKAN TOMBOL ---
+        if (valid) {
             btnStep1.disabled = false;
             btnStep1.classList.remove('bg-pink-300', 'cursor-not-allowed');
             btnStep1.classList.add('bg-pink-500', 'hover:bg-pink-600');
@@ -209,8 +238,10 @@ document.addEventListener('DOMContentLoaded', function() {
             btnStep1.onclick = null;
         }
     }
+    nama.addEventListener('input', validateStep1);
+    email.addEventListener('input', validateStep1);
     telp.addEventListener('input', validateStep1);
-
+    
     // --- Validasi Step 2 ---
     const boothSelect = document.querySelector('select[name="booth_id"]');
     const paketSelect = document.querySelector('select[name="paket_id"]');
@@ -244,7 +275,7 @@ function updateSummary() {
     summaryTotalHarga.textContent = 'Rp' + totalHarga.toLocaleString('id-ID');
     summaryJam.textContent = selectedJamInput.value || '-';
 
-    // --- Catatan untuk database: hanya harga, strip, dan deskripsi paket ---
+    // --- Catatan untuk database ---   
     const catatanText = 
         `Deskripsi Paket: ${paketDeskripsi}\n` +
         `Strip: ${stripJumlah} strip\n` +

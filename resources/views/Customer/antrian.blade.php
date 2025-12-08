@@ -264,6 +264,11 @@
         <form action="{{ route('customer.antrian.store') }}" method="POST" id="antrianForm" class="space-y-6">
             @csrf
             
+            <!-- Hidden fields untuk harga -->
+            <input type="hidden" name="total_harga" id="totalHargaHidden" value="">
+            <input type="hidden" name="harga_paket" id="hargaPaketHidden" value="">
+            <input type="hidden" name="harga_tambahan" id="hargaTambahanHidden" value="">
+            
             <!-- INFORMASI PENGUNJUNG -->
             <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
                 <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
@@ -635,6 +640,9 @@
                     return;
                 }
                 
+                // Set hidden fields dengan data harga
+                updateHiddenPriceFields();
+                
                 document.getElementById('loadingOverlay').style.display = 'flex';
                 
                 const submitBtn = document.getElementById('submitBtn');
@@ -649,6 +657,24 @@
                 `;
             });
         });
+
+        // 🔥 UPDATE HIDDEN PRICE FIELDS (untuk dikirim ke server)
+        function updateHiddenPriceFields() {
+            const totalHarga = calculateTotalHarga();
+            const hargaPaket = selectedPaket ? selectedPaket.harga : 0;
+            const hargaTambahan = tambahStrip * hargaPerStrip;
+            
+            document.getElementById('totalHargaHidden').value = totalHarga;
+            document.getElementById('hargaPaketHidden').value = hargaPaket;
+            document.getElementById('hargaTambahanHidden').value = hargaTambahan;
+        }
+
+        // 🔥 CALCULATE TOTAL HARGA
+        function calculateTotalHarga() {
+            const hargaPaket = selectedPaket ? selectedPaket.harga : 0;
+            const hargaTambahan = tambahStrip * hargaPerStrip;
+            return hargaPaket + hargaTambahan;
+        }
 
         // 🔥 LOAD BOOKED TIME SLOTS (AJAX KE SERVER)
         function loadBookedTimeSlots() {
@@ -1002,7 +1028,7 @@
                 tambahStripRow.style.display = 'none';
             }
             
-            const totalHarga = (selectedPaket ? selectedPaket.harga : 0) + biayaTambahan;
+            const totalHarga = calculateTotalHarga();
             document.getElementById('totalHarga').textContent = formatRupiah(totalHarga);
             
             updateRingkasanWaktu();

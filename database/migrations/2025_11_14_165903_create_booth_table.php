@@ -10,11 +10,11 @@ return new class extends Migration
     {
         //  tabel booth
         Schema::create('booth', function (Blueprint $table) {
-            $table->id(); 
+            $table->id();
             $table->string('nama_booth');
-            $table->integer('kapasitas'); 
-            $table->string('gambar')->nullable(); 
-            $table->timestamps(); 
+            $table->integer('kapasitas');
+            $table->json('gambar')->nullable();
+            $table->timestamps();
         });
     }
 

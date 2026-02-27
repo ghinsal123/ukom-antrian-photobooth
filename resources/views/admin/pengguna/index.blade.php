@@ -108,7 +108,7 @@
 
                     {{-- NAMA & TELEPON --}}
                     <td class="p-3">{{ $user->nama_pengguna }}</td>
-                    <td class="p-3">{{ $user->no_telp }}</td>
+                    <td class="p-3">+62 {{ $user->no_telp }}</td>
 
                     {{-- ROLE BADGE --}}
                     <td class="p-3">

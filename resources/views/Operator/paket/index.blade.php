@@ -23,7 +23,7 @@
                 type="submit" 
                 class="px-4 py-2 bg-pink-500 text-white rounded-xl hover:bg-pink-600"
             >
-                cari
+                Cari
             </button>
         </form>
     </div>
@@ -33,6 +33,7 @@
         <table class="w-full border-collapse">
             <thead>
                 <tr class="bg-pink-100 text-center">
+                    <th class="px-6 py-3">No</th>
                     <th class="px-6 py-3">gambar</th>
                     <th class="px-6 py-3">nama paket</th>
                     <th class="px-6 py-3">deskripsi</th>
@@ -45,7 +46,10 @@
             <tbody>
                 @forelse ($pakets as $paket)
                 <tr class="border-b hover:bg-pink-50">
-
+                    {{-- nomor urut --}}
+                    <td class="px-4 py-3 text-center">
+                        {{ $loop->iteration }}
+                    </td>   
                     {{-- gambar paket --}}
                     <td class="px-4 py-3">
                         <div class="flex justify-center items-center">
@@ -80,9 +84,9 @@
                     <td class="px-4 py-3 text-center">
                         <a 
                             href="{{ route('operator.paket.show', $paket->id) }}" 
-                            class="bg-pink-500 text-white px-4 py-2 rounded-xl hover:bg-pink-600 shadow-lg transition-all transform hover:scale-105"
+                            class="bg-purple-500 text-white px-4 py-2 rounded-xl hover:bg-purple-600 shadow-lg transition-all transform hover:scale-105"
                         >
-                            detail
+                            Detail
                         </a>
                     </td>
 

@@ -11,8 +11,10 @@ class Pengguna extends Authenticatable
 
     protected $table = 'pengguna';
 
+    // ✅ TAMBAHKAN 'email' di sini
     protected $fillable = [
         'nama_pengguna',
+        'email',        // ← TAMBAHKAN INI
         'no_telp',
         'password',
         'role',     // admin / customer

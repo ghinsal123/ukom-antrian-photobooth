@@ -39,10 +39,38 @@
                 <i class="fas fa-box mr-2"></i> Paket
             </a>
 
-            <a href="/admin/pengguna" class="block px-4 py-3 rounded-xl hover:bg-pink-100 
-                {{ request()->is('admin/pengguna*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
-                <i class="fas fa-user mr-2"></i> Pengguna
-            </a>
+            {{-- DROPDOWN PENGGUNA --}}
+            <div class="space-y-1">
+
+                {{-- BUTTON UTAMA --}}
+                <button 
+                    onclick="toggleMenu('penggunaMenu')" 
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-pink-100
+                        {{ request()->is('admin/pengguna/staff*') || request()->is('admin/pengguna/customer*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+
+                    <span><i class="fas fa-user mr-2"></i> Pengguna</span>
+                    <i id="iconPengguna" class="fas fa-chevron-down text-sm transition-transform duration-200"></i>
+                </button>
+
+                {{-- SUBMENU --}}
+                <div id="penggunaMenu" 
+                    class="ml-6 flex flex-col gap-1 {{ request()->is('admin/pengguna/*') ? '' : 'hidden' }}">
+
+                    <a href="{{ route('admin.pengguna.staff') }}"
+                        class="block px-3 py-2 rounded-lg hover:bg-pink-50 
+                            {{ request()->is('admin/pengguna/staff*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+                        <i class="fas fa-users-cog mr-2"></i> Staff
+                    </a>
+
+                    <a href="{{ route('admin.pengguna.customer') }}"
+                        class="block px-3 py-2 rounded-lg hover:bg-pink-50
+                            {{ request()->is('admin/pengguna/customer*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+                        <i class="fas fa-user-friends mr-2"></i> Customer
+                    </a>
+
+                </div>
+
+            </div>
 
             <a href="/admin/log" class="block px-4 py-3 rounded-xl hover:bg-pink-100 
                 {{ request()->is('admin/log*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
@@ -93,10 +121,38 @@
                     <i class="fas fa-box mr-2"></i> Paket
                 </a>
 
-                <a href="/admin/pengguna" class="block px-4 py-3 rounded-xl hover:bg-pink-100 
-                    {{ request()->is('admin/pengguna*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
-                    <i class="fas fa-user mr-2"></i> Pengguna
-                </a>
+                {{-- DROPDOWN PENGGUNA MOBILE --}}
+                <div class="space-y-1">
+
+                    {{-- BUTTON --}} 
+                    <button 
+                        onclick="toggleMenu('penggunaMenuMobile')" 
+                        class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-pink-100
+                            {{ request()->is('admin/pengguna/staff*') || request()->is('admin/pengguna/customer*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+
+                        <span><i class="fas fa-user mr-2"></i> Pengguna</span>
+                        <i id="iconPenggunaMobile" class="fas fa-chevron-down text-sm transition-transform duration-200"></i>
+                    </button>
+
+                    {{-- SUBMENU MOBILE --}}
+                    <div id="penggunaMenuMobile"
+                        class="ml-6 flex flex-col gap-1 {{ request()->is('admin/pengguna/*') ? '' : 'hidden' }}">
+
+                        <a href="{{ route('admin.pengguna.staff') }}"
+                            class="block px-3 py-2 rounded-lg hover:bg-pink-50
+                                {{ request()->is('admin/pengguna/staff*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+                            <i class="fas fa-users-cog mr-2"></i> Staff
+                        </a>
+
+                        <a href="{{ route('admin.pengguna.customer') }}"
+                            class="block px-3 py-2 rounded-lg hover:bg-pink-50
+                                {{ request()->is('admin/pengguna/customer*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
+                            <i class="fas fa-user-friends mr-2"></i> Customer
+                        </a>
+
+                    </div>
+
+                </div>
 
                 <a href="/admin/log" class="block px-4 py-3 rounded-xl hover:bg-pink-100 
                     {{ request()->is('admin/log*') ? 'bg-pink-200 font-semibold text-pink-600' : '' }}">
@@ -177,6 +233,33 @@
             document.getElementById('mobile-sidebar').classList.toggle('hidden');
         }
     </script>
+    <script>
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
 
+            // toggle hide
+            const isHidden = menu.classList.toggle('hidden');
+
+            // DETECT ICON YANG DIPAKAI
+            let icon = null;
+
+            if (id === 'penggunaMenu') {
+                icon = document.getElementById('iconPengguna');
+            } else if (id === 'penggunaMenuMobile') {
+                icon = document.getElementById('iconPenggunaMobile');
+            }
+
+            // UBAH ICON
+            if (icon) {
+                if (isHidden) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                } else {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
+            }
+        }
+    </script>
 </body>
 </html>

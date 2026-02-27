@@ -14,6 +14,11 @@ class Booth extends Model
         'gambar',
     ];
 
+    // Cast gambar JSON ke array otomatis
+    protected $casts = [
+        'gambar' => 'array',
+    ];
+
     // Relasi ke tabel antrian
     public function antrian()
     {

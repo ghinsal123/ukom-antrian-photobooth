@@ -34,16 +34,26 @@
             >
         </div>
 
-        {{-- INPUT : TELEPON --}}
+        {{-- INPUT NOMOR TELEPON --}}
         <div class="mb-4">
-            <label class="block mb-1 font-medium">Nomor Telepon</label>
-            <input 
-                type="text" 
-                name="no_telp" 
-                required
-                class="w-full p-2 border rounded-xl"
-                value="{{ old('no_telp', $pengguna->no_telp) }}"
-            >
+            <label class="block mb-1 font-medium">Nomor Telepon
+                <span class="text-red-500">*</span>
+            </label>
+
+            <div class="flex">
+                {{-- PREFIX +62 --}}
+                <span class="px-4 flex items-center bg-gray-200 border border-gray-300 rounded-l-xl text-gray-700">
+                    +62
+                </span>
+
+                {{-- INPUT NOMOR --}}
+                <input type="text"
+                    name="no_telp"
+                    placeholder="8123456789"
+                    value="{{ old('no_telp', $pengguna->no_telp) }}"
+                    required
+                    class="w-full p-2 border border-gray-300 rounded-r-xl focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
         </div>
 
         {{-- INPUT : PASSWORD (opsional, hanya jika ubah) --}}
